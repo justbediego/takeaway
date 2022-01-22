@@ -3,7 +3,7 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import {FontAwesome} from '@expo/vector-icons';
+import {FontAwesome, Ionicons} from '@expo/vector-icons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {DarkTheme, DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -15,7 +15,7 @@ import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
+import TabProfileScreen from '../screens/TabProfileScreen';
 import LinkingConfiguration from './LinkingConfiguration';
 import {useTranslation} from "react-i18next";
 
@@ -55,7 +55,7 @@ const BottomTab = createBottomTabNavigator();
 
 function BottomTabNavigator() {
     const colorScheme = useColorScheme();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     return (
         <BottomTab.Navigator
@@ -68,7 +68,9 @@ function BottomTabNavigator() {
                 component={TabOneScreen}
                 options={({navigation}) => ({
                     title: 'Tab One',
-                    tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
+                    tabBarIcon: ({color, focused}) =>
+                        <Ionicons size={26} style={{marginBottom: -3}} color={color}
+                                  name={focused ? "home" : "home-outline"} />,
                     headerRight: () => (
                         <Pressable
                             onPress={() => navigation.navigate('Modal')}
@@ -86,20 +88,15 @@ function BottomTabNavigator() {
                 })}
             />
             <BottomTab.Screen
-                name="TabTwo"
-                component={TabTwoScreen}
+                name="TabProfile"
+                component={TabProfileScreen}
                 options={{
                     title: t('tabProfileTitle'),
-                    tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
+                    tabBarIcon: ({color, focused}) =>
+                        <FontAwesome size={26} style={{marginBottom: -3}} color={color}
+                                     name={focused ? "user" : "user-o"} />,
                 }}
             />
         </BottomTab.Navigator>
     );
-}
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props) {
-    return <FontAwesome size={30} style={{marginBottom: -3}} {...props} />;
 }
