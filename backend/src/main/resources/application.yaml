@@ -16,5 +16,7 @@ spring:
         enable_lazy_load_no_trans: true
   application:
     name: takeaway
+    attachmentsPath: ~/takeaway_attachments/
+    profilePictureSize: 100
 server:
   port: 2102
