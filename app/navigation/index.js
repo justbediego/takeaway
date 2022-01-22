@@ -17,6 +17,7 @@ import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import LinkingConfiguration from './LinkingConfiguration';
+import {useTranslation} from "react-i18next";
 
 export default function Navigation({colorScheme}) {
     return (
@@ -54,6 +55,7 @@ const BottomTab = createBottomTabNavigator();
 
 function BottomTabNavigator() {
     const colorScheme = useColorScheme();
+    const { t } = useTranslation();
 
     return (
         <BottomTab.Navigator
@@ -87,7 +89,7 @@ function BottomTabNavigator() {
                 name="TabTwo"
                 component={TabTwoScreen}
                 options={{
-                    title: 'Tab Two',
+                    title: t('tabProfileTitle'),
                     tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
                 }}
             />
