@@ -22,8 +22,6 @@ public class User extends BaseEntity {
     @Column(length = 1000, nullable = false)
     private String username;
 
-    private transient String password;
-
     @Column(length = 100, nullable = false)
     private String hashedPassword;
 
