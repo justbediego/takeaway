@@ -8,7 +8,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {DarkTheme, DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
-import {Pressable} from 'react-native';
+import {Pressable, StyleSheet} from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -66,37 +66,36 @@ function BottomTabNavigator() {
             <BottomTab.Screen
                 name="TabOne"
                 component={TabOneScreen}
-                options={({navigation}) => ({
+                options={{
                     title: 'Tab One',
+                    tabBarShowLabel: false,
                     tabBarIcon: ({color, focused}) =>
-                        <Ionicons size={26} style={{marginBottom: -3}} color={color}
-                                  name={focused ? "home" : "home-outline"} />,
-                    headerRight: () => (
-                        <Pressable
-                            onPress={() => navigation.navigate('Modal')}
-                            style={({pressed}) => ({
-                                opacity: pressed ? 0.5 : 1,
-                            })}>
-                            <FontAwesome
-                                name="info-circle"
-                                size={25}
-                                color={Colors[colorScheme].text}
-                                style={{marginRight: 15}}
-                            />
-                        </Pressable>
-                    ),
-                })}
+                        <Ionicons size={24} color={color}
+                                  name={focused ? "home" : "home-outline"}/>
+                }}
             />
             <BottomTab.Screen
                 name="TabProfile"
                 component={TabProfileScreen}
-                options={{
+                options={({navigation}) => ({
                     title: t('tabProfileTitle'),
+                    tabBarShowLabel: false,
                     tabBarIcon: ({color, focused}) =>
-                        <FontAwesome size={26} style={{marginBottom: -3}} color={color}
-                                     name={focused ? "user" : "user-o"} />,
-                }}
+                        <FontAwesome size={24} color={color} name={focused ? "user" : "user-o"}/>,
+                    headerRight: () => (
+                        <Pressable
+                            style={({pressed}) => ({
+                                opacity: pressed ? 0.5 : 1,
+                                marginRight: 15
+                            })}
+                            onPress={() => navigation.navigate('Modal')}>
+                            <FontAwesome name="edit" size={25} color={Colors[colorScheme].text}/>
+                        </Pressable>
+                    ),
+                })}
             />
         </BottomTab.Navigator>
     );
 }
+
+const styles = StyleSheet.create({});

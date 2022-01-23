@@ -1,7 +1,7 @@
 const translations = {
     en: {
         translation: {
-            'tabProfileTitle': 'Profile'
+            tabProfileTitle: 'My Profile',
         }
     },
 }
