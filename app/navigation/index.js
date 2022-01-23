@@ -1,8 +1,3 @@
-/**
- * If you are not familiar with React Navigation, refer to the "Fundamentals" guide:
- * https://reactnavigation.org/docs/getting-started
- *
- */
 import {FontAwesome, Ionicons} from '@expo/vector-icons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {DarkTheme, DefaultTheme, NavigationContainer} from '@react-navigation/native';
@@ -18,6 +13,8 @@ import TabOneScreen from '../screens/TabOneScreen';
 import TabProfileScreen from '../screens/TabProfileScreen';
 import LinkingConfiguration from './LinkingConfiguration';
 import {useTranslation} from "react-i18next";
+import TabMarkedScreen from "../screens/TabMarkedScreen";
+import TabNewScreen from "../screens/TabNewScreen";
 
 export default function Navigation({colorScheme}) {
     return (
@@ -29,10 +26,6 @@ export default function Navigation({colorScheme}) {
     );
 }
 
-/**
- * A root stack navigator is often used for displaying modals on top of all other content.
- * https://reactnavigation.org/docs/modal
- */
 const Stack = createNativeStackNavigator();
 
 function RootNavigator() {
@@ -47,10 +40,6 @@ function RootNavigator() {
     );
 }
 
-/**
- * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
- * https://reactnavigation.org/docs/bottom-tab-navigator
- */
 const BottomTab = createBottomTabNavigator();
 
 function BottomTabNavigator() {
@@ -70,8 +59,19 @@ function BottomTabNavigator() {
                     title: 'Tab One',
                     tabBarShowLabel: false,
                     tabBarIcon: ({color, focused}) =>
-                        <Ionicons size={24} color={color}
-                                  name={focused ? "home" : "home-outline"}/>
+                        <Ionicons style={styles.tabDefaultBtn}
+                                  color={color} name={focused ? "home" : "home-outline"}/>
+                }}
+            />
+            <BottomTab.Screen
+                name="TabNew"
+                component={TabNewScreen}
+                options={{
+                    title: t('tabNewTitle'),
+                    tabBarShowLabel: false,
+                    tabBarIcon: () =>
+                        <FontAwesome style={styles.tabNewBtn}
+                                     color={Colors[colorScheme].newIcon} name="plus-circle"/>,
                 }}
             />
             <BottomTab.Screen
@@ -81,15 +81,17 @@ function BottomTabNavigator() {
                     title: t('tabProfileTitle'),
                     tabBarShowLabel: false,
                     tabBarIcon: ({color, focused}) =>
-                        <FontAwesome size={24} color={color} name={focused ? "user" : "user-o"}/>,
+                        <FontAwesome style={styles.tabDefaultBtn}
+                                     color={color} name={focused ? "user" : "user-o"}/>,
                     headerRight: () => (
                         <Pressable
                             style={({pressed}) => ({
+                                ...styles.topRightPress,
                                 opacity: pressed ? 0.5 : 1,
-                                marginRight: 15
                             })}
                             onPress={() => navigation.navigate('Modal')}>
-                            <FontAwesome name="edit" size={25} color={Colors[colorScheme].text}/>
+                            <FontAwesome name="edit" style={styles.topRightPressIcon}
+                                         color={Colors[colorScheme].text}/>
                         </Pressable>
                     ),
                 })}
@@ -98,4 +100,18 @@ function BottomTabNavigator() {
     );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    tabNewBtn: {
+        marginTop: -20,
+        fontSize: 70,
+    },
+    tabDefaultBtn: {
+        fontSize: 24,
+    },
+    topRightPress: {
+        marginRight: 15,
+    },
+    topRightPressIcon: {
+        fontSize: 20
+    }
+});
