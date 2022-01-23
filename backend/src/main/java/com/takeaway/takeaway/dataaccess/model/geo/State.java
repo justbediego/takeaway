@@ -37,5 +37,5 @@ public class State extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_id")
-    private List<Location> locations = new ArrayList<>();
+    private List<Location> inLocations = new ArrayList<>();
 }

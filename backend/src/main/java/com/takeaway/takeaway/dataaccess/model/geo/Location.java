@@ -1,6 +1,7 @@
 package com.takeaway.takeaway.dataaccess.model.geo;
 
 import com.takeaway.takeaway.dataaccess.model.BaseEntity;
+import com.takeaway.takeaway.dataaccess.model.Item;
 import com.takeaway.takeaway.dataaccess.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,9 +43,13 @@ public class Location extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "billing_address_id")
-    private List<User> billingAddressUser = new ArrayList<>();
+    private List<User> forUserBillingAddresses = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "shipping_address_id")
-    private List<User> shippingAddressUser = new ArrayList<>();
+    private List<User> forUserShippingAddresses = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id")
+    private List<Item> forItems = new ArrayList<>();
 }

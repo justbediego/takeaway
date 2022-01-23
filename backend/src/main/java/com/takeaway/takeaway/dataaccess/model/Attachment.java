@@ -38,13 +38,13 @@ public class Attachment extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "picture_item_id")
-    private Item pictureItem;
+    private Item forItem;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_picture_id")
-    private List<User> profilePictureUser = new ArrayList<>();
+    private List<User> forUserProfilePictures = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_picture_original_id")
-    private List<User> profilePictureOriginalUser = new ArrayList<>();
+    private List<User> forUserProfilePictureOriginals = new ArrayList<>();
 }
