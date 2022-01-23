@@ -2,15 +2,19 @@ import {StyleSheet} from 'react-native';
 
 import {Image, Text, View} from '../components/Themed';
 import React from "react";
+import Colors from "../constants/Colors";
+import useColorScheme from "../hooks/useColorScheme";
 
 export default function TabProfileScreen() {
+    const colorScheme = useColorScheme();
     return (
         <View style={styles.container}>
             <Image source={{
                 uri: "https://www.fairtravel4u.org/wp-content/uploads/2018/06/sample-profile-pic.png",
-                height: 100,
-                width: 100
-            }} style={styles.profilePicture}/>
+            }} style={{
+                ...styles.profilePicture,
+                borderColor: Colors[colorScheme].tint
+            }}/>
             <Text style={styles.fullName}>Hossein Alizadeh</Text>
             <Text style={styles.username}>@justbediego</Text>
             <Text style={styles.username}>+4915223339850</Text>
@@ -30,7 +34,7 @@ const styles = StyleSheet.create({
         height: 100,
         width: 100,
         borderRadius: 50,
-        borderWidth: 0,
+        borderWidth: 3
     },
     fullName: {
         fontSize: 20,
