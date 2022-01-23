@@ -6,9 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -27,4 +27,19 @@ public class Geolocation extends BaseEntity {
     @Column(nullable = false)
     private Integer accuracyKm;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "geolocation_id")
+    private List<Country> countries = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "geolocation_id")
+    private List<City> cities = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "geolocation_id")
+    private List<Location> locations = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "geolocation_id")
+    private List<State> states = new ArrayList<>();
 }

@@ -6,9 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -36,4 +36,15 @@ public class Attachment extends BaseEntity {
     @Column(length = 300, nullable = false)
     private String filename;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "picture_item_id")
+    private Item pictureItem;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_picture_id")
+    private List<User> profilePictureUser = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_picture_original_id")
+    private List<User> profilePictureOriginalUser = new ArrayList<>();
 }

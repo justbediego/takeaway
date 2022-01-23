@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -28,9 +29,13 @@ public class State extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_id")
-    private List<City> cities;
+    private List<City> cities = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "geolocation_id")
     private Geolocation geolocation;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_id")
+    private List<Location> locations = new ArrayList<>();
 }

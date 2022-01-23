@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -29,4 +31,7 @@ public class City extends BaseEntity {
     @JoinColumn(name = "geolocation_id")
     private Geolocation geolocation;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    private List<Location> locations = new ArrayList<>();
 }

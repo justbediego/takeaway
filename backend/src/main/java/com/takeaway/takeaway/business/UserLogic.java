@@ -10,7 +10,6 @@ import com.takeaway.takeaway.dataaccess.model.Attachment;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
 import com.takeaway.takeaway.dataaccess.repository.AttachmentRepository;
-import com.takeaway.takeaway.dataaccess.repository.LocationRepository;
 import com.takeaway.takeaway.dataaccess.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,14 +31,11 @@ public class UserLogic {
 
     private final UserRepository userRepository;
 
-    private final LocationRepository locationRepository;
-
     private final AttachmentRepository attachmentRepository;
 
-    public UserLogic(AttachmentLogic attachmentLogic, UserRepository userRepository, LocationRepository locationRepository, AttachmentRepository attachmentRepository) {
+    public UserLogic(AttachmentLogic attachmentLogic, UserRepository userRepository, AttachmentRepository attachmentRepository) {
         this.attachmentLogic = attachmentLogic;
         this.userRepository = userRepository;
-        this.locationRepository = locationRepository;
         this.attachmentRepository = attachmentRepository;
     }
 

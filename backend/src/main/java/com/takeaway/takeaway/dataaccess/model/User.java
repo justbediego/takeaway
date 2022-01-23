@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -29,7 +31,7 @@ public class User extends BaseEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "billin_address_id")
+    @JoinColumn(name = "billing_address_id")
     private Location billingAddress;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,5 +45,9 @@ public class User extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_picture_original_id")
     private Attachment profilePictureOriginal;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_user_id")
+    private List<Item> items = new ArrayList<>();
 
 }
