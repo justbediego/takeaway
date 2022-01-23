@@ -7,14 +7,13 @@ import {Pressable, StyleSheet} from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import ModalScreen from '../screens/ModalScreen';
+import ModalScreen from '../screens/NewItemScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabProfileScreen from '../screens/TabProfileScreen';
 import LinkingConfiguration from './LinkingConfiguration';
 import {useTranslation} from "react-i18next";
-import TabMarkedScreen from "../screens/TabMarkedScreen";
-import TabNewScreen from "../screens/TabNewScreen";
+import NewItemScreen from "../screens/NewItemScreen";
 
 export default function Navigation({colorScheme}) {
     return (
@@ -34,7 +33,7 @@ function RootNavigator() {
             <Stack.Screen name="Root" component={BottomTabNavigator} options={{headerShown: false}}/>
             <Stack.Screen name="NotFound" component={NotFoundScreen} options={{title: 'Oops!'}}/>
             <Stack.Group screenOptions={{presentation: 'modal'}}>
-                <Stack.Screen name="Modal" component={ModalScreen}/>
+                <Stack.Screen name="NewItemModal" component={NewItemScreen}/>
             </Stack.Group>
         </Stack.Navigator>
     );
@@ -45,6 +44,7 @@ const BottomTab = createBottomTabNavigator();
 function BottomTabNavigator() {
     const colorScheme = useColorScheme();
     const {t} = useTranslation();
+    const emptyComponent = () => null
 
     return (
         <BottomTab.Navigator
@@ -65,7 +65,7 @@ function BottomTabNavigator() {
             />
             <BottomTab.Screen
                 name="TabNew"
-                component={TabNewScreen}
+                component={emptyComponent}
                 options={{
                     title: t('tabNewTitle'),
                     tabBarShowLabel: false,
@@ -73,6 +73,12 @@ function BottomTabNavigator() {
                         <FontAwesome style={styles.tabNewBtn}
                                      color={Colors[colorScheme].newIcon} name="plus-circle"/>,
                 }}
+                listeners={({navigation}) => ({
+                    tabPress: (e) => {
+                        e.preventDefault();
+                        navigation.navigate('NewItemModal');
+                    }
+                })}
             />
             <BottomTab.Screen
                 name="TabProfile"

@@ -5,7 +5,7 @@ import EditScreenInfo from '../components/EditScreenInfo';
 import {Text, View} from '../components/Themed';
 import React from "react";
 
-export default function ModalScreen() {
+export default function NewItemScreen() {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Modal</Text>
