@@ -22,10 +22,10 @@ public class Item extends BaseEntity {
     @JoinColumn(name = "owner_user_id")
     private User user;
 
-    @Column(length = 1000, nullable = false)
+    @Column(length = 100, nullable = false)
     private String title;
 
-    @Column(length = 10000)
+    @Column(length = 5000)
     private String description;
 
     @OneToMany(fetch = FetchType.LAZY)
@@ -39,4 +39,8 @@ public class Item extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_category_id")
     private ItemCategory category;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    private List<DirectMessage> directMessages = new ArrayList<>();
 }

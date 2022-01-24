@@ -47,4 +47,8 @@ public class Attachment extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_picture_original_id")
     private List<User> forUserProfilePictureOriginals = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "attachment_id")
+    private List<DirectMessage> directMessages =  new ArrayList<>();
 }

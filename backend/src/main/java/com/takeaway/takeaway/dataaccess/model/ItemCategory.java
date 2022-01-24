@@ -21,7 +21,7 @@ public class ItemCategory extends BaseEntity {
     @Column(nullable = false)
     private Integer categoryCode;
 
-    @Column(length = 1000, nullable = false)
+    @Column(length = 100, nullable = false)
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)

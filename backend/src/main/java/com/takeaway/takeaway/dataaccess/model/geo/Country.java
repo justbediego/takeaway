@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "countries")
 public class Country extends BaseEntity {
 
-    @Column(length = 200, nullable = false)
+    @Column(length = 100, nullable = false)
     private String name;
 
     // relations

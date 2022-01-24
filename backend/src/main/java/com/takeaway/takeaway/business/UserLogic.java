@@ -89,7 +89,10 @@ public class UserLogic {
         User user = findUserOrThrow(userId);
         Attachment profilePicture = user.getProfilePicture();
         return GetBasicInfoDto.builder()
-                .name(user.getName())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phoneNumber(user.getPhoneNumber())
+                .phoneNumberCountryCode(user.getPhoneNumberCountryCode())
                 .profilePictureId(profilePicture == null ? null : profilePicture.getId())
                 .profilePictureKey(profilePicture == null ? null : profilePicture.getSecurityKey())
                 .build();
@@ -97,7 +100,10 @@ public class UserLogic {
 
     public void updateBasicInfo(UUID userId, UpdateBasicInfoDto updateBasicInfoDto) throws TakeawayException {
         User user = findUserOrThrow(userId);
-        user.setName(updateBasicInfoDto.getName());
+        user.setFirstName(updateBasicInfoDto.getFirstName());
+        user.setLastName(updateBasicInfoDto.getLastName());
+        user.setPhoneNumber(updateBasicInfoDto.getPhoneNumber());
+        user.setPhoneNumberCountryCode(updateBasicInfoDto.getPhoneNumberCountryCode());
         userRepository.save(user);
     }
 }

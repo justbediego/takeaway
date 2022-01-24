@@ -18,17 +18,26 @@ import java.util.List;
 @Table(name = "users")
 public class User extends BaseEntity {
 
-    @Column(length = 1000, nullable = false)
+    @Column(length = 200, nullable = false)
     private String email;
 
-    @Column(length = 1000, nullable = false)
-    private String username;
+    @Column(length = 20)
+    private String phoneNumber;
 
-    @Column(length = 100, nullable = false)
-    private String hashedPassword;
+    @Column(length = 5)
+    private String phoneNumberCountryCode;
 
     @Column(length = 200, nullable = false)
-    private String name;
+    private String username;
+
+    @Column(length = 300, nullable = false)
+    private String hashedPassword;
+
+    @Column(length = 100)
+    private String firstName;
+
+    @Column(length = 100)
+    private String lastName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "billing_address_id")
@@ -50,4 +59,11 @@ public class User extends BaseEntity {
     @JoinColumn(name = "owner_user_id")
     private List<Item> items = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "from_user_id")
+    private List<DirectMessage> directMessagesFrom = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_user_id")
+    private List<DirectMessage> directMessagesTo = new ArrayList<>();
 }

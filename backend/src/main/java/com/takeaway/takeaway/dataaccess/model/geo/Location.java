@@ -20,7 +20,7 @@ import java.util.List;
 @Table(name = "locations")
 public class Location extends BaseEntity {
 
-    @Column(length = 200)
+    @Column(length = 100)
     private String title;
 
     // relations

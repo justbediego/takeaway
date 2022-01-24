@@ -10,5 +10,8 @@ import java.util.UUID;
 public class GetBasicInfoDto {
     private UUID profilePictureId;
     private UUID profilePictureKey;
-    private String name;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private String phoneNumberCountryCode;
 }
