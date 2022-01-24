@@ -1,9 +1,7 @@
 package com.takeaway.takeaway.presentation;
 
 import com.takeaway.takeaway.business.UserLogic;
-import com.takeaway.takeaway.business.dto.CreateAttachmentDto;
-import com.takeaway.takeaway.business.dto.GetBasicInfoDto;
-import com.takeaway.takeaway.business.dto.UpdateBasicInfoDto;
+import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.business.exception.FileUploadException;
 import com.takeaway.takeaway.business.exception.TakeawayException;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +27,24 @@ public class UserController {
         userLogic.updateBasicInfo(userID, updateBasicInfoDto);
     }
 
+    @PutMapping(path = "/updateUsername")
+    public void updateUsername(@RequestBody UpdateUsernameDto updateUsernameDto) throws TakeawayException {
+        userLogic.updateUsername(userID, updateUsernameDto);
+    }
+
+    @PutMapping(path = "/updateEmail")
+    public void updateEmail(@RequestBody UpdateEmailDto updateEmailDto) throws TakeawayException {
+        userLogic.updateEmail(userID, updateEmailDto);
+    }
+
+    @PutMapping(path = "/changePassword")
+    public void changePassword(@RequestBody ChangePasswordDto changePasswordDto) throws TakeawayException {
+        userLogic.changePassword(userID, changePasswordDto);
+    }
+
     @PutMapping(path = "/updateProfilePicture")
     public void updateProfilePicture(@RequestPart MultipartFile file) throws TakeawayException {
-        CreateAttachmentDto attachmentDto = null;
+        CreateAttachmentDto attachmentDto;
         try {
             attachmentDto = CreateAttachmentDto.builder()
                     .fileData(file.getBytes())

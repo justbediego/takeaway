@@ -2,7 +2,10 @@ package com.takeaway.takeaway.business;
 
 import com.takeaway.takeaway.business.dto.CreateAttachmentDto;
 import com.takeaway.takeaway.business.dto.GetAttachmentDto;
-import com.takeaway.takeaway.business.exception.*;
+import com.takeaway.takeaway.business.exception.EntityNotFound;
+import com.takeaway.takeaway.business.exception.TakeawayException;
+import com.takeaway.takeaway.business.exception.UnableToParseImage;
+import com.takeaway.takeaway.business.exception.UnrecognizedException;
 import com.takeaway.takeaway.dataaccess.model.Attachment;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
 import com.takeaway.takeaway.dataaccess.repository.AttachmentRepository;
@@ -62,11 +65,11 @@ public class AttachmentLogic {
     public GetAttachmentDto getAttachment(UUID attachmentId, UUID attachmentKey, AttachmentTypes typeCheck) throws TakeawayException {
         Optional<Attachment> optionalAttachment = attachmentRepository.findByIdAndKey(attachmentId, attachmentKey);
         if (optionalAttachment.isEmpty()) {
-            throw new EntityNotFound(attachmentId);
+            throw new EntityNotFound("Attachment", attachmentId);
         }
         Attachment attachment = optionalAttachment.get();
         if (typeCheck != null && attachment.getType() != typeCheck) {
-            throw new EntityNotFound(attachmentId);
+            throw new EntityNotFound("Attachment", attachmentId);
         }
         byte[] fileData;
         try {
@@ -75,7 +78,7 @@ public class AttachmentLogic {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            throw new UnableToAccessAttachment(attachmentId);
+            throw new UnrecognizedException("Unable to access attachment");
         }
         return GetAttachmentDto.builder()
                 .type(attachment.getType())
@@ -101,7 +104,7 @@ public class AttachmentLogic {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            throw new UnableToCreateAttachment();
+            throw new UnrecognizedException("Unable to create attachment");
         }
         return newAttachment.getId();
     }
@@ -109,7 +112,7 @@ public class AttachmentLogic {
     public void removeAttachment(UUID attachmentId) throws TakeawayException {
         Optional<Attachment> optionalAttachment = attachmentRepository.findById(attachmentId);
         if (optionalAttachment.isEmpty()) {
-            throw new EntityNotFound(attachmentId);
+            throw new EntityNotFound("Attachment", attachmentId);
         }
         Attachment attachment = optionalAttachment.get();
         try {
@@ -117,7 +120,7 @@ public class AttachmentLogic {
             attachmentRepository.delete(attachment);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new UnableToAccessAttachment(attachmentId);
+            throw new UnrecognizedException("Unable to access attachment");
         }
     }
 }

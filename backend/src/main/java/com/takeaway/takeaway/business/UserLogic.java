@@ -1,11 +1,7 @@
 package com.takeaway.takeaway.business;
 
-import com.takeaway.takeaway.business.dto.CreateAttachmentDto;
-import com.takeaway.takeaway.business.dto.GetBasicInfoDto;
-import com.takeaway.takeaway.business.dto.UpdateBasicInfoDto;
-import com.takeaway.takeaway.business.exception.EntityNotFound;
-import com.takeaway.takeaway.business.exception.TakeawayException;
-import com.takeaway.takeaway.business.exception.UnrecognizedException;
+import com.takeaway.takeaway.business.dto.*;
+import com.takeaway.takeaway.business.exception.*;
 import com.takeaway.takeaway.dataaccess.model.Attachment;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
@@ -42,9 +38,14 @@ public class UserLogic {
     private User findUserOrThrow(UUID userId) throws TakeawayException {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isEmpty()) {
-            throw new EntityNotFound(userId);
+            throw new EntityNotFound("User", userId);
         }
         return optionalUser.get();
+    }
+
+    private String getHashedPassword(String password){
+        // todo: fix hashed
+        return "Test";
     }
 
     @Transactional
@@ -100,10 +101,39 @@ public class UserLogic {
 
     public void updateBasicInfo(UUID userId, UpdateBasicInfoDto updateBasicInfoDto) throws TakeawayException {
         User user = findUserOrThrow(userId);
+        // todo: validation
         user.setFirstName(updateBasicInfoDto.getFirstName());
         user.setLastName(updateBasicInfoDto.getLastName());
         user.setPhoneNumber(updateBasicInfoDto.getPhoneNumber());
         user.setPhoneNumberCountryCode(updateBasicInfoDto.getPhoneNumberCountryCode());
+        userRepository.save(user);
+    }
+
+    public void updateUsername(UUID userId, UpdateUsernameDto updateUsernameDto) throws TakeawayException{
+        User user = findUserOrThrow(userId);
+        // todo: validation
+        user.setUsername(updateUsernameDto.getUsername());
+        userRepository.save(user);
+    }
+
+    public void updateEmail(UUID userId, UpdateEmailDto updateEmailDto) throws TakeawayException{
+        User user = findUserOrThrow(userId);
+        // todo: validation
+        user.setEmail(updateEmailDto.getEmail());
+        userRepository.save(user);
+    }
+
+    public void changePassword(UUID userId, ChangePasswordDto changePasswordDto) throws TakeawayException{
+        User user = findUserOrThrow(userId);
+        if(!changePasswordDto.getNewPassword().equals(changePasswordDto.getNewPasswordVerify())){
+            throw new VerifyPasswordException();
+        }
+        final String hashedOldPassword = getHashedPassword(changePasswordDto.getOldPassword());
+        if(!hashedOldPassword.equals(user.getHashedPassword())){
+            throw new WrongPasswordException();
+        }
+        // todo: validation
+        user.setHashedPassword(getHashedPassword(changePasswordDto.getNewPassword()));
         userRepository.save(user);
     }
 }
