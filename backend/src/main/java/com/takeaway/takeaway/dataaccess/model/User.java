@@ -40,12 +40,8 @@ public class User extends BaseEntity {
     private String lastName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "billing_address_id")
-    private Location billingAddress;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shipping_address_id")
-    private Location shippingAddress;
+    @JoinColumn(name = "user_address_id")
+    private Location address;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_picture_id")

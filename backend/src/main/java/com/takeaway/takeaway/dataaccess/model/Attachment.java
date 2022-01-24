@@ -50,5 +50,5 @@ public class Attachment extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "attachment_id")
-    private List<DirectMessage> directMessages =  new ArrayList<>();
+    private List<DirectMessage> directMessages = new ArrayList<>();
 }

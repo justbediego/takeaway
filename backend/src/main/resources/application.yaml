@@ -18,5 +18,6 @@ spring:
     name: takeaway
     attachmentsPath: ~/takeaway_attachments/
     profilePictureSize: 100
+    passwordHashSalt: May we all be one day free!
 server:
   port: 2102

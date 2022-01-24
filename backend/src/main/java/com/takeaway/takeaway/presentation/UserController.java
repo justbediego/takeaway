@@ -42,6 +42,11 @@ public class UserController {
         userLogic.changePassword(userID, changePasswordDto);
     }
 
+    @PutMapping(path = "/modifyAddress")
+    public void modifyAddress(@RequestBody ModifyAddressDto modifyAddressDto) throws TakeawayException {
+        userLogic.modifyAddress(userID, modifyAddressDto);
+    }
+
     @PutMapping(path = "/updateProfilePicture")
     public void updateProfilePicture(@RequestPart MultipartFile file) throws TakeawayException {
         CreateAttachmentDto attachmentDto;

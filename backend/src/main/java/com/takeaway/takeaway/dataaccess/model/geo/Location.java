@@ -23,6 +23,18 @@ public class Location extends BaseEntity {
     @Column(length = 100)
     private String title;
 
+    @Column(length = 100)
+    private String StreetName;
+
+    @Column(length = 100)
+    private String StreetName2;
+
+    @Column(length = 10)
+    private String HouseNumber;
+
+    @Column(length = 200)
+    private String AdditionalInfo;
+
     // relations
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,12 +54,8 @@ public class Location extends BaseEntity {
     private Geolocation geolocation;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "billing_address_id")
-    private List<User> forUserBillingAddresses = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shipping_address_id")
-    private List<User> forUserShippingAddresses = new ArrayList<>();
+    @JoinColumn(name = "user_address_id")
+    private List<User> forUserAddresses = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")

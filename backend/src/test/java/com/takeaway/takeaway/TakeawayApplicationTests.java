@@ -9,7 +9,7 @@ class TakeawayApplicationTests {
 
     @Test
     void contextLoads() {
-        Assertions.assertThat(1==1).isSameAs(true);
+        Assertions.assertThat(1 == 1).isSameAs(true);
     }
 
 }
