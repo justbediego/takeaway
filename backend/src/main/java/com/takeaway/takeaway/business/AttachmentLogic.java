@@ -8,6 +8,7 @@ import com.takeaway.takeaway.business.exception.UnableToParseImage;
 import com.takeaway.takeaway.business.exception.UnrecognizedException;
 import com.takeaway.takeaway.dataaccess.model.Attachment;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
+import com.takeaway.takeaway.dataaccess.model.enums.EntityTypes;
 import com.takeaway.takeaway.dataaccess.repository.AttachmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.imgscalr.Scalr;
@@ -65,11 +66,11 @@ public class AttachmentLogic {
     public GetAttachmentDto getAttachment(UUID attachmentId, UUID attachmentKey, AttachmentTypes typeCheck) throws TakeawayException {
         Optional<Attachment> optionalAttachment = attachmentRepository.findByIdAndKey(attachmentId, attachmentKey);
         if (optionalAttachment.isEmpty()) {
-            throw new EntityNotFound("Attachment", attachmentId);
+            throw new EntityNotFound(EntityTypes.ATTACHMENT, attachmentId);
         }
         Attachment attachment = optionalAttachment.get();
         if (typeCheck != null && attachment.getType() != typeCheck) {
-            throw new EntityNotFound("Attachment", attachmentId);
+            throw new EntityNotFound(EntityTypes.ATTACHMENT, attachmentId);
         }
         byte[] fileData;
         try {
@@ -112,7 +113,7 @@ public class AttachmentLogic {
     public void removeAttachment(UUID attachmentId) throws TakeawayException {
         Optional<Attachment> optionalAttachment = attachmentRepository.findById(attachmentId);
         if (optionalAttachment.isEmpty()) {
-            throw new EntityNotFound("Attachment", attachmentId);
+            throw new EntityNotFound(EntityTypes.ATTACHMENT, attachmentId);
         }
         Attachment attachment = optionalAttachment.get();
         try {

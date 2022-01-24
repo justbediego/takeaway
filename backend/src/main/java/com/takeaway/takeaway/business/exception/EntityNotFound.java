@@ -1,10 +1,12 @@
 package com.takeaway.takeaway.business.exception;
 
+import com.takeaway.takeaway.dataaccess.model.enums.EntityTypes;
+
 import java.util.UUID;
 
 public class EntityNotFound extends TakeawayException {
 
-    public EntityNotFound(String entityType, UUID id) {
-        super(entityType, String.format("id: %s", id));
+    public EntityNotFound(EntityTypes entityType, UUID id) {
+        super(entityType.toString(), String.format("id: %s", id));
     }
 }

@@ -5,6 +5,7 @@ import com.takeaway.takeaway.business.exception.*;
 import com.takeaway.takeaway.dataaccess.model.Attachment;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
+import com.takeaway.takeaway.dataaccess.model.enums.EntityTypes;
 import com.takeaway.takeaway.dataaccess.repository.AttachmentRepository;
 import com.takeaway.takeaway.dataaccess.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -38,14 +39,14 @@ public class UserLogic {
     private User findUserOrThrow(UUID userId) throws TakeawayException {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isEmpty()) {
-            throw new EntityNotFound("User", userId);
+            throw new EntityNotFound(EntityTypes.USER, userId);
         }
         return optionalUser.get();
     }
 
     private String getHashedPassword(String password){
         // todo: fix hashed
-        return "Test";
+        return password;
     }
 
     @Transactional
