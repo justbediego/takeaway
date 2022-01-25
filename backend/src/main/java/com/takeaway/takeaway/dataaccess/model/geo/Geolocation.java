@@ -2,7 +2,6 @@ package com.takeaway.takeaway.dataaccess.model.geo;
 
 import com.takeaway.takeaway.dataaccess.model.BaseEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -114,7 +114,7 @@ public class ValidationLogic {
 
     }
 
-    public void validateLocationAddress(String StreetName, String StreetName2, String HouseNumber, String AdditionalInfo){
+    public void validateLocationAddress(String streetName, String streetName2, String houseNumber, String additionalInfo){
 
     }
 

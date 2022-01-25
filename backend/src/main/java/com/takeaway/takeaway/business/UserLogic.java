@@ -87,7 +87,7 @@ public class UserLogic {
         }
         user.setProfilePicture(smallPicture);
         user.setProfilePictureOriginal(originalPicture);
-        user.UpdateDateModified();
+        user.updateDateModified();
         userRepository.save(user);
     }
 
@@ -95,6 +95,8 @@ public class UserLogic {
         User user = validationLogic.validateGetUserById(userId);
         Attachment profilePicture = user.getProfilePicture();
         return GetBasicInfoDto.builder()
+                .username(user.getUsername())
+                .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .phoneNumber(user.getPhoneNumber())
@@ -119,7 +121,7 @@ public class UserLogic {
         user.setLastName(updateBasicInfoDto.getLastName());
         user.setPhoneNumber(updateBasicInfoDto.getPhoneNumber());
         user.setPhoneNumberCountryCode(updateBasicInfoDto.getPhoneNumberCountryCode());
-        user.UpdateDateModified();
+        user.updateDateModified();
         userRepository.save(user);
     }
 
@@ -133,7 +135,7 @@ public class UserLogic {
 
         // business
         user.setUsername(updateUsernameDto.getUsername());
-        user.UpdateDateModified();
+        user.updateDateModified();
         userRepository.save(user);
     }
 
@@ -147,7 +149,7 @@ public class UserLogic {
 
         // business
         user.setEmail(updateEmailDto.getEmail());
-        user.UpdateDateModified();
+        user.updateDateModified();
         userRepository.save(user);
     }
 
@@ -165,7 +167,7 @@ public class UserLogic {
 
         // business
         user.setHashedPassword(getHashedPassword(changePasswordDto.getNewPassword()));
-        user.UpdateDateModified();
+        user.updateDateModified();
         userRepository.save(user);
     }
 
@@ -218,8 +220,8 @@ public class UserLogic {
         address.setStreetName2(modifyAddressDto.getStreetName2());
         address.setHouseNumber(modifyAddressDto.getHouseNumber());
         address.setAdditionalInfo(modifyAddressDto.getAdditionalInfo());
-        address.UpdateDateModified();
-        geolocation.UpdateDateModified();
+        address.updateDateModified();
+        geolocation.updateDateModified();
         userRepository.save(user);
     }
 

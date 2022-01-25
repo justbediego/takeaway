@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.UUID;
 
-// import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
@@ -87,5 +87,7 @@ class UserControllerIT {
     void getBasicInfo() {
         String apiPath = String.format("%s%s", basePath, "getBasicInfo");
         GetBasicInfoDto getBasicInfoDto = restTemplate.getForObject(apiPath, GetBasicInfoDto.class);
+        assertEquals( "first@test.com", getBasicInfoDto.getEmail());
+        assertEquals("first", getBasicInfoDto.getUsername());
     }
 }

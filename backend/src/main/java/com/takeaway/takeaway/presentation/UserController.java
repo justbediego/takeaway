@@ -17,7 +17,7 @@ public class UserController {
 
     private final UserLogic userLogic;
 
-    private UUID userID = null; // UUID.fromString("60ff024c-421a-404d-bf14-60bee1e1fd59");
+    private UUID userID = null;
 
     public UserController(UserLogic userLogic) {
         this.userLogic = userLogic;

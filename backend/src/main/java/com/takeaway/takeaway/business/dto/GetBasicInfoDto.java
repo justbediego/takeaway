@@ -19,4 +19,6 @@ public class GetBasicInfoDto implements Serializable {
     private String lastName;
     private String phoneNumber;
     private String phoneNumberCountryCode;
+    private String email;
+    private String username;
 }

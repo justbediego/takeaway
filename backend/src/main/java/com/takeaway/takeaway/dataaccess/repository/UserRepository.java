@@ -1,7 +1,6 @@
 package com.takeaway.takeaway.dataaccess.repository;
 
 import com.takeaway.takeaway.dataaccess.model.User;
-import com.takeaway.takeaway.dataaccess.model.geo.City;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
