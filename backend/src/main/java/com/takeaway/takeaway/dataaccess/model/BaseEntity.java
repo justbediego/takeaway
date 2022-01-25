@@ -23,4 +23,8 @@ public abstract class BaseEntity {
         this.dateCreated = new Date();
         this.dateModified = new Date();
     }
+
+    public void UpdateDateModified() {
+        this.dateModified = new Date();
+    }
 }

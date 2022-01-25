@@ -90,6 +90,7 @@ public class UserLogic {
         }
         user.setProfilePicture(smallPicture);
         user.setProfilePictureOriginal(originalPicture);
+        user.UpdateDateModified();
         userRepository.save(user);
     }
 
@@ -121,6 +122,7 @@ public class UserLogic {
         user.setLastName(updateBasicInfoDto.getLastName());
         user.setPhoneNumber(updateBasicInfoDto.getPhoneNumber());
         user.setPhoneNumberCountryCode(updateBasicInfoDto.getPhoneNumberCountryCode());
+        user.UpdateDateModified();
         userRepository.save(user);
     }
 
@@ -134,6 +136,7 @@ public class UserLogic {
 
         // business
         user.setUsername(updateUsernameDto.getUsername());
+        user.UpdateDateModified();
         userRepository.save(user);
     }
 
@@ -147,6 +150,7 @@ public class UserLogic {
 
         // business
         user.setEmail(updateEmailDto.getEmail());
+        user.UpdateDateModified();
         userRepository.save(user);
     }
 
@@ -164,12 +168,13 @@ public class UserLogic {
 
         // business
         user.setHashedPassword(getHashedPassword(changePasswordDto.getNewPassword()));
+        user.UpdateDateModified();
         userRepository.save(user);
     }
 
     public void modifyAddress(UUID userId, ModifyAddressDto modifyAddressDto) throws TakeawayException {
-        User user = validationLogic.validateGetUserById(userId);
         // validation
+        User user = validationLogic.validateGetUserById(userId);
         boolean hasGeolocation = false;
         if (modifyAddressDto.getLatitude() != null || modifyAddressDto.getLongitude() != null) {
             validationLogic.validateLongitudeLatitude(
@@ -216,6 +221,8 @@ public class UserLogic {
         address.setStreetName2(modifyAddressDto.getStreetName2());
         address.setHouseNumber(modifyAddressDto.getHouseNumber());
         address.setAdditionalInfo(modifyAddressDto.getAdditionalInfo());
+        address.UpdateDateModified();
+        geolocation.UpdateDateModified();
         userRepository.save(user);
     }
 }
