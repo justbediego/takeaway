@@ -24,16 +24,16 @@ public class Location extends BaseEntity {
     private String title;
 
     @Column(length = 100)
-    private String StreetName;
+    private String streetName;
 
     @Column(length = 100)
-    private String StreetName2;
+    private String streetName2;
 
     @Column(length = 10)
-    private String HouseNumber;
+    private String houseNumber;
 
     @Column(length = 200)
-    private String AdditionalInfo;
+    private String additionalInfo;
 
     // relations
 

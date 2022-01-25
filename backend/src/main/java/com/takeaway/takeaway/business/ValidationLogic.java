@@ -98,5 +98,23 @@ public class ValidationLogic {
     public void validatePassword(String password) {
 
     }
+    public void validateLongitudeLatitude(Double longitude, Double latitude, Integer accuracyKm) {
 
+    }
+
+    public void validateLocationTitle(String title){
+
+    }
+
+    public void validateLocationAddress(String StreetName, String StreetName2, String HouseNumber, String AdditionalInfo){
+
+    }
+
+    public void validateFilename(String filename){
+
+    }
+
+    public void validateFileData(byte[] fileData){
+
+    }
 }

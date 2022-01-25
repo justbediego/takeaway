@@ -32,16 +32,23 @@ public class AttachmentLogic {
     @Value("${spring.application.attachmentsPath}")
     private String attachmentsPath;
 
+    @Value("${spring.application.profilePictureMaxSize}")
+    private Integer profilePictureMaxSize;
+
+    private ValidationLogic validationLogic;
+
     private String getFullPath(UUID fileId) {
         return String.format("%s/%s.TAKE", attachmentsPath, fileId);
     }
 
     private final AttachmentRepository attachmentRepository;
 
-    public AttachmentLogic(AttachmentRepository attachmentRepository) {
+    public AttachmentLogic(ValidationLogic validationLogic, AttachmentRepository attachmentRepository) {
+        this.validationLogic = validationLogic;
         this.attachmentRepository = attachmentRepository;
     }
 
+    // only used internally
     public byte[] prepareImage(byte[] imageData, Integer rescaleSide) throws TakeawayException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
@@ -49,10 +56,13 @@ public class AttachmentLogic {
             BufferedImage image = ImageIO.read(inputStream);
             Integer height = image.getHeight();
             Integer width = image.getWidth();
+            Integer maxSide = Math.max(height, width);
+            if (rescaleSide == null && maxSide > profilePictureMaxSize) {
+                rescaleSide = profilePictureMaxSize;
+            }
             if (rescaleSide != null) {
-                Integer minSide = Math.min(height, width);
-                height = (int) Math.ceil((double) height / minSide * rescaleSide);
-                width = (int) Math.ceil((double) width / minSide * rescaleSide);
+                height = (int) Math.ceil((double) height / maxSide * rescaleSide);
+                width = (int) Math.ceil((double) width / maxSide * rescaleSide);
             }
             BufferedImage resized = Scalr.resize(image, Scalr.Method.AUTOMATIC, width, height);
             ImageIO.write(resized, "png", outputStream);
@@ -88,8 +98,13 @@ public class AttachmentLogic {
                 .build();
     }
 
-    @Transactional
+    // only used internally
     public UUID createAttachment(CreateAttachmentDto attachmentDto, AttachmentTypes type) throws TakeawayException {
+        // validation
+        validationLogic.validateFilename(attachmentDto.getFilename());
+        validationLogic.validateFileData(attachmentDto.getFileData());
+
+        // business
         Attachment newAttachment = Attachment.builder()
                 .filename(attachmentDto.getFilename())
                 .fileId(UUID.randomUUID())
@@ -110,6 +125,7 @@ public class AttachmentLogic {
         return newAttachment.getId();
     }
 
+    // only used internally
     public void removeAttachment(UUID attachmentId) throws TakeawayException {
         Optional<Attachment> optionalAttachment = attachmentRepository.findById(attachmentId);
         if (optionalAttachment.isEmpty()) {

@@ -15,8 +15,8 @@ public class ModifyAddressDto {
     private Double longitude;
     private Double latitude;
     private Integer accuracyKm;
-    private String StreetName;
-    private String StreetName2;
-    private String HouseNumber;
-    private String AdditionalInfo;
+    private String streetName;
+    private String streetName2;
+    private String houseNumber;
+    private String additionalInfo;
 }

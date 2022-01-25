@@ -170,7 +170,22 @@ public class UserLogic {
     public void modifyAddress(UUID userId, ModifyAddressDto modifyAddressDto) throws TakeawayException {
         User user = validationLogic.validateGetUserById(userId);
         // validation
-        // todo: continue from here
+        boolean hasGeolocation = false;
+        if (modifyAddressDto.getLatitude() != null || modifyAddressDto.getLongitude() != null) {
+            validationLogic.validateLongitudeLatitude(
+                    modifyAddressDto.getLongitude(),
+                    modifyAddressDto.getLatitude(),
+                    modifyAddressDto.getAccuracyKm()
+            );
+            hasGeolocation = true;
+        }
+        validationLogic.validateLocationTitle(modifyAddressDto.getTitle());
+        validationLogic.validateLocationAddress(
+                modifyAddressDto.getStreetName(),
+                modifyAddressDto.getStreetName2(),
+                modifyAddressDto.getHouseNumber(),
+                modifyAddressDto.getAdditionalInfo()
+        );
 
         // business
         Country country = validationLogic.validateGetCountryById(modifyAddressDto.getCountryId());
@@ -187,7 +202,7 @@ public class UserLogic {
         address.setCountry(country);
         address.setState(state);
         address.setCity(city);
-        if (modifyAddressDto.getLatitude() != null || modifyAddressDto.getLongitude() != null) {
+        if (hasGeolocation) {
             geolocation.setLatitude(modifyAddressDto.getLatitude());
             geolocation.setLongitude(modifyAddressDto.getLongitude());
             geolocation.setAccuracyKm(modifyAddressDto.getAccuracyKm());
