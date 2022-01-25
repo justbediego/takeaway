@@ -223,28 +223,28 @@ public class UserLogic {
         userRepository.save(user);
     }
 
-    public UUID authenticateByUsername(String username, String password) throws TakeawayException {
+    public UUID authenticateByUsername(UsernameAuthenticateDto authenticateDto) throws TakeawayException {
         // validate
-        validationLogic.validateUsername(username);
-        validationLogic.validatePassword(password);
+        validationLogic.validateUsername(authenticateDto.getUsername());
+        validationLogic.validatePassword(authenticateDto.getPassword());
 
         // business
-        String hashedPassword = getHashedPassword(password);
-        Optional<User> optionalUser = userRepository.findByUsernamePassword(username, hashedPassword);
+        String hashedPassword = getHashedPassword(authenticateDto.getPassword());
+        Optional<User> optionalUser = userRepository.findByUsernamePassword(authenticateDto.getUsername(), hashedPassword);
         if (optionalUser.isEmpty()) {
             throw new UserOrPasswordWrongException();
         }
         return optionalUser.get().getId();
     }
 
-    public UUID authenticateByEmail(String email, String password) throws TakeawayException {
+    public UUID authenticateByEmail(EmailAuthenticateDto authenticateDto) throws TakeawayException {
         // validate
-        validationLogic.validateEmail(email);
-        validationLogic.validatePassword(password);
+        validationLogic.validateEmail(authenticateDto.getEmail());
+        validationLogic.validatePassword(authenticateDto.getPassword());
 
         // business
-        String hashedPassword = getHashedPassword(password);
-        Optional<User> optionalUser = userRepository.findByEmailPassword(email, hashedPassword);
+        String hashedPassword = getHashedPassword(authenticateDto.getPassword());
+        Optional<User> optionalUser = userRepository.findByEmailPassword(authenticateDto.getEmail(), hashedPassword);
         if (optionalUser.isEmpty()) {
             throw new UserOrPasswordWrongException();
         }

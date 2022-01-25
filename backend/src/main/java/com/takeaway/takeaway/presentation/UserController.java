@@ -67,13 +67,13 @@ public class UserController {
     }
 
     @PostMapping(path = "/authenticateUsername")
-    public void authenticateUsername(String username, String password) throws TakeawayException {
-        userID = userLogic.authenticateByUsername(username, password);
+    public void authenticateUsername(UsernameAuthenticateDto authenticateDto) throws TakeawayException {
+        userID = userLogic.authenticateByUsername(authenticateDto);
     }
 
     @PostMapping(path = "/authenticateEmail")
-    public void authenticateEmail(String email, String password) throws TakeawayException {
-        userID = userLogic.authenticateByEmail(email, password);
+    public void authenticateEmail(EmailAuthenticateDto authenticateDto) throws TakeawayException {
+        userID = userLogic.authenticateByEmail(authenticateDto);
     }
 
 }
