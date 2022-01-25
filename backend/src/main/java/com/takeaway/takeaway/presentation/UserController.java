@@ -4,6 +4,7 @@ import com.takeaway.takeaway.business.UserLogic;
 import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.business.exception.FileUploadException;
 import com.takeaway.takeaway.business.exception.TakeawayException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,17 +63,17 @@ public class UserController {
     }
 
     @GetMapping(path = "/getBasicInfo")
-    public GetBasicInfoDto getBasicInfo() throws TakeawayException {
-        return userLogic.getBasicInfo(userID);
+    public ResponseEntity<GetBasicInfoDto> getBasicInfo() throws TakeawayException {
+        return ResponseEntity.ok(userLogic.getBasicInfo(userID));
     }
 
     @PostMapping(path = "/authenticateUsername")
-    public void authenticateUsername(UsernameAuthenticateDto authenticateDto) throws TakeawayException {
+    public void authenticateUsername(@RequestBody UsernameAuthenticateDto authenticateDto) throws TakeawayException {
         userID = userLogic.authenticateByUsername(authenticateDto);
     }
 
     @PostMapping(path = "/authenticateEmail")
-    public void authenticateEmail(EmailAuthenticateDto authenticateDto) throws TakeawayException {
+    public void authenticateEmail(@RequestBody EmailAuthenticateDto authenticateDto) throws TakeawayException {
         userID = userLogic.authenticateByEmail(authenticateDto);
     }
 

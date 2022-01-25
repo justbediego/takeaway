@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.UUID;
 
@@ -28,8 +28,7 @@ class UserControllerIT {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate(new SimpleClientHttpRequestFactory());
 
     private User first = null;
     private User second = null;
@@ -41,7 +40,8 @@ class UserControllerIT {
         first.setId(UUID.randomUUID());
         first.setUsername("first");
         first.setEmail("first@test.com");
-        first.setHashedPassword("testBoy");
+        // testpassword
+        first.setHashedPassword("a4cb35912220081cde4edfb9e220b815956ff3f4cd476914d3346abb5f52700c");
         second = new User();
         second.setId(UUID.randomUUID());
         second.setUsername("second");
@@ -49,13 +49,13 @@ class UserControllerIT {
         userRepository.save(first);
         userRepository.save(second);
         basePath = String.format("http://localhost:%d/user/", port);
-        ResponseEntity<UUID> getBasicInfo = restTemplate.postForEntity(
+        restTemplate.postForObject(
                 String.format("%s%s", basePath, "authenticateUsername"),
                 UsernameAuthenticateDto.builder()
                         .username("first")
-                        .password("testBoy")
+                        .password("testpassword")
                         .build(),
-                UUID.class
+                Void.class
         );
     }
 
@@ -86,6 +86,6 @@ class UserControllerIT {
     @Test
     void getBasicInfo() {
         String apiPath = String.format("%s%s", basePath, "getBasicInfo");
-        GetBasicInfoDto apiResponse = restTemplate.getForObject(apiPath, GetBasicInfoDto.class);
+        GetBasicInfoDto getBasicInfoDto = restTemplate.getForObject(apiPath, GetBasicInfoDto.class);
     }
 }

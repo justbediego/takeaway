@@ -1,13 +1,18 @@
 package com.takeaway.takeaway.business.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Builder
 @Data
-public class ModifyAddressDto {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ModifyAddressDto implements Serializable {
     private String title;
     private UUID countryId;
     private UUID stateId;

@@ -1,13 +1,18 @@
 package com.takeaway.takeaway.business.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Builder
 @Data
-public class GetBasicInfoDto {
+@NoArgsConstructor
+@AllArgsConstructor
+public class GetBasicInfoDto implements Serializable {
     private UUID profilePictureId;
     private UUID profilePictureKey;
     private String firstName;
