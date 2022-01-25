@@ -2,7 +2,6 @@ package com.takeaway.takeaway.dataaccess.model;
 
 import com.takeaway.takeaway.dataaccess.model.geo.Location;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,10 +11,11 @@ import java.util.List;
 
 @Data
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "items")
+@Table(name = "items", indexes = {
+        @Index(name = "category_idx", columnList = "item_category_id")
+})
 public class Item extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -105,13 +105,12 @@ public class AttachmentLogic {
         validationLogic.validateFileData(attachmentDto.getFileData());
 
         // business
-        Attachment newAttachment = Attachment.builder()
-                .filename(attachmentDto.getFilename())
-                .fileId(UUID.randomUUID())
-                .securityKey(UUID.randomUUID())
-                .fileSize(attachmentDto.getFileData().length)
-                .type(type)
-                .build();
+        Attachment newAttachment = new Attachment();
+        newAttachment.setFilename(attachmentDto.getFilename());
+        newAttachment.setFileId(UUID.randomUUID());
+        newAttachment.setSecurityKey(UUID.randomUUID());
+        newAttachment.setFileSize(attachmentDto.getFileData().length);
+        newAttachment.setType(type);
         this.attachmentRepository.save(newAttachment);
         try {
             try (FileOutputStream fileStream = new FileOutputStream(getFullPath(newAttachment.getFileId()))) {

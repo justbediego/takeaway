@@ -16,7 +16,7 @@ public class UserController {
 
     private final UserLogic userLogic;
 
-    private final UUID userID = null; // UUID.fromString("60ff024c-421a-404d-bf14-60bee1e1fd59")
+    private UUID userID = null; // UUID.fromString("60ff024c-421a-404d-bf14-60bee1e1fd59");
 
     public UserController(UserLogic userLogic) {
         this.userLogic = userLogic;
@@ -64,6 +64,16 @@ public class UserController {
     @GetMapping(path = "/getBasicInfo")
     public GetBasicInfoDto getBasicInfo() throws TakeawayException {
         return userLogic.getBasicInfo(userID);
+    }
+
+    @PostMapping(path = "/authenticateUsername")
+    public void authenticateUsername(String username, String password) throws TakeawayException {
+        userID = userLogic.authenticateByUsername(username, password);
+    }
+
+    @PostMapping(path = "/authenticateEmail")
+    public void authenticateEmail(String email, String password) throws TakeawayException {
+        userID = userLogic.authenticateByEmail(email, password);
     }
 
 }

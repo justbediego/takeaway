@@ -4,7 +4,6 @@ import com.takeaway.takeaway.dataaccess.model.BaseEntity;
 import com.takeaway.takeaway.dataaccess.model.Item;
 import com.takeaway.takeaway.dataaccess.model.User;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +13,6 @@ import java.util.List;
 
 @Data
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "locations")

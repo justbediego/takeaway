@@ -2,7 +2,6 @@ package com.takeaway.takeaway.dataaccess.model;
 
 import com.takeaway.takeaway.dataaccess.model.geo.Location;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,10 +11,12 @@ import java.util.List;
 
 @Data
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "email_idx", columnList = "email", unique = true),
+        @Index(name = "username_idx", columnList = "username", unique = true)
+})
 public class User extends BaseEntity {
 
     @Column(length = 200, nullable = false)
@@ -30,7 +31,8 @@ public class User extends BaseEntity {
     @Column(length = 200, nullable = false)
     private String username;
 
-    @Column(length = 300, nullable = false)
+    // a user might not have a password set
+    @Column(length = 300)
     private String hashedPassword;
 
     @Column(length = 100)

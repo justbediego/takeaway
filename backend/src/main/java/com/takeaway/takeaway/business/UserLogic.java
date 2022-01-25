@@ -2,10 +2,7 @@ package com.takeaway.takeaway.business;
 
 import com.google.common.hash.Hashing;
 import com.takeaway.takeaway.business.dto.*;
-import com.takeaway.takeaway.business.exception.TakeawayException;
-import com.takeaway.takeaway.business.exception.UnrecognizedException;
-import com.takeaway.takeaway.business.exception.VerifyPasswordException;
-import com.takeaway.takeaway.business.exception.WrongPasswordException;
+import com.takeaway.takeaway.business.exception.*;
 import com.takeaway.takeaway.dataaccess.model.Attachment;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
@@ -129,7 +126,7 @@ public class UserLogic {
     public void updateUsername(UUID userId, UpdateUsernameDto updateUsernameDto) throws TakeawayException {
         // validation
         User user = validationLogic.validateGetUserById(userId);
-        validationLogic.validateUsername(
+        validationLogic.validateChangeUsername(
                 updateUsernameDto.getUsername(),
                 user.getUsername()
         );
@@ -143,7 +140,7 @@ public class UserLogic {
     public void updateEmail(UUID userId, UpdateEmailDto updateEmailDto) throws TakeawayException {
         // validation
         User user = validationLogic.validateGetUserById(userId);
-        validationLogic.validateEmail(
+        validationLogic.validateChangeEmail(
                 updateEmailDto.getEmail(),
                 user.getEmail()
         );
@@ -224,5 +221,33 @@ public class UserLogic {
         address.UpdateDateModified();
         geolocation.UpdateDateModified();
         userRepository.save(user);
+    }
+
+    public UUID authenticateByUsername(String username, String password) throws TakeawayException {
+        // validate
+        validationLogic.validateUsername(username);
+        validationLogic.validatePassword(password);
+
+        // business
+        String hashedPassword = getHashedPassword(password);
+        Optional<User> optionalUser = userRepository.findByUsernamePassword(username, hashedPassword);
+        if (optionalUser.isEmpty()) {
+            throw new UserOrPasswordWrongException();
+        }
+        return optionalUser.get().getId();
+    }
+
+    public UUID authenticateByEmail(String email, String password) throws TakeawayException {
+        // validate
+        validationLogic.validateEmail(email);
+        validationLogic.validatePassword(password);
+
+        // business
+        String hashedPassword = getHashedPassword(password);
+        Optional<User> optionalUser = userRepository.findByEmailPassword(email, hashedPassword);
+        if (optionalUser.isEmpty()) {
+            throw new UserOrPasswordWrongException();
+        }
+        return optionalUser.get().getId();
     }
 }

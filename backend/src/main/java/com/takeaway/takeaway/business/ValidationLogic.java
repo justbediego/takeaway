@@ -87,11 +87,19 @@ public class ValidationLogic {
 
     }
 
-    public void validateUsername(String newUsername, String oldUsername) {
+    public void validateUsername(String username) {
 
     }
 
-    public void validateEmail(String newEmail, String oldEmail) {
+    public void validateChangeUsername(String newUsername, String oldUsername) {
+
+    }
+
+    public void validateEmail(String email) {
+
+    }
+
+    public void validateChangeEmail(String newEmail, String oldEmail) {
 
     }
 
