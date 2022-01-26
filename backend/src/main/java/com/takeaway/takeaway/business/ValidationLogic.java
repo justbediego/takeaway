@@ -91,38 +91,53 @@ public class ValidationLogic {
 
     }
 
-    public void validateChangeUsername(String newUsername, String oldUsername) {
-
+    public void validateChangeUsername(String newUsername, String oldUsername) throws TakeawayException {
+        validateUsername(newUsername);
+        if (newUsername.equals(oldUsername)) {
+            throw new NewUsernameSameAsOldException();
+        }
+        Optional<User> optionalNewUser = userRepository.findByUsername(newUsername);
+        if (!optionalNewUser.isEmpty()) {
+            throw new UsernameAlreadyInUseException();
+        }
     }
 
     public void validateEmail(String email) {
 
     }
 
-    public void validateChangeEmail(String newEmail, String oldEmail) {
-
+    public void validateChangeEmail(String newEmail, String oldEmail) throws TakeawayException {
+        validateEmail(newEmail);
+        if (newEmail.equals(oldEmail)) {
+            throw new NewEmailSameAsOldException();
+        }
+        Optional<User> optionalNewUser = userRepository.findByEmail(newEmail);
+        if (!optionalNewUser.isEmpty()) {
+            throw new EmailAlreadyInUseException();
+        }
     }
 
     public void validatePassword(String password) {
 
     }
+
     public void validateLongitudeLatitude(Double longitude, Double latitude, Integer accuracyKm) {
 
     }
 
-    public void validateLocationTitle(String title){
+    public void validateLocationTitle(String title) {
 
     }
 
-    public void validateLocationAddress(String streetName, String streetName2, String houseNumber, String additionalInfo){
+    public void validateLocationAddress(String streetName, String streetName2, String houseNumber, String additionalInfo) {
 
     }
 
-    public void validateFilename(String filename){
+    public void validateFilename(String filename) {
 
     }
 
-    public void validateFileData(byte[] fileData){
+    public void validateFileData(byte[] fileData) {
 
     }
 }

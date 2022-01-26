@@ -15,4 +15,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query("SELECT x FROM User x WHERE x.email = ?1 AND x.hashedPassword = ?2")
     Optional<User> findByEmailPassword(String email, String hashedPassword);
+
+    @Query("SELECT x FROM User x WHERE x.email = ?1")
+    Optional<User> findByEmail(String email);
+
+    @Query("SELECT x FROM User x WHERE x.username = ?1")
+    Optional<User> findByUsername(String username);
 }

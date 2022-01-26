@@ -4,7 +4,6 @@ import com.takeaway.takeaway.business.UserLogic;
 import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.business.exception.FileUploadException;
 import com.takeaway.takeaway.business.exception.TakeawayException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,32 +22,32 @@ public class UserController {
         this.userLogic = userLogic;
     }
 
-    @PutMapping(path = "/updateBasicInfo")
+    @PatchMapping(path = "/updateBasicInfo")
     public void updateBasicInfo(@RequestBody UpdateBasicInfoDto updateBasicInfoDto) throws TakeawayException {
         userLogic.updateBasicInfo(userID, updateBasicInfoDto);
     }
 
-    @PutMapping(path = "/updateUsername")
+    @PatchMapping(path = "/updateUsername")
     public void updateUsername(@RequestBody UpdateUsernameDto updateUsernameDto) throws TakeawayException {
         userLogic.updateUsername(userID, updateUsernameDto);
     }
 
-    @PutMapping(path = "/updateEmail")
+    @PatchMapping(path = "/updateEmail")
     public void updateEmail(@RequestBody UpdateEmailDto updateEmailDto) throws TakeawayException {
         userLogic.updateEmail(userID, updateEmailDto);
     }
 
-    @PutMapping(path = "/changePassword")
+    @PatchMapping(path = "/changePassword")
     public void changePassword(@RequestBody ChangePasswordDto changePasswordDto) throws TakeawayException {
         userLogic.changePassword(userID, changePasswordDto);
     }
 
-    @PutMapping(path = "/modifyAddress")
+    @PatchMapping(path = "/modifyAddress")
     public void modifyAddress(@RequestBody ModifyAddressDto modifyAddressDto) throws TakeawayException {
         userLogic.modifyAddress(userID, modifyAddressDto);
     }
 
-    @PutMapping(path = "/updateProfilePicture")
+    @PatchMapping(path = "/updateProfilePicture")
     public void updateProfilePicture(@RequestPart MultipartFile file) throws TakeawayException {
         CreateAttachmentDto attachmentDto;
         try {
@@ -63,8 +62,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/getBasicInfo")
-    public ResponseEntity<GetBasicInfoDto> getBasicInfo() throws TakeawayException {
-        return ResponseEntity.ok(userLogic.getBasicInfo(userID));
+    public GetBasicInfoDto getBasicInfo() throws TakeawayException {
+        return userLogic.getBasicInfo(userID);
     }
 
     @PostMapping(path = "/authenticateUsername")
