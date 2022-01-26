@@ -39,8 +39,8 @@ class UserControllerIT {
         first.setId(UUID.randomUUID());
         first.setUsername("first");
         first.setEmail("first@test.com");
-        // testpassword
-        first.setHashedPassword("a4cb35912220081cde4edfb9e220b815956ff3f4cd476914d3346abb5f52700c");
+        // testPassword@123
+        first.setHashedPassword("01940ac311221054a4184f415ac82a6e94ed5664c0b1d426088a07336d57f6ec");
         final User second = new User();
         second.setId(UUID.randomUUID());
         second.setUsername("second");
@@ -51,7 +51,7 @@ class UserControllerIT {
                 String.format("%s%s", basePath, "authenticateUsername"),
                 UsernameAuthenticateDto.builder()
                         .username("first")
-                        .password("testpassword")
+                        .password("testPassword@123")
                         .build(),
                 Void.class
         );
@@ -70,6 +70,10 @@ class UserControllerIT {
         updateBasicInfo_InvalidLastName();
         updateBasicInfo();
         getBasicInfo();
+        changePassword_InvalidPassword();
+        changePassword_VerifyPassword();
+        changePassword_WrongPassword();
+        changePassword();
     }
 
     void updateEmail_InvalidEmail() {
@@ -289,7 +293,6 @@ class UserControllerIT {
 
     void updateBasicInfo() {
         String apiPath = String.format("%s%s", basePath, "updateBasicInfo");
-        HttpClientErrorException takeawayException = null;
         restTemplate.patchForObject(
                 apiPath,
                 UpdateBasicInfoDto.builder()
@@ -302,8 +305,79 @@ class UserControllerIT {
         );
     }
 
-    void changePassword() {
+    void changePassword_InvalidPassword() {
+        String apiPath = String.format("%s%s", basePath, "changePassword");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    ChangePasswordDto.builder()
+                            .newPassword("Fun")
+                            .newPasswordVerify("Fun")
+                            .oldPassword("testPassword@123")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("InvalidPasswordException"));
     }
+
+    void changePassword_VerifyPassword() {
+        String apiPath = String.format("%s%s", basePath, "changePassword");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    ChangePasswordDto.builder()
+                            .newPassword("Fun@1234567")
+                            .newPasswordVerify("Fun@1234568")
+                            .oldPassword("testPassword@123")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("VerifyPasswordException"));
+    }
+
+    void changePassword_WrongPassword() {
+        String apiPath = String.format("%s%s", basePath, "changePassword");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    ChangePasswordDto.builder()
+                            .newPassword("Fun@1234567")
+                            .newPasswordVerify("Fun@1234567")
+                            .oldPassword("testPassword@124")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("WrongPasswordException"));
+    }
+
+    void changePassword() {
+        String apiPath = String.format("%s%s", basePath, "changePassword");
+        restTemplate.patchForObject(
+                apiPath,
+                ChangePasswordDto.builder()
+                        .newPassword("Fun@1234567")
+                        .newPasswordVerify("Fun@1234567")
+                        .oldPassword("testPassword@123")
+                        .build(),
+                Void.class
+        );
+    }
+
 
     void modifyAddress() {
     }

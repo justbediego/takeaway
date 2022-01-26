@@ -136,8 +136,12 @@ public class ValidationLogic {
         }
     }
 
-    public void validatePassword(String password) {
-
+    public void validatePassword(String password) throws TakeawayException {
+        // Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
+        final String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        if (!password.matches(passwordPattern)) {
+            throw new InvalidPasswordException();
+        }
     }
 
     public void validateLongitudeLatitude(Double longitude, Double latitude, Integer accuracyKm) {
