@@ -100,8 +100,11 @@ public class ValidationLogic {
         }
     }
 
-    public void validateUsername(String username) {
-
+    public void validateUsername(String username) throws TakeawayException{
+        final String usernamePattern = "^[a-zA-Z][a-zA-Z0-9._]{3,40}[a-zA-Z0-9]$";
+        if(!username.matches(usernamePattern)){
+            throw new InvalidUsernameException();
+        }
     }
 
     public void validateChangeUsername(String newUsername, String oldUsername) throws TakeawayException {
@@ -115,8 +118,11 @@ public class ValidationLogic {
         }
     }
 
-    public void validateEmail(String email) {
-
+    public void validateEmail(String email) throws TakeawayException {
+        final String emailPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        if (!email.matches(emailPattern)) {
+            throw new InvalidEmailException();
+        }
     }
 
     public void validateChangeEmail(String newEmail, String oldEmail) throws TakeawayException {

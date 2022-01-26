@@ -1,9 +1,6 @@
 package com.takeaway.takeaway.presentation;
 
-import com.takeaway.takeaway.business.dto.GetBasicInfoDto;
-import com.takeaway.takeaway.business.dto.UpdateBasicInfoDto;
-import com.takeaway.takeaway.business.dto.UpdateEmailDto;
-import com.takeaway.takeaway.business.dto.UsernameAuthenticateDto;
+import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -59,9 +56,14 @@ class UserControllerIT {
                 Void.class
         );
 
+        updateEmail_InvalidEmail();
         updateEmail_SameException();
         updateEmail_InUseException();
         updateEmail();
+        updateUsername_InvalidUsername();
+        updateUsername_SameException();
+        updateUsername_InUseException();
+        updateUsername();
         updateBasicInfo_InvalidCountryCode();
         updateBasicInfo_InvalidPhoneNumber();
         updateBasicInfo_InvalidFirstName();
@@ -70,6 +72,23 @@ class UserControllerIT {
         getBasicInfo();
     }
 
+    void updateEmail_InvalidEmail() {
+        String apiPath = String.format("%s%s", basePath, "updateEmail");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    UpdateEmailDto.builder()
+                            .email("funny no way")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("InvalidEmailException"));
+    }
 
     void updateEmail_SameException() {
         String apiPath = String.format("%s%s", basePath, "updateEmail");
@@ -118,11 +137,80 @@ class UserControllerIT {
         );
     }
 
+    void updateUsername_InvalidUsername() {
+        String apiPath = String.format("%s%s", basePath, "updateUsername");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    UpdateUsernameDto.builder()
+                            .username("funny no way")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("InvalidUsernameException"));
+    }
+
+    void updateUsername_SameException() {
+        String apiPath = String.format("%s%s", basePath, "updateUsername");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    UpdateUsernameDto.builder()
+                            .username("first")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("NewUsernameSameAsOldException"));
+    }
+
+    void updateUsername_InUseException() {
+        String apiPath = String.format("%s%s", basePath, "updateUsername");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    UpdateUsernameDto.builder()
+                            .username("second")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("UsernameAlreadyInUseException"));
+    }
+
+    void updateUsername() {
+        String apiPath = String.format("%s%s", basePath, "updateUsername");
+        restTemplate.patchForObject(
+                apiPath,
+                UpdateUsernameDto.builder()
+                        .username("firstNew")
+                        .build(),
+                Void.class
+        );
+    }
+
     void getBasicInfo() {
         String apiPath = String.format("%s%s", basePath, "getBasicInfo");
         GetBasicInfoDto getBasicInfoDto = restTemplate.getForObject(apiPath, GetBasicInfoDto.class);
         assertEquals("firstNew@test.com", getBasicInfoDto.getEmail());
-        assertEquals("first", getBasicInfoDto.getUsername());
+        assertEquals("firstNew", getBasicInfoDto.getUsername());
+        assertEquals("TestFirst", getBasicInfoDto.getFirstName());
+        assertEquals("TestLast", getBasicInfoDto.getLastName());
+        assertEquals("+49", getBasicInfoDto.getPhoneNumberCountryCode());
+        assertEquals("123456789", getBasicInfoDto.getPhoneNumber());
     }
 
     void updateBasicInfo_InvalidCountryCode() {
@@ -212,9 +300,6 @@ class UserControllerIT {
                         .build(),
                 Void.class
         );
-    }
-
-    void updateUsername() {
     }
 
     void changePassword() {
