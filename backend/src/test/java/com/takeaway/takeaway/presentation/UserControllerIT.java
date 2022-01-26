@@ -97,7 +97,7 @@ class UserControllerIT {
             restTemplate.patchForObject(
                     apiPath,
                     UpdateEmailDto.builder()
-                            .email("first@test.com")
+                            .email("firST@test.com")
                             .build(),
                     Void.class
             );
@@ -115,7 +115,7 @@ class UserControllerIT {
             restTemplate.patchForObject(
                     apiPath,
                     UpdateEmailDto.builder()
-                            .email("second@test.com")
+                            .email("seCOnd@test.com")
                             .build(),
                     Void.class
             );
@@ -131,7 +131,7 @@ class UserControllerIT {
         restTemplate.patchForObject(
                 apiPath,
                 UpdateEmailDto.builder()
-                        .email("firstNew@test.com")
+                        .email("   firstNew@test.com   ")
                         .build(),
                 Void.class
         );
@@ -162,7 +162,7 @@ class UserControllerIT {
             restTemplate.patchForObject(
                     apiPath,
                     UpdateUsernameDto.builder()
-                            .username("first")
+                            .username("fiRst")
                             .build(),
                     Void.class
             );
@@ -180,7 +180,7 @@ class UserControllerIT {
             restTemplate.patchForObject(
                     apiPath,
                     UpdateUsernameDto.builder()
-                            .username("second")
+                            .username("seCoNd")
                             .build(),
                     Void.class
             );
@@ -196,7 +196,7 @@ class UserControllerIT {
         restTemplate.patchForObject(
                 apiPath,
                 UpdateUsernameDto.builder()
-                        .username("firstNew")
+                        .username(" firstNew ")
                         .build(),
                 Void.class
         );
@@ -293,10 +293,10 @@ class UserControllerIT {
         restTemplate.patchForObject(
                 apiPath,
                 UpdateBasicInfoDto.builder()
-                        .firstName("TestFirst")
-                        .lastName("TestLast")
-                        .phoneNumberCountryCode("+49")
-                        .phoneNumber("123456789")
+                        .firstName(" TestFirst ")
+                        .lastName(" TestLast ")
+                        .phoneNumberCountryCode(" +49 ")
+                        .phoneNumber(" 123456789 ")
                         .build(),
                 Void.class
         );

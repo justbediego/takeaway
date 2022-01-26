@@ -75,16 +75,16 @@ public class ValidationLogic {
         return optionalCity.get();
     }
 
-    public void validateFirstName(String firsName) throws TakeawayException{
+    public void validateFirstName(String firsName) throws TakeawayException {
         String firstNamePattern = "^[a-zA-Z]([- ',.a-zA-Z]{0,40}[a-zA-Z])$";
-        if(!firsName.matches(firstNamePattern)){
+        if (!firsName.matches(firstNamePattern)) {
             throw new InvalidFirstNameException();
         }
     }
 
     public void validateLastName(String lastName) throws TakeawayException {
         String lastNamePattern = "^[a-zA-Z]([- ',.a-zA-Z]{0,90}[a-zA-Z])$";
-        if(!lastName.matches(lastNamePattern)){
+        if (!lastName.matches(lastNamePattern)) {
             throw new InvalidLastNameException();
         }
     }
@@ -92,24 +92,24 @@ public class ValidationLogic {
     public void validatePhoneNumber(String countryCode, String number) throws TakeawayException {
         final String countryCodePattern = "^\\+\\d{1,3}$";
         final String phoneNumberPattern = "^\\d{5,15}$";
-        if(!countryCode.matches(countryCodePattern)){
+        if (!countryCode.matches(countryCodePattern)) {
             throw new InvalidCountryCodeException();
         }
-        if(!number.matches(phoneNumberPattern)){
+        if (!number.matches(phoneNumberPattern)) {
             throw new InvalidPhoneNumberException();
         }
     }
 
-    public void validateUsername(String username) throws TakeawayException{
+    public void validateUsername(String username) throws TakeawayException {
         final String usernamePattern = "^[a-zA-Z][a-zA-Z0-9._]{3,40}[a-zA-Z0-9]$";
-        if(!username.matches(usernamePattern)){
+        if (!username.matches(usernamePattern)) {
             throw new InvalidUsernameException();
         }
     }
 
     public void validateChangeUsername(String newUsername, String oldUsername) throws TakeawayException {
         validateUsername(newUsername);
-        if (newUsername.equals(oldUsername)) {
+        if (newUsername.toLowerCase().equals(oldUsername.toLowerCase())) {
             throw new NewUsernameSameAsOldException();
         }
         Optional<User> optionalNewUser = userRepository.findByUsername(newUsername);
@@ -127,7 +127,7 @@ public class ValidationLogic {
 
     public void validateChangeEmail(String newEmail, String oldEmail) throws TakeawayException {
         validateEmail(newEmail);
-        if (newEmail.equals(oldEmail)) {
+        if (newEmail.toLowerCase().equals(oldEmail.toLowerCase())) {
             throw new NewEmailSameAsOldException();
         }
         Optional<User> optionalNewUser = userRepository.findByEmail(newEmail);

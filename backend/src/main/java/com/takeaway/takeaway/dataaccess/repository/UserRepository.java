@@ -10,15 +10,15 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    @Query("SELECT x FROM User x WHERE x.username = ?1 AND x.hashedPassword = ?2")
+    @Query("SELECT x FROM User x WHERE lower(x.username) = lower(?1) AND lower(x.hashedPassword) = lower(?2)")
     Optional<User> findByUsernamePassword(String username, String hashedPassword);
 
-    @Query("SELECT x FROM User x WHERE x.email = ?1 AND x.hashedPassword = ?2")
+    @Query("SELECT x FROM User x WHERE lower(x.email) = lower(?1) AND lower(x.hashedPassword) = lower(?2)")
     Optional<User> findByEmailPassword(String email, String hashedPassword);
 
-    @Query("SELECT x FROM User x WHERE x.email = ?1")
+    @Query("SELECT x FROM User x WHERE lower(x.email) = lower(?1)")
     Optional<User> findByEmail(String email);
 
-    @Query("SELECT x FROM User x WHERE x.username = ?1")
+    @Query("SELECT x FROM User x WHERE lower(x.username) = lower(?1)")
     Optional<User> findByUsername(String username);
 }

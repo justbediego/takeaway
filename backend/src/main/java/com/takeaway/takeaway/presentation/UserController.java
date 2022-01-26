@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BaseController {
 
     private final UserLogic userLogic;
 
@@ -23,28 +23,58 @@ public class UserController {
     }
 
     @PatchMapping(path = "/updateBasicInfo")
-    public void updateBasicInfo(@RequestBody UpdateBasicInfoDto updateBasicInfoDto) throws TakeawayException {
-        userLogic.updateBasicInfo(userID, updateBasicInfoDto);
+    public void updateBasicInfo(@RequestBody UpdateBasicInfoDto data) throws TakeawayException {
+        userLogic.updateBasicInfo(userID,
+                UpdateBasicInfoDto.builder()
+                        .firstName(trim(data.getFirstName()))
+                        .lastName(trim(data.getLastName()))
+                        .phoneNumber(trim(data.getPhoneNumber()))
+                        .phoneNumberCountryCode(trim(data.getPhoneNumberCountryCode()))
+                        .build()
+        );
     }
 
     @PatchMapping(path = "/updateUsername")
-    public void updateUsername(@RequestBody UpdateUsernameDto updateUsernameDto) throws TakeawayException {
-        userLogic.updateUsername(userID, updateUsernameDto);
+    public void updateUsername(@RequestBody UpdateUsernameDto data) throws TakeawayException {
+        userLogic.updateUsername(userID,
+                UpdateUsernameDto.builder()
+                        .username(trim(data.getUsername()))
+                        .build()
+        );
     }
 
     @PatchMapping(path = "/updateEmail")
-    public void updateEmail(@RequestBody UpdateEmailDto updateEmailDto) throws TakeawayException {
-        userLogic.updateEmail(userID, updateEmailDto);
+    public void updateEmail(@RequestBody UpdateEmailDto data) throws TakeawayException {
+        userLogic.updateEmail(userID,
+                UpdateEmailDto.builder()
+                        .email(trim(data.getEmail()))
+                        .build()
+        );
     }
 
     @PatchMapping(path = "/changePassword")
-    public void changePassword(@RequestBody ChangePasswordDto changePasswordDto) throws TakeawayException {
-        userLogic.changePassword(userID, changePasswordDto);
+    public void changePassword(@RequestBody ChangePasswordDto data) throws TakeawayException {
+        // no trimming for passwords
+        userLogic.changePassword(userID, data);
     }
 
     @PatchMapping(path = "/modifyAddress")
-    public void modifyAddress(@RequestBody ModifyAddressDto modifyAddressDto) throws TakeawayException {
-        userLogic.modifyAddress(userID, modifyAddressDto);
+    public void modifyAddress(@RequestBody ModifyAddressDto data) throws TakeawayException {
+        userLogic.modifyAddress(userID,
+                ModifyAddressDto.builder()
+                        .houseNumber(trim(data.getHouseNumber()))
+                        .streetName(trim(data.getStreetName()))
+                        .streetName2(trim(data.getStreetName2()))
+                        .title(trim(data.getTitle()))
+                        .additionalInfo(trim(data.getAdditionalInfo()))
+                        .accuracyKm(data.getAccuracyKm())
+                        .cityId(data.getCityId())
+                        .countryId(data.getCountryId())
+                        .latitude(data.getLatitude())
+                        .longitude(data.getLongitude())
+                        .stateId(data.getStateId())
+                        .build()
+        );
     }
 
     @PatchMapping(path = "/updateProfilePicture")
@@ -53,7 +83,7 @@ public class UserController {
         try {
             attachmentDto = CreateAttachmentDto.builder()
                     .fileData(file.getBytes())
-                    .filename(file.getOriginalFilename())
+                    .filename(trim(file.getOriginalFilename()))
                     .build();
         } catch (IOException ioException) {
             throw new FileUploadException();
@@ -67,13 +97,23 @@ public class UserController {
     }
 
     @PostMapping(path = "/authenticateUsername")
-    public void authenticateUsername(@RequestBody UsernameAuthenticateDto authenticateDto) throws TakeawayException {
-        userID = userLogic.authenticateByUsername(authenticateDto);
+    public void authenticateUsername(@RequestBody UsernameAuthenticateDto data) throws TakeawayException {
+        userID = userLogic.authenticateByUsername(
+                UsernameAuthenticateDto.builder()
+                        .username(trim(data.getUsername()))
+                        .password(data.getPassword())
+                        .build()
+        );
     }
 
     @PostMapping(path = "/authenticateEmail")
-    public void authenticateEmail(@RequestBody EmailAuthenticateDto authenticateDto) throws TakeawayException {
-        userID = userLogic.authenticateByEmail(authenticateDto);
+    public void authenticateEmail(@RequestBody EmailAuthenticateDto data) throws TakeawayException {
+        userID = userLogic.authenticateByEmail(
+                EmailAuthenticateDto.builder()
+                        .email(trim(data.getEmail()))
+                        .password(data.getPassword())
+                        .build()
+        );
     }
 
 }
