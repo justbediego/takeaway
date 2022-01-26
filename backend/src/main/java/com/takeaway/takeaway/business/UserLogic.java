@@ -1,5 +1,6 @@
 package com.takeaway.takeaway.business;
 
+import com.google.common.base.Strings;
 import com.google.common.hash.Hashing;
 import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.business.exception.*;
@@ -108,12 +109,20 @@ public class UserLogic {
 
     public void updateBasicInfo(UUID userId, UpdateBasicInfoDto updateBasicInfoDto) throws TakeawayException {
         // validation
-        validationLogic.validateFirstName(updateBasicInfoDto.getFirstName());
-        validationLogic.validateLastName(updateBasicInfoDto.getLastName());
-        validationLogic.validatePhoneNumber(
-                updateBasicInfoDto.getPhoneNumberCountryCode(),
-                updateBasicInfoDto.getPhoneNumber()
-        );
+        if (!Strings.isNullOrEmpty(updateBasicInfoDto.getFirstName())) {
+            validationLogic.validateFirstName(updateBasicInfoDto.getFirstName());
+        }
+        if (!Strings.isNullOrEmpty(updateBasicInfoDto.getLastName())) {
+            validationLogic.validateLastName(updateBasicInfoDto.getLastName());
+        }
+        if (!Strings.isNullOrEmpty(updateBasicInfoDto.getPhoneNumberCountryCode()) ||
+                !Strings.isNullOrEmpty(updateBasicInfoDto.getPhoneNumber())) {
+            validationLogic.validatePhoneNumber(
+                    updateBasicInfoDto.getPhoneNumberCountryCode(),
+                    updateBasicInfoDto.getPhoneNumber()
+            );
+        }
+
         User user = validationLogic.validateGetUserById(userId);
 
         // business

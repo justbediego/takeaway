@@ -75,16 +75,29 @@ public class ValidationLogic {
         return optionalCity.get();
     }
 
-    public void validateFirstName(String firsName) {
-
+    public void validateFirstName(String firsName) throws TakeawayException{
+        String firstNamePattern = "^[a-zA-Z]([- ',.a-zA-Z]{0,40}[a-zA-Z])$";
+        if(!firsName.matches(firstNamePattern)){
+            throw new InvalidFirstNameException();
+        }
     }
 
-    public void validateLastName(String lastName) {
-
+    public void validateLastName(String lastName) throws TakeawayException {
+        String lastNamePattern = "^[a-zA-Z]([- ',.a-zA-Z]{0,90}[a-zA-Z])$";
+        if(!lastName.matches(lastNamePattern)){
+            throw new InvalidLastNameException();
+        }
     }
 
-    public void validatePhoneNumber(String countryCode, String number) {
-
+    public void validatePhoneNumber(String countryCode, String number) throws TakeawayException {
+        final String countryCodePattern = "^\\+\\d{1,3}$";
+        final String phoneNumberPattern = "^\\d{5,15}$";
+        if(!countryCode.matches(countryCodePattern)){
+            throw new InvalidCountryCodeException();
+        }
+        if(!number.matches(phoneNumberPattern)){
+            throw new InvalidPhoneNumberException();
+        }
     }
 
     public void validateUsername(String username) {

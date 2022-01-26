@@ -1,6 +1,7 @@
 package com.takeaway.takeaway.presentation;
 
 import com.takeaway.takeaway.business.dto.GetBasicInfoDto;
+import com.takeaway.takeaway.business.dto.UpdateBasicInfoDto;
 import com.takeaway.takeaway.business.dto.UpdateEmailDto;
 import com.takeaway.takeaway.business.dto.UsernameAuthenticateDto;
 import com.takeaway.takeaway.dataaccess.model.User;
@@ -61,6 +62,11 @@ class UserControllerIT {
         updateEmail_SameException();
         updateEmail_InUseException();
         updateEmail();
+        updateBasicInfo_InvalidCountryCode();
+        updateBasicInfo_InvalidPhoneNumber();
+        updateBasicInfo_InvalidFirstName();
+        updateBasicInfo_InvalidLastName();
+        updateBasicInfo();
         getBasicInfo();
     }
 
@@ -119,7 +125,93 @@ class UserControllerIT {
         assertEquals("first", getBasicInfoDto.getUsername());
     }
 
+    void updateBasicInfo_InvalidCountryCode() {
+        String apiPath = String.format("%s%s", basePath, "updateBasicInfo");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    UpdateBasicInfoDto.builder()
+                            .phoneNumberCountryCode("BAD COUNTRY CODE")
+                            .phoneNumber("12345678")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("InvalidCountryCodeException"));
+    }
+
+    void updateBasicInfo_InvalidPhoneNumber() {
+        String apiPath = String.format("%s%s", basePath, "updateBasicInfo");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    UpdateBasicInfoDto.builder()
+                            .phoneNumberCountryCode("+32")
+                            .phoneNumber("BAD PHONE NUMBER")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("InvalidPhoneNumberException"));
+    }
+
+    void updateBasicInfo_InvalidFirstName() {
+        String apiPath = String.format("%s%s", basePath, "updateBasicInfo");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    UpdateBasicInfoDto.builder()
+                            .firstName("F")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("InvalidFirstNameException"));
+    }
+
+    void updateBasicInfo_InvalidLastName() {
+        String apiPath = String.format("%s%s", basePath, "updateBasicInfo");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    UpdateBasicInfoDto.builder()
+                            .lastName("F")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("InvalidLastNameException"));
+    }
+
     void updateBasicInfo() {
+        String apiPath = String.format("%s%s", basePath, "updateBasicInfo");
+        HttpClientErrorException takeawayException = null;
+        restTemplate.patchForObject(
+                apiPath,
+                UpdateBasicInfoDto.builder()
+                        .firstName("TestFirst")
+                        .lastName("TestLast")
+                        .phoneNumberCountryCode("+49")
+                        .phoneNumber("123456789")
+                        .build(),
+                Void.class
+        );
     }
 
     void updateUsername() {
