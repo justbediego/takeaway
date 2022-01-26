@@ -2,6 +2,12 @@ package com.takeaway.takeaway.presentation;
 
 import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.dataaccess.model.User;
+import com.takeaway.takeaway.dataaccess.model.geo.City;
+import com.takeaway.takeaway.dataaccess.model.geo.Country;
+import com.takeaway.takeaway.dataaccess.model.geo.State;
+import com.takeaway.takeaway.dataaccess.repository.CityRepository;
+import com.takeaway.takeaway.dataaccess.repository.CountryRepository;
+import com.takeaway.takeaway.dataaccess.repository.StateRepository;
 import com.takeaway.takeaway.dataaccess.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -12,8 +18,6 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,6 +32,16 @@ class UserControllerIT {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CountryRepository countryRepository;
+
+    @Autowired
+    private StateRepository stateRepository;
+
+    @Autowired
+    private CityRepository cityRepository;
+
+
     private final RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
     private String basePath = null;
 
@@ -35,27 +49,10 @@ class UserControllerIT {
     void oneGiantTest() {
         // init
         basePath = String.format("http://localhost:%d/user/", port);
-        final User first = new User();
-        first.setId(UUID.randomUUID());
-        first.setUsername("first");
-        first.setEmail("first@test.com");
-        // testPassword@123
-        first.setHashedPassword("01940ac311221054a4184f415ac82a6e94ed5664c0b1d426088a07336d57f6ec");
-        final User second = new User();
-        second.setId(UUID.randomUUID());
-        second.setUsername("second");
-        second.setEmail("second@test.com");
-        userRepository.save(first);
-        userRepository.save(second);
-        restTemplate.postForObject(
-                String.format("%s%s", basePath, "authenticateUsername"),
-                UsernameAuthenticateDto.builder()
-                        .username("first")
-                        .password("testPassword@123")
-                        .build(),
-                Void.class
-        );
+        initUsers();
+        initLocation();
 
+        // tests
         updateEmail_InvalidEmail();
         updateEmail_SameException();
         updateEmail_InUseException();
@@ -74,6 +71,66 @@ class UserControllerIT {
         changePassword_VerifyPassword();
         changePassword_WrongPassword();
         changePassword();
+    }
+
+    void initUsers() {
+        final User first = new User();
+        first.setUsername("first");
+        first.setEmail("first@test.com");
+        // testPassword@123
+        first.setHashedPassword("01940ac311221054a4184f415ac82a6e94ed5664c0b1d426088a07336d57f6ec");
+        final User second = new User();
+        second.setUsername("second");
+        second.setEmail("second@test.com");
+        userRepository.save(first);
+        userRepository.save(second);
+        restTemplate.postForObject(
+                String.format("%s%s", basePath, "authenticateUsername"),
+                UsernameAuthenticateDto.builder()
+                        .username("first")
+                        .password("testPassword@123")
+                        .build(),
+                Void.class
+        );
+    }
+
+    void initLocation() {
+        Country c1 = new Country();
+        c1.setName("CNT1");
+        Country c2 = new Country();
+        c2.setName("CNT2");
+        countryRepository.save(c1);
+        countryRepository.save(c2);
+
+        State s1 = new State();
+        s1.setName("CNT1_S1");
+        State s2 = new State();
+        s2.setName("CNT1_S2");
+        State s3 = new State();
+        s3.setName("CNT2_S1");
+        s1.setCountry(c1);
+        s2.setCountry(c1);
+        s3.setCountry(c2);
+        stateRepository.save(s1);
+        stateRepository.save(s2);
+        stateRepository.save(s3);
+
+        City ct1 = new City();
+        ct1.setName("CNT1_S1_CT1");
+        City ct2 = new City();
+        ct2.setName("CNT1_S1_CT2");
+        City ct3 = new City();
+        ct3.setName("CNT1_S2_CT1");
+        City ct4 = new City();
+        ct4.setName("CNT2_S1_CT1");
+        ct1.setState(s1);
+        ct2.setState(s1);
+        ct3.setState(s2);
+        ct4.setState(s3);
+        cityRepository.save(ct1);
+        cityRepository.save(ct2);
+        cityRepository.save(ct3);
+        cityRepository.save(ct4);
     }
 
     void updateEmail_InvalidEmail() {
