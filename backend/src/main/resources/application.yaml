@@ -20,5 +20,6 @@ spring:
     profilePictureSize: 100
     profilePictureMaxSize: 1000
     passwordHashSalt: May we all be one day free!
+    maxUploadFileSizeInBytes: 26214400
 server:
   port: 2102

@@ -12,6 +12,7 @@ import com.takeaway.takeaway.dataaccess.repository.CountryRepository;
 import com.takeaway.takeaway.dataaccess.repository.StateRepository;
 import com.takeaway.takeaway.dataaccess.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -26,6 +27,8 @@ public class ValidationLogic {
     private final StateRepository stateRepository;
     private final CityRepository cityRepository;
 
+    @Value("${spring.application.maxUploadFileSizeInBytes}")
+    private Long maxUploadFileSizeInBytes;
 
     public ValidationLogic(UserRepository userRepository, CountryRepository countryRepository, StateRepository stateRepository, CityRepository cityRepository) {
         this.userRepository = userRepository;
@@ -182,11 +185,19 @@ public class ValidationLogic {
         }
     }
 
-    public void validateFilename(String filename) {
-
+    public void validateFilename(String filename) throws TakeawayException {
+        final String filenamePattern = "^[\\p{L}0-9\\-_ (),.*:\\\\\\/]{1,300}$";
+        if (!filename.matches(filenamePattern)) {
+            throw new InvalidFilenameException();
+        }
     }
 
-    public void validateFileData(byte[] fileData) {
-
+    public void validateFileData(byte[] fileData) throws TakeawayException {
+        if(fileData == null || fileData.length == 0){
+            throw new EmptyFileUploadedException();
+        }
+        if(fileData.length > maxUploadFileSizeInBytes){
+            throw new FileSizeExceededException();
+        }
     }
 }
