@@ -101,6 +101,17 @@ public class ValidationLogic {
         }
     }
 
+    @SuppressWarnings("squid:S5998")
+    public void validateEmail(String email) throws TakeawayException {
+        if (Strings.isNullOrEmpty(email) || email.length() > 200) {
+            throw new InvalidEmailException();
+        }
+        final String emailPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        if (!email.matches(emailPattern)) {
+            throw new InvalidEmailException();
+        }
+    }
+
     public void validateUsername(String username) throws TakeawayException {
         final String usernamePattern = "^[a-zA-Z][a-zA-Z0-9._]{3,40}[a-zA-Z0-9]$";
         if (!username.matches(usernamePattern)) {
@@ -110,7 +121,7 @@ public class ValidationLogic {
 
     public void validateChangeUsername(String newUsername, String oldUsername) throws TakeawayException {
         validateUsername(newUsername);
-        if (newUsername.toLowerCase().equals(oldUsername.toLowerCase())) {
+        if (newUsername.equalsIgnoreCase(oldUsername.toLowerCase())) {
             throw new NewUsernameSameAsOldException();
         }
         Optional<User> optionalNewUser = userRepository.findByUsername(newUsername);
@@ -119,16 +130,9 @@ public class ValidationLogic {
         }
     }
 
-    public void validateEmail(String email) throws TakeawayException {
-        final String emailPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
-        if (!email.matches(emailPattern)) {
-            throw new InvalidEmailException();
-        }
-    }
-
     public void validateChangeEmail(String newEmail, String oldEmail) throws TakeawayException {
         validateEmail(newEmail);
-        if (newEmail.toLowerCase().equals(oldEmail.toLowerCase())) {
+        if (newEmail.equalsIgnoreCase(oldEmail.toLowerCase())) {
             throw new NewEmailSameAsOldException();
         }
         Optional<User> optionalNewUser = userRepository.findByEmail(newEmail);
@@ -165,10 +169,8 @@ public class ValidationLogic {
         if (!streetName.matches(streetPattern)) {
             throw new InvalidAddressException();
         }
-        if (!Strings.isNullOrEmpty(streetName2)) {
-            if (!streetName2.matches(streetPattern)) {
-                throw new InvalidAddressException();
-            }
+        if (!Strings.isNullOrEmpty(streetName2) && !streetName2.matches(streetPattern)) {
+            throw new InvalidAddressException();
         }
         String houseNumberPattern = "^[a-zA-Z0-9'._\\-$#&*()+\\/\\\\<>\"{}|;:@ ]{1,20}$";
         if (!houseNumber.matches(houseNumberPattern)) {
