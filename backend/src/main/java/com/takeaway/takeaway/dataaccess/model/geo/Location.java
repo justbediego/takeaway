@@ -27,7 +27,7 @@ public class Location extends BaseEntity {
     @Column(length = 100)
     private String streetName2;
 
-    @Column(length = 10)
+    @Column(length = 20)
     private String houseNumber;
 
     @Column(length = 200)

@@ -9,6 +9,8 @@ import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
 import com.takeaway.takeaway.dataaccess.model.geo.*;
 import com.takeaway.takeaway.dataaccess.repository.AttachmentRepository;
+import com.takeaway.takeaway.dataaccess.repository.GeolocationRepository;
+import com.takeaway.takeaway.dataaccess.repository.LocationRepository;
 import com.takeaway.takeaway.dataaccess.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,12 +38,18 @@ public class UserLogic {
 
     private final UserRepository userRepository;
 
+    private final LocationRepository locationRepository;
+
+    private final GeolocationRepository geolocationRepository;
+
     private final AttachmentRepository attachmentRepository;
 
-    public UserLogic(ValidationLogic validationLogic, AttachmentLogic attachmentLogic, UserRepository userRepository, AttachmentRepository attachmentRepository) {
+    public UserLogic(ValidationLogic validationLogic, AttachmentLogic attachmentLogic, UserRepository userRepository, LocationRepository locationRepository, GeolocationRepository geolocationRepository, AttachmentRepository attachmentRepository) {
         this.validationLogic = validationLogic;
         this.attachmentLogic = attachmentLogic;
         this.userRepository = userRepository;
+        this.locationRepository = locationRepository;
+        this.geolocationRepository = geolocationRepository;
         this.attachmentRepository = attachmentRepository;
     }
 
@@ -188,11 +196,13 @@ public class UserLogic {
             validationLogic.validateLongitudeLatitude(
                     modifyAddressDto.getLongitude(),
                     modifyAddressDto.getLatitude(),
-                    modifyAddressDto.getAccuracyKm()
+                    modifyAddressDto.getAccuracyM()
             );
             hasGeolocation = true;
         }
-        validationLogic.validateLocationTitle(modifyAddressDto.getTitle());
+        if(!Strings.isNullOrEmpty(modifyAddressDto.getTitle())){
+            validationLogic.validateLocationTitle(modifyAddressDto.getTitle());
+        }
         validationLogic.validateLocationAddress(
                 modifyAddressDto.getStreetName(),
                 modifyAddressDto.getStreetName2(),
@@ -218,11 +228,11 @@ public class UserLogic {
         if (hasGeolocation) {
             geolocation.setLatitude(modifyAddressDto.getLatitude());
             geolocation.setLongitude(modifyAddressDto.getLongitude());
-            geolocation.setAccuracyKm(modifyAddressDto.getAccuracyKm());
+            geolocation.setAccuracyM(modifyAddressDto.getAccuracyM());
         } else {
             geolocation.setLatitude(null);
             geolocation.setLongitude(null);
-            geolocation.setAccuracyKm(null);
+            geolocation.setAccuracyM(null);
         }
         address.setTitle(modifyAddressDto.getTitle());
         address.setStreetName(modifyAddressDto.getStreetName());
@@ -231,6 +241,8 @@ public class UserLogic {
         address.setAdditionalInfo(modifyAddressDto.getAdditionalInfo());
         address.updateDateModified();
         geolocation.updateDateModified();
+        geolocationRepository.save(geolocation);
+        locationRepository.save(address);
         userRepository.save(user);
     }
 

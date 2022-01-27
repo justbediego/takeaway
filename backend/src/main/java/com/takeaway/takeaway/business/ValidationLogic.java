@@ -1,5 +1,6 @@
 package com.takeaway.takeaway.business;
 
+import com.google.common.base.Strings;
 import com.takeaway.takeaway.business.exception.*;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.EntityTypes;
@@ -144,16 +145,39 @@ public class ValidationLogic {
         }
     }
 
-    public void validateLongitudeLatitude(Double longitude, Double latitude, Integer accuracyKm) {
-
+    public void validateLongitudeLatitude(Double longitude, Double latitude, Integer accuracyM) throws TakeawayException {
+        // latitude in degrees is -90 and +90
+        // Longitude is in the range -180 and +180
+        if (longitude < -180 || longitude > 180 || latitude < -90 || latitude > 90 || accuracyM < 0 || accuracyM > 10000) {
+            throw new InvalidGeolocationValuesException();
+        }
     }
 
-    public void validateLocationTitle(String title) {
-
+    public void validateLocationTitle(String title) throws TakeawayException {
+        String locationTitlePattern = "^[a-zA-Z0-9'._\\- ]{3,80}$";
+        if (!title.matches(locationTitlePattern)) {
+            throw new InvalidLocationTitleException();
+        }
     }
 
-    public void validateLocationAddress(String streetName, String streetName2, String houseNumber, String additionalInfo) {
-
+    public void validateLocationAddress(String streetName, String streetName2, String houseNumber, String additionalInfo) throws TakeawayException {
+        String streetPattern = "^[a-zA-Z0-9'._\\-$#&*()+\\/\\\\<>\"{}|;:@ ]{3,80}$";
+        if (!streetName.matches(streetPattern)) {
+            throw new InvalidAddressException();
+        }
+        if (!Strings.isNullOrEmpty(streetName2)) {
+            if (!streetName2.matches(streetPattern)) {
+                throw new InvalidAddressException();
+            }
+        }
+        String houseNumberPattern = "^[a-zA-Z0-9'._\\-$#&*()+\\/\\\\<>\"{}|;:@ ]{1,20}$";
+        if (!houseNumber.matches(houseNumberPattern)) {
+            throw new InvalidAddressException();
+        }
+        String additionalPattern = "^[a-zA-Z0-9'._\\-$#&*()+\\/\\\\<>\"{}|;:@ ]{1,200}$";
+        if (!additionalInfo.matches(additionalPattern)) {
+            throw new InvalidAddressException();
+        }
     }
 
     public void validateFilename(String filename) {

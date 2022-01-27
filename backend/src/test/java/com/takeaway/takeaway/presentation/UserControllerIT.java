@@ -19,6 +19,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -44,6 +46,7 @@ class UserControllerIT {
 
     private final RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
     private String basePath = null;
+    private UUID countryId, stateId, cityId, badStateId;
 
     @Test
     void oneGiantTest() {
@@ -66,11 +69,16 @@ class UserControllerIT {
         updateBasicInfo_InvalidFirstName();
         updateBasicInfo_InvalidLastName();
         updateBasicInfo();
-        getBasicInfo();
         changePassword_InvalidPassword();
         changePassword_VerifyPassword();
         changePassword_WrongPassword();
         changePassword();
+        modifyAddress_InvalidGeolocation();
+        modifyAddress_InvalidTitle();
+        modifyAddress_BadState();
+        modifyAddress_InvalidAddress();
+        modifyAddress();
+        getBasicInfo();
     }
 
     void initUsers() {
@@ -131,6 +139,10 @@ class UserControllerIT {
         cityRepository.save(ct2);
         cityRepository.save(ct3);
         cityRepository.save(ct4);
+        countryId = c1.getId();
+        stateId = s1.getId();
+        cityId = ct1.getId();
+        badStateId = s3.getId();
     }
 
     void updateEmail_InvalidEmail() {
@@ -436,7 +448,138 @@ class UserControllerIT {
     }
 
 
+    void modifyAddress_InvalidGeolocation() {
+        String apiPath = String.format("%s%s", basePath, "modifyAddress");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    ModifyAddressDto.builder()
+                            .latitude(500.0)
+                            .longitude(20.0)
+                            .title("my-title's test")
+                            .streetName("Street name")
+                            .streetName2("Street name 2")
+                            .countryId(countryId)
+                            .stateId(stateId)
+                            .cityId(cityId)
+                            .houseNumber("12 f")
+                            .accuracyM(10)
+                            .additionalInfo("Additional")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("InvalidGeolocationValuesException"));
+    }
+
+    void modifyAddress_InvalidTitle() {
+        String apiPath = String.format("%s%s", basePath, "modifyAddress");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    ModifyAddressDto.builder()
+                            .latitude(-80.0)
+                            .longitude(20.0)
+                            .title("m")
+                            .streetName("Street name")
+                            .streetName2("Street name 2")
+                            .countryId(countryId)
+                            .stateId(stateId)
+                            .cityId(cityId)
+                            .houseNumber("12 f")
+                            .accuracyM(10)
+                            .additionalInfo("Additional")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("InvalidLocationTitleException"));
+    }
+
+    void modifyAddress_BadState() {
+        String apiPath = String.format("%s%s", basePath, "modifyAddress");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    ModifyAddressDto.builder()
+                            .latitude(-80.0)
+                            .longitude(20.0)
+                            .title("my-title's test")
+                            .streetName("Street name")
+                            .streetName2("Street name 2")
+                            .countryId(countryId)
+                            .stateId(badStateId)
+                            .cityId(cityId)
+                            .houseNumber("12 f")
+                            .accuracyM(10)
+                            .additionalInfo("Additional")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("EntityNotFound"));
+        assertEquals(true, takeawayException.getMessage().contains("STATE"));
+    }
+
+    void modifyAddress_InvalidAddress() {
+        String apiPath = String.format("%s%s", basePath, "modifyAddress");
+        HttpClientErrorException takeawayException = null;
+        try {
+            restTemplate.patchForObject(
+                    apiPath,
+                    ModifyAddressDto.builder()
+                            .latitude(-80.0)
+                            .longitude(20.0)
+                            .title("my-title's test")
+                            .streetName("S")
+                            .streetName2("Street name 2")
+                            .countryId(countryId)
+                            .stateId(stateId)
+                            .cityId(cityId)
+                            .houseNumber("12 f")
+                            .accuracyM(10)
+                            .additionalInfo("Additional")
+                            .build(),
+                    Void.class
+            );
+        } catch (HttpClientErrorException ex) {
+            takeawayException = ex;
+        }
+        assertNotNull(takeawayException);
+        assertEquals(true, takeawayException.getMessage().contains("InvalidAddressException"));
+    }
+
     void modifyAddress() {
+        String apiPath = String.format("%s%s", basePath, "modifyAddress");
+        restTemplate.patchForObject(
+                apiPath,
+                ModifyAddressDto.builder()
+                        .latitude(-80.0)
+                        .longitude(20.0)
+                        .title("my-title's test")
+                        .streetName("Street name")
+                        .streetName2("Street name 2")
+                        .countryId(countryId)
+                        .stateId(stateId)
+                        .cityId(cityId)
+                        .houseNumber("12 f")
+                        .accuracyM(10)
+                        .additionalInfo("Additional")
+                        .build(),
+                Void.class
+        );
     }
 
     void updateProfilePicture() {

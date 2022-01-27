@@ -23,7 +23,7 @@ public class Geolocation extends BaseEntity {
     private Double latitude;
 
     @Column(nullable = false)
-    private Integer accuracyKm;
+    private Integer accuracyM;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "geolocation_id")

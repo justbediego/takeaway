@@ -67,7 +67,7 @@ public class UserController extends BaseController {
                         .streetName2(trim(data.getStreetName2()))
                         .title(trim(data.getTitle()))
                         .additionalInfo(trim(data.getAdditionalInfo()))
-                        .accuracyKm(data.getAccuracyKm())
+                        .accuracyM(data.getAccuracyM())
                         .cityId(data.getCityId())
                         .countryId(data.getCountryId())
                         .latitude(data.getLatitude())

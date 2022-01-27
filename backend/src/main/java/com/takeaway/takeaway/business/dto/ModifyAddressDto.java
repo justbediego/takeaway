@@ -19,7 +19,7 @@ public class ModifyAddressDto implements Serializable {
     private UUID cityId;
     private Double longitude;
     private Double latitude;
-    private Integer accuracyKm;
+    private Integer accuracyM;
     private String streetName;
     private String streetName2;
     private String houseNumber;
