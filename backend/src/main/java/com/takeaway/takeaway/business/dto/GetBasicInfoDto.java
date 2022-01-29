@@ -1,5 +1,6 @@
 package com.takeaway.takeaway.business.dto;
 
+import com.takeaway.takeaway.dataaccess.model.enums.GenderTypes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,4 +22,5 @@ public class GetBasicInfoDto implements Serializable {
     private String phoneNumberCountryCode;
     private String email;
     private String username;
+    private GenderTypes gender;
 }

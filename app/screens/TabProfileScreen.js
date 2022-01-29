@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-import {Image, Text, View, Button} from '../components/Themed';
+import {Image, Text, View} from '../components/Themed';
 import React, {useEffect} from "react";
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -29,17 +29,20 @@ export default function TabProfileScreen() {
 
     return (
         <View style={styles.container}>
-            <Image source={{
-                uri: "https://www.fairtravel4u.org/wp-content/uploads/2018/06/sample-profile-pic.png",
-            }} style={{
-                ...styles.profilePicture,
-                borderColor: Colors[colorScheme].tint
-            }}/>
+            <Image
+                source={basicInfo?.profilePictureId ?
+                    {uri: "https://www.fairtravel4u.org/wp-content/uploads/2018/06/sample-profile-pic.png"} :
+                    require('../assets/images/anonymous.png')
+                }
+                style={{
+                    ...styles.profilePicture,
+                    borderColor: Colors[colorScheme].imageBorder
+                }}
+            />
             <Text style={styles.fullName}>{basicInfo.firstName} {basicInfo.lastName}</Text>
             <Text style={styles.username}>@{basicInfo.username}</Text>
             <Text style={styles.username}>{basicInfo.phoneNumberCountryCode}{basicInfo.phoneNumber}</Text>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-            <Button title="Reload" onPress={refreshBasicInfo} />
         </View>
     );
 }
@@ -55,9 +58,10 @@ const styles = StyleSheet.create({
         height: 100,
         width: 100,
         borderRadius: 50,
-        borderWidth: 3
+        borderWidth: 2
     },
     fullName: {
+        marginTop: 10,
         fontSize: 20,
         fontWeight: 'bold',
     },

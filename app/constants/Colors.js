@@ -10,7 +10,8 @@ export default {
         tint: tintColorLight,
         tabIconDefault: '#ccc',
         tabIconSelected: tintColorLight,
-        newIcon: tint2ColorLight
+        newIcon: tint2ColorLight,
+        imageBorder: '#c8c8c8'
     },
     dark: {
         text: '#fff',
@@ -18,6 +19,7 @@ export default {
         tint: tintColorDark,
         tabIconDefault: '#ccc',
         tabIconSelected: tintColorDark,
-        newIcon: tint2ColorDark
+        newIcon: tint2ColorDark,
+        imageBorder: '#a7a7a7'
     },
 };

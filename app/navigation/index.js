@@ -13,6 +13,7 @@ import TabProfileScreen from '../screens/TabProfileScreen';
 import LinkingConfiguration from './LinkingConfiguration';
 import {useTranslation} from "react-i18next";
 import NewItemScreen from "../screens/NewItemScreen";
+import EditProfileScreen from "../screens/EditProfileScreen";
 
 export default function Navigation({colorScheme}) {
     return (
@@ -27,12 +28,22 @@ export default function Navigation({colorScheme}) {
 const Stack = createNativeStackNavigator();
 
 function RootNavigator() {
+    const {t} = useTranslation();
     return (
         <Stack.Navigator>
             <Stack.Screen name="Root" component={BottomTabNavigator} options={{headerShown: false}}/>
             <Stack.Screen name="NotFound" component={NotFoundScreen} options={{title: 'Oops!'}}/>
             <Stack.Group screenOptions={{presentation: 'modal'}}>
-                <Stack.Screen name="NewItemModal" component={NewItemScreen}/>
+                <Stack.Screen
+                    name="NewItemModal"
+                    component={NewItemScreen}
+                    options={{ title: t('tabNewTitle') }}
+                />
+                <Stack.Screen
+                    name="EditProfileModal"
+                    component={EditProfileScreen}
+                    options={{ title: t('modalEditProfileTitle') }}
+                />
             </Stack.Group>
         </Stack.Navigator>
     );
@@ -94,7 +105,7 @@ function BottomTabNavigator() {
                                 ...styles.topRightPress,
                                 opacity: pressed ? 0.5 : 1,
                             })}
-                            onPress={() => navigation.navigate('Modal')}>
+                            onPress={() => navigation.navigate('EditProfileModal')}>
                             <FontAwesome name="edit" style={styles.topRightPressIcon}
                                          color={Colors[colorScheme].text}/>
                         </Pressable>

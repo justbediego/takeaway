@@ -1,6 +1,10 @@
 const translations = {
     en: {
         translation: {
+            tabProfileTitle: 'My Profile',
+            tabMarkedTitle: 'Saved Items',
+            tabNewTitle: 'New Item',
+            modalEditProfileTitle: 'Edit Profile',
             exceptions: {
                 UnexpectedClientSideException: 'UnexpectedClientSideException',
                 CityNotSelectedException: 'CityNotSelectedException',
@@ -13,7 +17,8 @@ const translations = {
                 InvalidAddressException: 'InvalidAddressException',
                 InvalidCountryCodeException: 'InvalidCountryCodeException',
                 InvalidEmailException: 'InvalidEmailException',
-                InvalidFilenameException: 'InvalidFilenameException',
+                InvalidFilenameException: 'Invalid' +
+                    'FilenameException',
                 InvalidFirstNameException: 'InvalidFirstNameException',
                 InvalidGeolocationValuesException: 'InvalidGeolocationValuesException',
                 InvalidLastNameException: 'InvalidLastNameException',
@@ -31,10 +36,7 @@ const translations = {
                 UserOrPasswordWrongException: 'UserOrPasswordWrongException',
                 VerifyPasswordException: 'VerifyPasswordException',
                 WrongPasswordException: 'WrongPasswordException'
-            },
-            tabProfileTitle: 'My Profile',
-            tabMarkedTitle: 'Saved Items',
-            tabNewTitle: 'New Item'
+            }
         }
     },
 }

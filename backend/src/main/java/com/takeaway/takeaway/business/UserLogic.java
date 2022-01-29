@@ -109,6 +109,7 @@ public class UserLogic {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .phoneNumber(user.getPhoneNumber())
+                .gender(user.getGender())
                 .phoneNumberCountryCode(user.getPhoneNumberCountryCode())
                 .profilePictureId(profilePicture == null ? null : profilePicture.getId())
                 .profilePictureKey(profilePicture == null ? null : profilePicture.getSecurityKey())

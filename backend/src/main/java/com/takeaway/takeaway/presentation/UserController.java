@@ -16,7 +16,7 @@ public class UserController extends BaseController {
 
     private final UserLogic userLogic;
 
-    private UUID userID = null;
+    private UUID userID = UUID.fromString("19cc7d52-7369-46e9-aae0-60139e5f19dd");
 
     public UserController(UserLogic userLogic) {
         this.userLogic = userLogic;
