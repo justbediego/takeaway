@@ -1,4 +1,6 @@
+import axios from 'axios';
 export const basePath = "http://192.168.0.160:2102/";
+import i18n from "i18next";
 
 type RequestInfo = {
     method: 'GET' | 'POST' | 'PATCH' | 'DELETE';
@@ -21,14 +23,31 @@ type GetBasicInfoDto = {
 
 const callService = async ({data, headers, method, parent, action}: RequestInfo) => {
     try {
-        const response = await fetch(`${basePath}/${parent}/${action}`, {
+        const response = await axios({
+            url: `${basePath}/${parent}/${action}`,
             method,
             headers,
             body: JSON.stringify(data)
         });
-        return await response.json();
+        return response.data;
     } catch (ex) {
-
+        if(ex?.response?.status === 409 && ex?.response?.data?.type){
+            // takeaway exception
+            const {type, message, details} = ex.response.data;
+            throw {
+                type,
+                message,
+                details,
+                translation: i18n.t(`exceptions.${type}`)
+            }
+        }else{
+            const type = 'UnexpectedClientSideException';
+            throw {
+                type,
+                message: ex?.message,
+                translation: i18n.t(`exceptions.${type}`)
+            }
+        }
     }
 }
 

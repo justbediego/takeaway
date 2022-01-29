@@ -3,7 +3,7 @@
  * https://docs.expo.io/guides/color-schemes/
  */
 
-import {Text as DefaultText, View as DefaultView, Image as DefaultImage} from 'react-native';
+import {Text as DefaultText, View as DefaultView, Image as DefaultImage, Button as DefaultButton} from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -39,4 +39,11 @@ export function Image(props) {
     const borderColor = useThemeColor({light: lightColor, dark: darkColor}, 'tintColorLight');
 
     return <DefaultImage style={[{borderColor}, style]} {...otherProps} />;
+}
+
+export function Button(props) {
+    const {style, lightColor, darkColor, ...otherProps} = props;
+    const color = useThemeColor({light: lightColor, dark: darkColor}, 'text');
+
+    return <DefaultButton style={[{color}, style]} {...otherProps} />;
 }
