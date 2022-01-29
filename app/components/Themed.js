@@ -56,31 +56,10 @@ export function Button(props) {
 }
 
 export function TextInput(props) {
-    const {style, lightColor, darkColor, label, ...otherProps} = props;
+    const {style, lightColor, darkColor, ...otherProps} = props;
     const color = useThemeColor({light: lightColor, dark: darkColor}, 'text');
-    const input =
-        <DefaultTextInput
-            style={{
-                ...styles.textInput,
-                color,
-                ...style
-            }}
-            {...otherProps}
-        />;
-    if (label) {
-        return <><Text style={styles.textInputLabel}>{label}</Text>{input}</>
-    }
-    return input;
+    const backgroundColor = useThemeColor({light: lightColor, dark: darkColor}, 'inputBackground');
+    const borderColor = useThemeColor({light: lightColor, dark: darkColor}, 'inputBorder');
+
+    return <DefaultTextInput style={[{color, backgroundColor, borderColor}, style]} {...otherProps} />;
 }
-
-
-const styles = StyleSheet.create({
-    textInput: {
-        borderRadius: 5,
-        borderColor: 'red',
-        borderWidth: 2
-    },
-    textInputLabel: {
-        fontWeight: 'bold'
-    }
-});

@@ -11,7 +11,9 @@ export default {
         tabIconDefault: '#ccc',
         tabIconSelected: tintColorLight,
         newIcon: tint2ColorLight,
-        imageBorder: '#c8c8c8'
+        imageBorder: '#c8c8c8',
+        inputBackground: '#f1f1f1',
+        inputBorder: '#a9a9a9'
     },
     dark: {
         text: '#fff',
@@ -20,6 +22,8 @@ export default {
         tabIconDefault: '#ccc',
         tabIconSelected: tintColorDark,
         newIcon: tint2ColorDark,
-        imageBorder: '#a7a7a7'
+        imageBorder: '#a7a7a7',
+        inputBackground: '#353535',
+        inputBorder: '#5a5a5a'
     },
 };
