@@ -19,6 +19,9 @@ public class Country extends BaseEntity {
     @Column(length = 100, nullable = false)
     private String name;
 
+    @Column(length = 5)
+    private String countryCode;
+
     // relations
 
     @OneToMany(fetch = FetchType.LAZY)

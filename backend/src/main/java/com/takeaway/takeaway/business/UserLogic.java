@@ -8,10 +8,7 @@ import com.takeaway.takeaway.dataaccess.model.Attachment;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
 import com.takeaway.takeaway.dataaccess.model.geo.*;
-import com.takeaway.takeaway.dataaccess.repository.AttachmentRepository;
-import com.takeaway.takeaway.dataaccess.repository.GeolocationRepository;
-import com.takeaway.takeaway.dataaccess.repository.LocationRepository;
-import com.takeaway.takeaway.dataaccess.repository.UserRepository;
+import com.takeaway.takeaway.dataaccess.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -44,13 +41,16 @@ public class UserLogic {
 
     private final AttachmentRepository attachmentRepository;
 
-    public UserLogic(ValidationLogic validationLogic, AttachmentLogic attachmentLogic, UserRepository userRepository, LocationRepository locationRepository, GeolocationRepository geolocationRepository, AttachmentRepository attachmentRepository) {
+    private final CountryRepository countryRepository;
+
+    public UserLogic(ValidationLogic validationLogic, AttachmentLogic attachmentLogic, UserRepository userRepository, LocationRepository locationRepository, GeolocationRepository geolocationRepository, AttachmentRepository attachmentRepository, CountryRepository countryRepository) {
         this.validationLogic = validationLogic;
         this.attachmentLogic = attachmentLogic;
         this.userRepository = userRepository;
         this.locationRepository = locationRepository;
         this.geolocationRepository = geolocationRepository;
         this.attachmentRepository = attachmentRepository;
+        this.countryRepository = countryRepository;
     }
 
     private String getHashedPassword(String password) {
@@ -201,7 +201,7 @@ public class UserLogic {
             );
             hasGeolocation = true;
         }
-        if(!Strings.isNullOrEmpty(modifyAddressDto.getTitle())){
+        if (!Strings.isNullOrEmpty(modifyAddressDto.getTitle())) {
             validationLogic.validateLocationTitle(modifyAddressDto.getTitle());
         }
         validationLogic.validateLocationAddress(
@@ -273,5 +273,11 @@ public class UserLogic {
             throw new UserOrPasswordWrongException();
         }
         return optionalUser.get().getId();
+    }
+
+    public GetCountryCodesDto getCountryCodes() {
+        return GetCountryCodesDto.builder()
+                .countryCodes(countryRepository.findAllCountryCodes())
+                .build();
     }
 }

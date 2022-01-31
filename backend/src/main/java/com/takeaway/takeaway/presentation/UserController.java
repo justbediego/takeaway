@@ -116,4 +116,8 @@ public class UserController extends BaseController {
         );
     }
 
+    @GetMapping(path = "/getCountryCodes")
+    public GetCountryCodesDto getCountryCodes() {
+        return userLogic.getCountryCodes();
+    }
 }
