@@ -5,6 +5,9 @@ const translations = {
             tabMarkedTitle: 'Saved Items',
             tabNewTitle: 'New Item',
             modalEditProfileTitle: 'Edit Profile',
+            labelFirstName: 'First Name',
+            labelLastName: 'Last Name',
+            labelPhoneNumber: 'Phone Number',
             exceptions: {
                 UnexpectedClientSideException: 'UnexpectedClientSideException',
                 CityNotSelectedException: 'CityNotSelectedException',

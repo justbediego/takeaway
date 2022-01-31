@@ -6,11 +6,12 @@
 import {
     Button as DefaultButton,
     Image as DefaultImage,
-    StyleSheet,
     Text as DefaultText,
     TextInput as DefaultTextInput,
     View as DefaultView
 } from 'react-native';
+
+import {Picker as DefaultPicker} from '@react-native-picker/picker';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -63,3 +64,13 @@ export function TextInput(props) {
 
     return <DefaultTextInput style={[{color, backgroundColor, borderColor}, style]} {...otherProps} />;
 }
+
+export function Picker(props) {
+    const {style, lightColor, darkColor, ...otherProps} = props;
+    const color = useThemeColor({light: lightColor, dark: darkColor}, 'text');
+    const backgroundColor = useThemeColor({light: lightColor, dark: darkColor}, 'inputBackground');
+    const borderColor = useThemeColor({light: lightColor, dark: darkColor}, 'inputBorder');
+
+    return <DefaultPicker style={[{color, backgroundColor, borderColor}, style]} {...otherProps} />;
+}
+
