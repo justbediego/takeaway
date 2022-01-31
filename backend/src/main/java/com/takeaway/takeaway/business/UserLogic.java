@@ -15,8 +15,10 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -276,8 +278,15 @@ public class UserLogic {
     }
 
     public GetCountryCodesDto getCountryCodes() {
+        List<CountryCodeDto> countries = countryRepository.findAll().stream()
+                .filter(c -> !Strings.isNullOrEmpty(c.getCountryCode()))
+                .map(c -> CountryCodeDto.builder()
+                        .countryName(c.getName())
+                        .countryCode(c.getCountryCode())
+                        .build())
+                .collect(Collectors.toList());
         return GetCountryCodesDto.builder()
-                .countryCodes(countryRepository.findAllCountryCodes())
+                .countries(countries)
                 .build();
     }
 }

@@ -6,12 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Builder
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class GetCountryCodesDto implements Serializable {
-    private List<CountryCodeDto> countries;
+@NoArgsConstructor
+public class CountryCodeDto implements Serializable {
+    private String countryName;
+    private String countryCode;
 }

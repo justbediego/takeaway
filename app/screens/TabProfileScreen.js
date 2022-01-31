@@ -19,6 +19,7 @@ export default function TabProfileScreen() {
             const response = await getBasicInfo();
             await dispatch(updateBasicInfoSlice(response));
         }catch (e) {
+            // todo
             console.log(e.translation);
         }
     }

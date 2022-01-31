@@ -20,8 +20,7 @@ const translations = {
                 InvalidAddressException: 'InvalidAddressException',
                 InvalidCountryCodeException: 'InvalidCountryCodeException',
                 InvalidEmailException: 'InvalidEmailException',
-                InvalidFilenameException: 'Invalid' +
-                    'FilenameException',
+                InvalidFilenameException: 'InvalidFilenameException',
                 InvalidFirstNameException: 'InvalidFirstNameException',
                 InvalidGeolocationValuesException: 'InvalidGeolocationValuesException',
                 InvalidLastNameException: 'InvalidLastNameException',

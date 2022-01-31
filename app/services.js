@@ -1,6 +1,7 @@
 import axios from 'axios';
-export const basePath = "http://192.168.0.160:2102/";
 import i18n from "i18next";
+
+export const basePath = "http://192.168.1.198:2102/";
 
 type RequestInfo = {
     method: 'GET' | 'POST' | 'PATCH' | 'DELETE';
@@ -21,6 +22,15 @@ type GetBasicInfoDto = {
     username: string;
 }
 
+type CountryCodeDto = {
+    countryName: string;
+    countryCode: string;
+}
+
+type GetCountryCodesDto = {
+    countries: CountryCodeDto[];
+}
+
 const callService = async ({data, headers, method, parent, action}: RequestInfo) => {
     try {
         const response = await axios({
@@ -31,7 +41,7 @@ const callService = async ({data, headers, method, parent, action}: RequestInfo)
         });
         return response.data;
     } catch (ex) {
-        if(ex?.response?.status === 409 && ex?.response?.data?.type){
+        if (ex?.response?.status === 409 && ex?.response?.data?.type) {
             // takeaway exception
             const {type, message, details} = ex.response.data;
             throw {
@@ -40,7 +50,7 @@ const callService = async ({data, headers, method, parent, action}: RequestInfo)
                 details,
                 translation: i18n.t(`exceptions.${type}`)
             }
-        }else{
+        } else {
             const type = 'UnexpectedClientSideException';
             throw {
                 type,
@@ -88,3 +98,9 @@ export const updateProfilePicture = () => {
 export const updateUsername = () => {
 //PATCH
 }
+
+export const getCountryCodes = (): Promise<GetCountryCodesDto> => callService({
+    method: "GET",
+    parent: "user",
+    action: 'getCountryCodes'
+})

@@ -1,8 +1,12 @@
 import {StatusBar} from 'expo-status-bar';
 import {Platform, StyleSheet} from 'react-native';
 import {Picker, Text, TextInput, View} from '../components/Themed';
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
+
+import {Picker as DefaultPicker} from '@react-native-picker/picker'
+import {getCountryCodes} from "../services";
+
 
 const LabeledInput = ({label, value}) => {
     return (
@@ -15,6 +19,24 @@ const LabeledInput = ({label, value}) => {
 
 export default function EditProfileScreen() {
     const {t} = useTranslation();
+    const [countryCodes, setCountryCodes] = useState([]);
+
+    const updateCountryCodes = async () => {
+        try {
+            const response = await getCountryCodes();
+            setCountryCodes(response
+                ?.countries
+                ?.sort((c1, c2) => c1?.countryName?.localeCompare(c2?.countryName))
+            );
+        } catch (e) {
+            // todo
+            console.log(e.translation);
+        }
+    }
+
+    useEffect(() => {
+        updateCountryCodes();
+    }, [])
 
     return (
         <View style={styles.container}>
@@ -24,9 +46,11 @@ export default function EditProfileScreen() {
             <View style={styles.labeledInput}>
                 <Text style={styles.inputLabel}>{t('labelPhoneNumber')}</Text>
                 <View style={styles.phoneNumberView}>
-                    <Picker type={'asc'} style={[styles.textInput, styles.textCountryCode]}>
-                        <Picker.Item label="Java" value="java" />
-                        <Picker.Item label="JavaScript" value="js" />
+                    <Picker mode="dialog" style={[styles.textInput, styles.textCountryCode]}>
+                        {countryCodes && countryCodes.map((value, index) =>
+                            <DefaultPicker.Item label={`${value.countryCode} (${value.countryName})`}
+                                                value={value.countryCode} key={index}/>
+                        )}
                     </Picker>
                     <TextInput style={[styles.textInput, styles.textPhoneNumber]}>Salam</TextInput>
                 </View>
@@ -56,10 +80,11 @@ const styles = StyleSheet.create({
     },
     textCountryCode: {
         flex: 1,
-        borderRightWidth: 1
+        borderRightWidth: 1,
+        textAlign: 'right'
     },
     textPhoneNumber: {
-        flex: 4,
+        flex: 2,
     },
     phoneNumberView: {
         flexDirection: "row"
