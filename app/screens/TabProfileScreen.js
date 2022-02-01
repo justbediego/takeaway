@@ -1,21 +1,20 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View as DefaultView} from 'react-native';
 
 import {Image, Pressable, Text, View} from '../components/Themed';
 import React, {useEffect, useRef} from "react";
 import Colors from "../constants/Colors";
-import useColorScheme from "../hooks/useColorScheme";
 
 import {useDispatch, useSelector} from 'react-redux';
 import {update as updateBasicInfoSlice} from '../store/basicInfoSlice';
 import {getBasicInfo} from "../services";
-import {FontAwesome, MaterialCommunityIcons} from "@expo/vector-icons";
+import {FontAwesome} from "@expo/vector-icons";
 import Modal from 'react-native-modalbox';
 import {useTranslation} from "react-i18next";
-import {View as DefaultView} from 'react-native';
 
 export default function TabProfileScreen() {
     const {t} = useTranslation();
-    const colorScheme = useColorScheme();
+    // const colorScheme = useColorScheme();
+    const colorScheme = 'light';
     const basicInfo = useSelector((state) => state.basicInfo.value)
     const dispatch = useDispatch();
     const picOptions = useRef();
@@ -56,10 +55,10 @@ export default function TabProfileScreen() {
                 }}
             />
             <Pressable onPress={() => picOptions.current.open()} style={styles.pictureEditBtn}>
-                <MaterialCommunityIcons
-                    name="pencil-circle"
+                <FontAwesome
+                    name="arrow-circle-o-up"
                     style={{
-                        color: Colors[colorScheme].tint,
+                        color: Colors[colorScheme].text,
                         ...styles.pictureEditIcon
                     }}/>
             </Pressable>
@@ -122,9 +121,12 @@ const styles = StyleSheet.create({
         fontSize: 30
     },
     picOptions: {
-        height: 100,
+        height: 150,
         flexDirection: 'column',
-        justifyContent:'space-around'
+        justifyContent: 'space-around',
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+        paddingBottom: 30
     },
     pictureOptionBtn: {
         flexDirection: 'row',
@@ -132,8 +134,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     pictureOptionBtnText: {
-        fontSize: 15,
-        textTransform: 'uppercase'
+        fontSize: 15
     },
     pictureOptionBtnIcon: {
         fontSize: 25,

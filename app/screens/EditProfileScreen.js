@@ -9,7 +9,6 @@ import {getBasicInfo, getCountryCodes, updateBasicInfo} from "../services";
 import {useDispatch, useSelector} from "react-redux";
 import {update as updateBasicInfoSlice} from "../store/basicInfoSlice";
 import {Formik} from "formik";
-import useColorScheme from "../hooks/useColorScheme";
 import Colors from "../constants/Colors";
 
 
@@ -24,7 +23,8 @@ const LabeledInput = ({label, value, ...otherProps}) => {
 
 export default function EditProfileScreen({navigation}) {
     const {t} = useTranslation();
-    const colorScheme = useColorScheme();
+    // const colorScheme = useColorScheme();
+    const colorScheme = 'light';
     const [countryCodes, setCountryCodes] = useState([]);
     const basicInfo = useSelector((state) => state.basicInfo.value);
     const dispatch = useDispatch();
@@ -77,7 +77,6 @@ export default function EditProfileScreen({navigation}) {
         <Formik initialValues={basicInfo} onSubmit={submitBasicInfo}>
             {({handleChange, handleBlur, handleSubmit, values}) => (
                 <View style={styles.container}>
-                    <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'}/>
                     <LabeledInput
                         label={t('labelFirstName')}
                         value={values.firstName}

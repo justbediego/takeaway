@@ -53,7 +53,8 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator();
 
 function BottomTabNavigator() {
-    const colorScheme = useColorScheme();
+    // const colorScheme = useColorScheme();
+    const colorScheme = 'light';
     const {t} = useTranslation();
     const emptyComponent = () => null
 

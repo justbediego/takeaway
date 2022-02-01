@@ -9,8 +9,8 @@ const translations = {
             labelLastName: 'Last Name',
             labelPhoneNumber: 'Phone Number',
             submitButton: 'Save Changes',
-            deleteProfilePictureBtn: 'Delete profile picture',
-            uploadProfilePictureBtn: 'Upload a new picture',
+            deleteProfilePictureBtn: 'Delete',
+            uploadProfilePictureBtn: 'Upload',
             exceptions: {
                 UnexpectedClientSideException: 'UnexpectedClientSideException',
                 CityNotSelectedException: 'CityNotSelectedException',

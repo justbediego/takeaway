@@ -10,6 +10,7 @@ import {initReactI18next} from "react-i18next";
 import translations from "./translations";
 import { Provider } from 'react-redux';
 import store from './store';
+import {Platform} from "react-native";
 
 i18n
     .use(initReactI18next)
@@ -25,7 +26,8 @@ i18n
 
 export default function App() {
     const isLoadingComplete = useCachedResources();
-    const colorScheme = useColorScheme();
+    // const colorScheme = useColorScheme();
+    const colorScheme = 'light';
 
     if (!isLoadingComplete) {
         return null;
@@ -34,7 +36,7 @@ export default function App() {
             <SafeAreaProvider>
                 <Provider store={store}>
                     <Navigation colorScheme={colorScheme}/>
-                    <StatusBar/>
+                    <StatusBar style={'dark'}/>
                 </Provider>
             </SafeAreaProvider>
         );
