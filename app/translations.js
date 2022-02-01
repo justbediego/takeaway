@@ -8,6 +8,7 @@ const translations = {
             labelFirstName: 'First Name',
             labelLastName: 'Last Name',
             labelPhoneNumber: 'Phone Number',
+            submitButton: 'Save Changes',
             exceptions: {
                 UnexpectedClientSideException: 'UnexpectedClientSideException',
                 CityNotSelectedException: 'CityNotSelectedException',

@@ -4,8 +4,8 @@
  */
 
 import {
-    Button as DefaultButton,
     Image as DefaultImage,
+    Pressable as DefaultPressable,
     Text as DefaultText,
     TextInput as DefaultTextInput,
     View as DefaultView
@@ -50,10 +50,19 @@ export function Image(props) {
 }
 
 export function Button(props) {
+    const {style, lightColor, darkColor, title, ...otherProps} = props;
+    const color = useThemeColor({light: lightColor, dark: darkColor}, 'text');
+
+    return <DefaultPressable style={({pressed}) => ({opacity: pressed ? 0.5 : 1})} {...otherProps}>
+        <Text style={{color, ...style}}>{title}</Text>
+    </DefaultPressable>;
+}
+
+export function Pressable(props) {
     const {style, lightColor, darkColor, ...otherProps} = props;
     const color = useThemeColor({light: lightColor, dark: darkColor}, 'text');
 
-    return <DefaultButton style={[{color}, style]} {...otherProps} />;
+    return <DefaultPressable style={[{color}, style]} {...otherProps} />;
 }
 
 export function TextInput(props) {

@@ -31,8 +31,18 @@ type GetCountryCodesDto = {
     countries: CountryCodeDto[];
 }
 
+type UpdateBasicInfoDto = {
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    phoneNumberCountryCode: string;
+}
+
 const callService = async ({data, headers, method, parent, action}: RequestInfo) => {
     try {
+        console.log(data);
+        console.log(JSON.stringify({data}));
+
         const response = await axios({
             url: `${basePath}/${parent}/${action}`,
             method,
@@ -83,9 +93,12 @@ export const modifyAddress = async () => {
 //PATCH
 }
 
-export const updateBasicInfo = () => {
-//PATCH
-}
+export const updateBasicInfo = (data: UpdateBasicInfoDto): Promise => callService({
+    method: "PATCH",
+    parent: "user",
+    action: 'updateBasicInfo',
+    data
+})
 
 export const updateEmail = () => {
 //PATCH
