@@ -53,16 +53,22 @@ export function Button(props) {
     const {style, lightColor, darkColor, title, ...otherProps} = props;
     const color = useThemeColor({light: lightColor, dark: darkColor}, 'text');
 
-    return <DefaultPressable style={({pressed}) => ({opacity: pressed ? 0.5 : 1})} {...otherProps}>
-        <Text style={{color, ...style}}>{title}</Text>
-    </DefaultPressable>;
+    return (
+        <DefaultPressable style={({pressed}) => ({opacity: pressed ? 0.5 : 1})} {...otherProps}>
+            <Text style={{color, ...style}}>{title}</Text>
+        </DefaultPressable>
+    );
 }
 
 export function Pressable(props) {
-    const {style, lightColor, darkColor, ...otherProps} = props;
+    const {style, lightColor, darkColor, title, children, ...otherProps} = props;
     const color = useThemeColor({light: lightColor, dark: darkColor}, 'text');
 
-    return <DefaultPressable style={[{color}, style]} {...otherProps} />;
+    return (
+        <DefaultPressable style={({pressed}) => ({opacity: pressed ? 0.5 : 1, color, ...style})} {...otherProps}>
+            {children}
+        </DefaultPressable>
+    );
 }
 
 export function TextInput(props) {

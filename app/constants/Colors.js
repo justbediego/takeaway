@@ -13,7 +13,8 @@ export default {
         newIcon: tint2ColorLight,
         imageBorder: '#c8c8c8',
         inputBackground: '#f1f1f1',
-        inputBorder: '#a9a9a9'
+        inputBorder: '#a9a9a9',
+        modalBackground: '#ffffff'
     },
     dark: {
         text: '#fff',
@@ -24,6 +25,7 @@ export default {
         newIcon: tint2ColorDark,
         imageBorder: '#a7a7a7',
         inputBackground: '#353535',
-        inputBorder: '#5a5a5a'
+        inputBorder: '#5a5a5a',
+        modalBackground: '#121212'
     },
 };

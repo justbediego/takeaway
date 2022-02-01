@@ -3,7 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {DarkTheme, DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
-import {Pressable, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -14,6 +14,7 @@ import LinkingConfiguration from './LinkingConfiguration';
 import {useTranslation} from "react-i18next";
 import NewItemScreen from "../screens/NewItemScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
+import {Pressable} from "../components/Themed";
 
 export default function Navigation({colorScheme}) {
     return (
@@ -101,13 +102,12 @@ function BottomTabNavigator() {
                                      color={color} name={focused ? "user" : "user-o"}/>,
                     headerRight: () => (
                         <Pressable
-                            style={({pressed}) => ({
-                                ...styles.topRightPress,
-                                opacity: pressed ? 0.5 : 1,
-                            })}
+                            style={styles.topRightPress}
                             onPress={() => navigation.navigate('EditProfileModal')}>
-                            <FontAwesome name="edit" style={styles.topRightPressIcon}
-                                         color={Colors[colorScheme].text}/>
+                            <FontAwesome
+                                name="edit"
+                                style={styles.topRightPressIcon}
+                                color={Colors[colorScheme].text}/>
                         </Pressable>
                     ),
                 })}
