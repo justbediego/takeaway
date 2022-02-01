@@ -22,13 +22,12 @@ const LabeledInput = ({label, value, ...otherProps}) => {
     );
 }
 
-export default function EditProfileScreen() {
+export default function EditProfileScreen({navigation}) {
     const {t} = useTranslation();
     const colorScheme = useColorScheme();
     const [countryCodes, setCountryCodes] = useState([]);
     const basicInfo = useSelector((state) => state.basicInfo.value);
     const dispatch = useDispatch();
-
 
     const refreshBasicInfo = async () => {
         try {
@@ -61,6 +60,8 @@ export default function EditProfileScreen() {
                 phoneNumber: values.phoneNumber,
                 phoneNumberCountryCode: values.phoneNumberCountryCode
             });
+            await refreshBasicInfo();
+            navigation.goBack(null);
         } catch (e) {
             // todo
             console.log(e.translation);

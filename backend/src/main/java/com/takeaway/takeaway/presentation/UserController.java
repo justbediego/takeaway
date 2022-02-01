@@ -4,6 +4,7 @@ import com.takeaway.takeaway.business.UserLogic;
 import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.business.exception.FileUploadException;
 import com.takeaway.takeaway.business.exception.TakeawayException;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

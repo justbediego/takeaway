@@ -40,14 +40,14 @@ type UpdateBasicInfoDto = {
 
 const callService = async ({data, headers, method, parent, action}: RequestInfo) => {
     try {
-        console.log(data);
-        console.log(JSON.stringify({data}));
-
         const response = await axios({
             url: `${basePath}/${parent}/${action}`,
             method,
-            headers,
-            body: JSON.stringify(data)
+            headers:{
+                'Content-Type': 'application/json',
+                ...headers
+            },
+            data: JSON.stringify(data)
         });
         return response.data;
     } catch (ex) {
