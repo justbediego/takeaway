@@ -12,7 +12,7 @@ import {getBasicInfo} from "../services";
 export default function TabProfileScreen() {
     const colorScheme = useColorScheme();
     const basicInfo = useSelector((state) => state.basicInfo.value)
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const refreshBasicInfo = async () => {
         try{

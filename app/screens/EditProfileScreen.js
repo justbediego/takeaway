@@ -5,7 +5,10 @@ import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 
 import {Picker as DefaultPicker} from '@react-native-picker/picker'
-import {getCountryCodes} from "../services";
+import {getBasicInfo, getCountryCodes} from "../services";
+import {useDispatch, useSelector} from "react-redux";
+import {update as updateBasicInfoSlice} from "../store/basicInfoSlice";
+import {Formik} from "formik";
 
 
 const LabeledInput = ({label, value}) => {
@@ -20,6 +23,19 @@ const LabeledInput = ({label, value}) => {
 export default function EditProfileScreen() {
     const {t} = useTranslation();
     const [countryCodes, setCountryCodes] = useState([]);
+    const basicInfo = useSelector((state) => state.basicInfo.value);
+    const dispatch = useDispatch();
+
+
+    const refreshBasicInfo = async () => {
+        try {
+            const response = await getBasicInfo();
+            await dispatch(updateBasicInfoSlice(response));
+        } catch (e) {
+            // todo
+            console.log(e.translation);
+        }
+    }
 
     const updateCountryCodes = async () => {
         try {
@@ -35,27 +51,50 @@ export default function EditProfileScreen() {
     }
 
     useEffect(() => {
+        refreshBasicInfo();
         updateCountryCodes();
     }, [])
 
     return (
-        <View style={styles.container}>
-            <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'}/>
-            <LabeledInput label={t('labelFirstName')} value={"Salam"}/>
-            <LabeledInput label={t('labelLastName')} value={"Salam"}/>
-            <View style={styles.labeledInput}>
-                <Text style={styles.inputLabel}>{t('labelPhoneNumber')}</Text>
-                <View style={styles.phoneNumberView}>
-                    <Picker mode="dialog" style={[styles.textInput, styles.textCountryCode]}>
-                        {countryCodes && countryCodes.map((value, index) =>
-                            <DefaultPicker.Item label={`${value.countryCode} (${value.countryName})`}
-                                                value={value.countryCode} key={index}/>
-                        )}
-                    </Picker>
-                    <TextInput style={[styles.textInput, styles.textPhoneNumber]}>Salam</TextInput>
+        <Formik initialValues={basicInfo}>
+            {({handleChange, handleBlur, handleSubmit, values}) => (
+                <View style={styles.container}>
+                    <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'}/>
+                    <LabeledInput
+                        label={t('labelFirstName')}
+                        value={values.firstName}
+                        onChangeText={handleChange('firstName')}
+                        onBlur={handleBlur('firstName')}
+                    />
+                    <LabeledInput
+                        label={t('labelLastName')}
+                        value={values.lastName}
+                        onChangeText={handleChange('lastName')}
+                        onBlur={handleBlur('lastName')}
+                    />
+                    <View style={styles.labeledInput}>
+                        <Text style={styles.inputLabel}>{t('labelPhoneNumber')}</Text>
+                        <View style={styles.phoneNumberView}>
+                            <Picker
+                                mode="dialog"
+                                selectedValue={values.phoneNumberCountryCode}
+                                onValueChange={handleChange('phoneNumberCountryCode')}
+                                style={[styles.textInput, styles.textCountryCode]}>
+                                {countryCodes && countryCodes.map((value, index) =>
+                                    <DefaultPicker.Item label={`${value.countryCode} (${value.countryName})`}
+                                                        value={value.countryCode} key={index}/>
+                                )}
+                            </Picker>
+                            <TextInput
+                                value={values.phoneNumber}
+                                onChangeText={handleChange('phoneNumber')}
+                                onBlur={handleBlur('phoneNumber')}
+                                style={[styles.textInput, styles.textPhoneNumber]} />
+                        </View>
+                    </View>
                 </View>
-            </View>
-        </View>
+            )}
+        </Formik>
     );
 }
 
@@ -81,7 +120,7 @@ const styles = StyleSheet.create({
     textCountryCode: {
         flex: 1,
         borderRightWidth: 1,
-        textAlign: 'right'
+        textAlign: 'right',
     },
     textPhoneNumber: {
         flex: 2,
