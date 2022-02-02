@@ -102,15 +102,17 @@ export default function TabProfileScreen({navigation}) {
             </Pressable>
             <Pressable onPress={() => picOptions.current.open()} style={styles.pictureEditBtn}>
                 <FontAwesome
-                    name="arrow-circle-o-up"
+                    name="pencil"
                     style={{
-                        color: Colors[colorScheme].text,
+                        color: Colors[colorScheme].background,
+                        backgroundColor: Colors[colorScheme].tint,
+                        borderColor: Colors[colorScheme].imageBorder,
                         ...styles.pictureEditIcon
                     }}/>
             </Pressable>
             <Text style={styles.fullName}>{basicInfo.firstName} {basicInfo.lastName}</Text>
             <Text style={styles.username}>@{basicInfo.username}</Text>
-            <Text style={styles.username}>{basicInfo.phoneNumberCountryCode}{basicInfo.phoneNumber}</Text>
+            <Text style={styles.username}>{basicInfo.phoneNumberCountryCode} {basicInfo.phoneNumber}</Text>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
             <Modal style={{...styles.picOptions, backgroundColor: Colors[colorScheme].modalBackground}}
                    position={"bottom"} ref={picOptions}>
@@ -168,7 +170,12 @@ const styles = StyleSheet.create({
         marginLeft: 70,
     },
     pictureEditIcon: {
-        fontSize: 30
+        fontSize: 20,
+        borderWidth: 2,
+        borderRadius: 15,
+        padding: 3,
+        paddingLeft: 7,
+        paddingTop: 5
     },
     picOptions: {
         height: 150,

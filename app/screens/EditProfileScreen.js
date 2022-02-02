@@ -93,17 +93,22 @@ export default function EditProfileScreen({navigation}) {
                         />
                         <View style={styles.labeledInput}>
                             <Text style={styles.inputLabel}>{t('labelPhoneNumber')}</Text>
+                            <Picker
+                                mode="dropdown"
+                                selectedValue={values.phoneNumberCountryCode}
+                                onValueChange={handleChange('phoneNumberCountryCode')}
+                                style={styles.pickerCountryCode}>
+                                {countryCodes && countryCodes.map((value, index) =>
+                                    <DefaultPicker.Item
+                                        key={index}
+                                        label={value.countryName}
+                                        value={value.countryCode}/>
+                                )}
+                            </Picker>
                             <View style={styles.phoneNumberView}>
-                                <Picker
-                                    mode="dropdown"
-                                    selectedValue={values.phoneNumberCountryCode}
-                                    onValueChange={handleChange('phoneNumberCountryCode')}
-                                    style={[styles.textInput, styles.textCountryCode]}>
-                                    {countryCodes && countryCodes.map((value, index) =>
-                                        <DefaultPicker.Item label={`${value.countryCode} (${value.countryName})`}
-                                                            value={value.countryCode} key={index}/>
-                                    )}
-                                </Picker>
+                                <TextInput
+                                    value={values.phoneNumberCountryCode}
+                                    style={[styles.textInput, styles.textCountryCode]}/>
                                 <TextInput
                                     value={values.phoneNumber}
                                     onChangeText={handleChange('phoneNumber')}
@@ -155,7 +160,10 @@ const styles = StyleSheet.create({
         borderRightWidth: 1,
     },
     textPhoneNumber: {
-        flex: 2,
+        flex: 4,
+    },
+    pickerCountryCode: {
+        height: 50,
     },
     phoneNumberView: {
         flexDirection: "row",
