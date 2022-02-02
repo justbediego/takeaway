@@ -16,6 +16,8 @@ import java.util.UUID;
 public class GetBasicInfoDto implements Serializable {
     private UUID profilePictureId;
     private UUID profilePictureKey;
+    private UUID profilePictureOriginalId;
+    private UUID profilePictureOriginalKey;
     private String firstName;
     private String lastName;
     private String phoneNumber;

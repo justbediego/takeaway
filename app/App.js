@@ -3,14 +3,12 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import React from "react";
 import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import i18n from "i18next";
 import {initReactI18next} from "react-i18next";
 import translations from "./translations";
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import store from './store';
-import {Platform} from "react-native";
 
 i18n
     .use(initReactI18next)

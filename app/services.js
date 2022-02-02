@@ -14,6 +14,8 @@ type RequestInfo = {
 type GetBasicInfoDto = {
     profilePictureKey: string;
     profilePictureId: string;
+    profilePictureOriginalKey: string;
+    profilePictureOriginalId: string;
     firstName: string;
     lastName: string;
     phoneNumber: string;

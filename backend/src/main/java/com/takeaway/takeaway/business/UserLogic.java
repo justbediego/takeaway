@@ -119,6 +119,7 @@ public class UserLogic {
     public GetBasicInfoDto getBasicInfo(UUID userId) throws TakeawayException {
         User user = validationLogic.validateGetUserById(userId);
         Attachment profilePicture = user.getProfilePicture();
+        Attachment profilePictureOriginal = user.getProfilePictureOriginal();
         return GetBasicInfoDto.builder()
                 .username(user.getUsername())
                 .email(user.getEmail())
@@ -129,6 +130,8 @@ public class UserLogic {
                 .phoneNumberCountryCode(user.getPhoneNumberCountryCode())
                 .profilePictureId(profilePicture == null ? null : profilePicture.getId())
                 .profilePictureKey(profilePicture == null ? null : profilePicture.getSecurityKey())
+                .profilePictureOriginalId(profilePictureOriginal == null ? null : profilePictureOriginal.getId())
+                .profilePictureOriginalKey(profilePictureOriginal == null ? null : profilePictureOriginal.getSecurityKey())
                 .build();
     }
 

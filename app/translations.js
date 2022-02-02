@@ -1,3 +1,5 @@
+import ShowProfilePictureScreen from "./screens/ShowProfilePictureScreen";
+
 const translations = {
     en: {
         translation: {
@@ -11,6 +13,7 @@ const translations = {
             submitButton: 'Save Changes',
             deleteProfilePictureBtn: 'Delete',
             uploadProfilePictureBtn: 'Upload',
+            modalProfilePictureTitle: 'Profile Picture',
             exceptions: {
                 UnexpectedClientSideException: 'UnexpectedClientSideException',
                 CityNotSelectedException: 'CityNotSelectedException',

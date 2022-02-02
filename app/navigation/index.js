@@ -6,7 +6,6 @@ import * as React from 'react';
 import {StyleSheet} from 'react-native';
 
 import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabProfileScreen from '../screens/TabProfileScreen';
@@ -15,6 +14,7 @@ import {useTranslation} from "react-i18next";
 import NewItemScreen from "../screens/NewItemScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import {Pressable} from "../components/Themed";
+import ShowProfilePictureScreen from "../screens/ShowProfilePictureScreen";
 
 export default function Navigation({colorScheme}) {
     return (
@@ -38,12 +38,16 @@ function RootNavigator() {
                 <Stack.Screen
                     name="NewItemModal"
                     component={NewItemScreen}
-                    options={{ title: t('tabNewTitle') }}
+                    options={{title: t('tabNewTitle')}}
                 />
                 <Stack.Screen
                     name="EditProfileModal"
                     component={EditProfileScreen}
-                    options={{ title: t('modalEditProfileTitle') }}
+                    options={{title: t('modalEditProfileTitle')}}
+                />
+                <Stack.Screen
+                    name="ShowProfilePictureModal"
+                    component={ShowProfilePictureScreen}
                 />
             </Stack.Group>
         </Stack.Navigator>

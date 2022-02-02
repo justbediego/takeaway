@@ -12,7 +12,7 @@ import Modal from 'react-native-modalbox';
 import {useTranslation} from "react-i18next";
 import * as ImagePicker from 'expo-image-picker';
 
-export default function TabProfileScreen() {
+export default function TabProfileScreen({navigation}) {
     const {t} = useTranslation();
     // const colorScheme = useColorScheme();
     const colorScheme = 'light';
@@ -72,22 +72,34 @@ export default function TabProfileScreen() {
         }
     }
 
+    const openProfilePictureModal = () => {
+        if (basicInfo?.profilePictureOriginalId) {
+            navigation.navigate('ShowProfilePictureModal', {
+                title: t('modalProfilePictureTitle'),
+                picId: basicInfo.profilePictureOriginalId,
+                picKey: basicInfo?.profilePictureOriginalKey
+            });
+        }
+    }
+
     useEffect(() => {
         refreshBasicInfo();
     }, []);
 
     return (
         <View style={styles.container}>
-            <Image
-                source={basicInfo?.profilePictureId ?
-                    {uri: getImageSource(basicInfo?.profilePictureId, basicInfo?.profilePictureKey)} :
-                    require('../assets/images/anonymous.png')
-                }
-                style={{
-                    ...styles.profilePicture,
-                    borderColor: Colors[colorScheme].imageBorder
-                }}
-            />
+            <Pressable onPress={openProfilePictureModal}>
+                <Image
+                    source={basicInfo?.profilePictureId ?
+                        {uri: getImageSource(basicInfo?.profilePictureId, basicInfo?.profilePictureKey)} :
+                        require('../assets/images/anonymous.png')
+                    }
+                    style={{
+                        ...styles.profilePicture,
+                        borderColor: Colors[colorScheme].imageBorder
+                    }}
+                />
+            </Pressable>
             <Pressable onPress={() => picOptions.current.open()} style={styles.pictureEditBtn}>
                 <FontAwesome
                     name="arrow-circle-o-up"
