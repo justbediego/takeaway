@@ -34,6 +34,7 @@ export default function TabProfileScreen({navigation}) {
         try {
             await deleteProfilePicture();
             await refreshBasicInfo();
+            picOptions.current.close();
         } catch (e) {
             // todo
             console.log(e.translation);
@@ -114,8 +115,13 @@ export default function TabProfileScreen({navigation}) {
             <Text style={styles.username}>@{basicInfo.username}</Text>
             <Text style={styles.username}>{basicInfo.phoneNumberCountryCode} {basicInfo.phoneNumber}</Text>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-            <Modal style={{...styles.picOptions, backgroundColor: Colors[colorScheme].modalBackground}}
-                   position={"bottom"} ref={picOptions}>
+            <Modal
+                position={"bottom"} ref={picOptions}
+                style={{
+                    ...styles.picOptions,
+                    backgroundColor: Colors[colorScheme].modalBackground,
+                    height: basicInfo?.profilePictureId ? 150 : 100
+                }}>
                 <Pressable onPress={uploadProfilePicPressed}>
                     <DefaultView style={styles.pictureOptionBtn}>
                         <FontAwesome
@@ -126,6 +132,7 @@ export default function TabProfileScreen({navigation}) {
                         </Text>
                     </DefaultView>
                 </Pressable>
+                {basicInfo?.profilePictureId &&
                 <Pressable onPress={deleteProfilePicPressed}>
                     <DefaultView style={styles.pictureOptionBtn}>
                         <FontAwesome
@@ -135,7 +142,7 @@ export default function TabProfileScreen({navigation}) {
                             {t('deleteProfilePictureBtn')}
                         </Text>
                     </DefaultView>
-                </Pressable>
+                </Pressable>}
             </Modal>
         </View>
     );
@@ -178,7 +185,6 @@ const styles = StyleSheet.create({
         paddingTop: 5
     },
     picOptions: {
-        height: 150,
         flexDirection: 'column',
         justifyContent: 'space-around',
         borderTopRightRadius: 20,
