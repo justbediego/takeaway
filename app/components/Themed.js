@@ -14,7 +14,6 @@ import {
 import {Picker as DefaultPicker} from '@react-native-picker/picker';
 
 import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
 import React from "react";
 
 export function useThemeColor(props, colorName) {

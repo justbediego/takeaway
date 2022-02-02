@@ -38,6 +38,8 @@ type UpdateBasicInfoDto = {
     phoneNumberCountryCode: string;
 }
 
+export const getImageSource = (imageId, securityKey) => `${basePath}/attachment/getImage/${imageId}/${securityKey}`
+
 const handleServiceException = async (callMethod: Promise) => {
     try {
         return (await callMethod())?.data;
@@ -63,13 +65,12 @@ const handleServiceException = async (callMethod: Promise) => {
 }
 
 const callFileService = ({data, method, parent, action}: RequestInfo) =>
-    handleServiceException(() => axios({
-        url: `${basePath}/${parent}/${action}`,
+    handleServiceException(() => fetch(`${basePath}/${parent}/${action}`, {
+        method,
         headers: {
             "Content-Type": "multipart/form-data"
         },
-        method,
-        data
+        body: data
     }))
 
 const callJsonService = ({data, headers, method, parent, action}: RequestInfo) =>

@@ -6,7 +6,7 @@ import Colors from "../constants/Colors";
 
 import {useDispatch, useSelector} from 'react-redux';
 import {update as updateBasicInfoSlice} from '../store/basicInfoSlice';
-import {deleteProfilePicture, getBasicInfo, updateProfilePicture} from "../services";
+import {deleteProfilePicture, getBasicInfo, getImageSource, updateProfilePicture} from "../services";
 import {FontAwesome} from "@expo/vector-icons";
 import Modal from 'react-native-modalbox';
 import {useTranslation} from "react-i18next";
@@ -51,17 +51,20 @@ export default function TabProfileScreen() {
         if (result.cancelled || !result?.uri) {
             return;
         }
+        const uri = result.uri;
+        const name = result.uri.split('/').pop();
 
         const formData = new FormData();
         formData.append('file', {
-            ...result,
-            name: result.uri.split('/').pop()
+            uri,
+            name,
+            type: 'image/*'
         });
-        console.log(formData);
 
         try {
             await updateProfilePicture(formData);
             await refreshBasicInfo();
+            picOptions.current.close();
         } catch (e) {
             // todo
             console.log(e.translation);
@@ -77,7 +80,7 @@ export default function TabProfileScreen() {
         <View style={styles.container}>
             <Image
                 source={basicInfo?.profilePictureId ?
-                    {uri: "https://www.fairtravel4u.org/wp-content/uploads/2018/06/sample-profile-pic.png"} :
+                    {uri: getImageSource(basicInfo?.profilePictureId, basicInfo?.profilePictureKey)} :
                     require('../assets/images/anonymous.png')
                 }
                 style={{
