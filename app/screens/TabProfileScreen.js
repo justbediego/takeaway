@@ -6,10 +6,11 @@ import Colors from "../constants/Colors";
 
 import {useDispatch, useSelector} from 'react-redux';
 import {update as updateBasicInfoSlice} from '../store/basicInfoSlice';
-import {deleteProfilePicture, getBasicInfo} from "../services";
+import {deleteProfilePicture, getBasicInfo, updateProfilePicture} from "../services";
 import {FontAwesome} from "@expo/vector-icons";
 import Modal from 'react-native-modalbox';
 import {useTranslation} from "react-i18next";
+import * as ImagePicker from 'expo-image-picker';
 
 export default function TabProfileScreen() {
     const {t} = useTranslation();
@@ -40,7 +41,32 @@ export default function TabProfileScreen() {
     }
 
     const uploadProfilePicPressed = async () => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+        });
 
+        if (result.cancelled || !result?.uri) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', {
+            ...result,
+            name: result.uri.split('/').pop()
+        });
+        console.log(formData);
+
+        try {
+            await updateProfilePicture(formData);
+            await refreshBasicInfo();
+        } catch (e) {
+            // todo
+            console.log(e.translation);
+            console.log(e.message);
+        }
     }
 
     useEffect(() => {

@@ -38,18 +38,9 @@ type UpdateBasicInfoDto = {
     phoneNumberCountryCode: string;
 }
 
-const callService = async ({data, headers, method, parent, action}: RequestInfo) => {
+const handleServiceException = async (callMethod: Promise) => {
     try {
-        const response = await axios({
-            url: `${basePath}/${parent}/${action}`,
-            method,
-            headers:{
-                'Content-Type': 'application/json',
-                ...headers
-            },
-            data: JSON.stringify(data)
-        });
-        return response.data;
+        return (await callMethod())?.data;
     } catch (ex) {
         if (ex?.response?.status === 409 && ex?.response?.data?.type) {
             // takeaway exception
@@ -71,6 +62,27 @@ const callService = async ({data, headers, method, parent, action}: RequestInfo)
     }
 }
 
+const callFileService = ({data, method, parent, action}: RequestInfo) =>
+    handleServiceException(() => axios({
+        url: `${basePath}/${parent}/${action}`,
+        headers: {
+            "Content-Type": "multipart/form-data"
+        },
+        method,
+        data
+    }))
+
+const callJsonService = ({data, headers, method, parent, action}: RequestInfo) =>
+    handleServiceException(() => axios({
+        url: `${basePath}/${parent}/${action}`,
+        method,
+        headers: {
+            'Content-Type': 'application/json',
+            ...headers
+        },
+        data: JSON.stringify(data)
+    }))
+
 export const authenticateEmail = () => {
 //POST
 }
@@ -83,7 +95,7 @@ export const changePassword = () => {
 //PATCH
 }
 
-export const getBasicInfo = (): Promise<GetBasicInfoDto> => callService({
+export const getBasicInfo = (): Promise<GetBasicInfoDto> => callJsonService({
     method: "GET",
     parent: "user",
     action: 'getBasicInfo'
@@ -93,7 +105,7 @@ export const modifyAddress = async () => {
 //PATCH
 }
 
-export const updateBasicInfo = (data: UpdateBasicInfoDto): Promise => callService({
+export const updateBasicInfo = (data: UpdateBasicInfoDto): Promise => callJsonService({
     method: "PATCH",
     parent: "user",
     action: 'updateBasicInfo',
@@ -104,21 +116,24 @@ export const updateEmail = () => {
 //PATCH
 }
 
-export const updateProfilePicture = () => {
-//PATCH
-}
+export const updateProfilePicture = (data): Promise => callFileService({
+    method: "PATCH",
+    parent: "user",
+    action: "updateProfilePicture",
+    data
+})
 
 export const updateUsername = () => {
 //PATCH
 }
 
-export const getCountryCodes = (): Promise<GetCountryCodesDto> => callService({
+export const getCountryCodes = (): Promise<GetCountryCodesDto> => callJsonService({
     method: "GET",
     parent: "user",
     action: 'getCountryCodes'
 })
 
-export const deleteProfilePicture = (): Promise => callService({
+export const deleteProfilePicture = (): Promise => callJsonService({
     method: "DELETE",
     parent: "user",
     action: 'deleteProfilePicture'
