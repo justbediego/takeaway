@@ -6,7 +6,7 @@ import Colors from "../constants/Colors";
 
 import {useDispatch, useSelector} from 'react-redux';
 import {update as updateBasicInfoSlice} from '../store/basicInfoSlice';
-import {getBasicInfo} from "../services";
+import {deleteProfilePicture, getBasicInfo} from "../services";
 import {FontAwesome} from "@expo/vector-icons";
 import Modal from 'react-native-modalbox';
 import {useTranslation} from "react-i18next";
@@ -19,7 +19,6 @@ export default function TabProfileScreen() {
     const dispatch = useDispatch();
     const picOptions = useRef();
 
-
     const refreshBasicInfo = async () => {
         try {
             const response = await getBasicInfo();
@@ -31,7 +30,13 @@ export default function TabProfileScreen() {
     }
 
     const deleteProfilePicPressed = async () => {
-
+        try {
+            await deleteProfilePicture();
+            await refreshBasicInfo();
+        } catch (e) {
+            // todo
+            console.log(e.translation);
+        }
     }
 
     const uploadProfilePicPressed = async () => {
@@ -70,18 +75,22 @@ export default function TabProfileScreen() {
                    position={"bottom"} ref={picOptions}>
                 <Pressable onPress={uploadProfilePicPressed}>
                     <DefaultView style={styles.pictureOptionBtn}>
-                        <FontAwesome name="upload"
-                                     style={{color: Colors[colorScheme].tint, ...styles.pictureOptionBtnIcon}}/>
-                        <Text
-                            style={{color: Colors[colorScheme].tint, ...styles.pictureOptionBtnText}}>{t('uploadProfilePictureBtn')}</Text>
+                        <FontAwesome
+                            name="upload"
+                            style={{color: Colors[colorScheme].tint, ...styles.pictureOptionBtnIcon}}/>
+                        <Text style={{color: Colors[colorScheme].tint, ...styles.pictureOptionBtnText}}>
+                            {t('uploadProfilePictureBtn')}
+                        </Text>
                     </DefaultView>
                 </Pressable>
                 <Pressable onPress={deleteProfilePicPressed}>
                     <DefaultView style={styles.pictureOptionBtn}>
-                        <FontAwesome name="trash"
-                                     style={{color: Colors[colorScheme].tint, ...styles.pictureOptionBtnIcon}}/>
-                        <Text
-                            style={{color: Colors[colorScheme].tint, ...styles.pictureOptionBtnText}}>{t('deleteProfilePictureBtn')}</Text>
+                        <FontAwesome
+                            name="trash"
+                            style={{color: Colors[colorScheme].tint, ...styles.pictureOptionBtnIcon}}/>
+                        <Text style={{color: Colors[colorScheme].tint, ...styles.pictureOptionBtnText}}>
+                            {t('deleteProfilePictureBtn')}
+                        </Text>
                     </DefaultView>
                 </Pressable>
             </Modal>

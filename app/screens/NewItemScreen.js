@@ -6,10 +6,13 @@ import React from "react";
 
 export default function NewItemScreen() {
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Modal</Text>
-            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-        </View>
+        <>
+            <StatusBar style={Platform.OS === 'ios' ? 'light' : 'dark'}/>
+            <View style={styles.container}>
+                <Text style={styles.title}>Modal</Text>
+                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+            </View>
+        </>
     );
 }
 

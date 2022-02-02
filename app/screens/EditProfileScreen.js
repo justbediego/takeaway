@@ -74,52 +74,55 @@ export default function EditProfileScreen({navigation}) {
     }, [])
 
     return (
-        <Formik initialValues={basicInfo} onSubmit={submitBasicInfo}>
-            {({handleChange, handleBlur, handleSubmit, values}) => (
-                <View style={styles.container}>
-                    <LabeledInput
-                        label={t('labelFirstName')}
-                        value={values.firstName}
-                        onChangeText={handleChange('firstName')}
-                        onBlur={handleBlur('firstName')}
-                    />
-                    <LabeledInput
-                        label={t('labelLastName')}
-                        value={values.lastName}
-                        onChangeText={handleChange('lastName')}
-                        onBlur={handleBlur('lastName')}
-                    />
-                    <View style={styles.labeledInput}>
-                        <Text style={styles.inputLabel}>{t('labelPhoneNumber')}</Text>
-                        <View style={styles.phoneNumberView}>
-                            <Picker
-                                mode="dropdown"
-                                selectedValue={values.phoneNumberCountryCode}
-                                onValueChange={handleChange('phoneNumberCountryCode')}
-                                style={[styles.textInput, styles.textCountryCode]}>
-                                {countryCodes && countryCodes.map((value, index) =>
-                                    <DefaultPicker.Item label={`${value.countryCode} (${value.countryName})`}
-                                                        value={value.countryCode} key={index}/>
-                                )}
-                            </Picker>
-                            <TextInput
-                                value={values.phoneNumber}
-                                onChangeText={handleChange('phoneNumber')}
-                                onBlur={handleBlur('phoneNumber')}
-                                style={[styles.textInput, styles.textPhoneNumber]}/>
+        <>
+            <StatusBar style={Platform.OS === 'ios' ? 'light' : 'dark'}/>
+            <Formik initialValues={basicInfo} onSubmit={submitBasicInfo}>
+                {({handleChange, handleBlur, handleSubmit, values}) => (
+                    <View style={styles.container}>
+                        <LabeledInput
+                            label={t('labelFirstName')}
+                            value={values.firstName}
+                            onChangeText={handleChange('firstName')}
+                            onBlur={handleBlur('firstName')}
+                        />
+                        <LabeledInput
+                            label={t('labelLastName')}
+                            value={values.lastName}
+                            onChangeText={handleChange('lastName')}
+                            onBlur={handleBlur('lastName')}
+                        />
+                        <View style={styles.labeledInput}>
+                            <Text style={styles.inputLabel}>{t('labelPhoneNumber')}</Text>
+                            <View style={styles.phoneNumberView}>
+                                <Picker
+                                    mode="dropdown"
+                                    selectedValue={values.phoneNumberCountryCode}
+                                    onValueChange={handleChange('phoneNumberCountryCode')}
+                                    style={[styles.textInput, styles.textCountryCode]}>
+                                    {countryCodes && countryCodes.map((value, index) =>
+                                        <DefaultPicker.Item label={`${value.countryCode} (${value.countryName})`}
+                                                            value={value.countryCode} key={index}/>
+                                    )}
+                                </Picker>
+                                <TextInput
+                                    value={values.phoneNumber}
+                                    onChangeText={handleChange('phoneNumber')}
+                                    onBlur={handleBlur('phoneNumber')}
+                                    style={[styles.textInput, styles.textPhoneNumber]}/>
+                            </View>
                         </View>
+                        <Button
+                            title={t('submitButton')}
+                            style={{
+                                color: Colors[colorScheme].tint,
+                                ...styles.submitButton
+                            }}
+                            onPress={handleSubmit}
+                        />
                     </View>
-                    <Button
-                        title={t('submitButton')}
-                        style={{
-                            color: Colors[colorScheme].tint,
-                            ...styles.submitButton
-                        }}
-                        onPress={handleSubmit}
-                    />
-                </View>
-            )}
-        </Formik>
+                )}
+            </Formik>
+        </>
     );
 }
 

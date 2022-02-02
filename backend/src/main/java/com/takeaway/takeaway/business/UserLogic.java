@@ -7,6 +7,7 @@ import com.takeaway.takeaway.business.exception.*;
 import com.takeaway.takeaway.dataaccess.model.Attachment;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
+import com.takeaway.takeaway.dataaccess.model.enums.EntityTypes;
 import com.takeaway.takeaway.dataaccess.model.geo.*;
 import com.takeaway.takeaway.dataaccess.repository.*;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +60,19 @@ public class UserLogic {
         return Hashing.sha256()
                 .hashString(String.format("%s%s", passwordHashSalt, password), StandardCharsets.UTF_8)
                 .toString();
+    }
+
+    public void deleteProfilePicture(UUID userId) throws TakeawayException {
+        User user = validationLogic.validateGetUserById(userId);
+        if (user.getProfilePicture() == null) {
+            throw  new EntityNotFound(EntityTypes.ATTACHMENT);
+        }
+        if (user.getProfilePictureOriginal() == null) {
+            throw  new EntityNotFound(EntityTypes.ATTACHMENT);
+        }
+        attachmentLogic.removeAttachment(user.getProfilePicture().getId());
+        attachmentLogic.removeAttachment(user.getProfilePictureOriginal().getId());
+        userRepository.save(user);
     }
 
     public void updateProfilePicture(UUID userId, CreateAttachmentDto attachmentDto) throws TakeawayException {

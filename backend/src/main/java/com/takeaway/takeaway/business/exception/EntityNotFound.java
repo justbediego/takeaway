@@ -6,6 +6,10 @@ import java.util.UUID;
 
 public class EntityNotFound extends TakeawayException {
 
+    public EntityNotFound(EntityTypes entityType) {
+        super(entityType.toString());
+    }
+
     public EntityNotFound(EntityTypes entityType, UUID id) {
         super(entityType.toString(), String.format("id: %s", id));
     }

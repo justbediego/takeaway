@@ -78,6 +78,11 @@ public class UserController extends BaseController {
         );
     }
 
+    @DeleteMapping(path = "/deleteProfilePicture")
+    public void deleteProfilePicture() throws TakeawayException{
+        userLogic.deleteProfilePicture(userID);
+    }
+
     @PatchMapping(path = "/updateProfilePicture")
     public void updateProfilePicture(@RequestPart MultipartFile file) throws TakeawayException {
         CreateAttachmentDto attachmentDto;

@@ -117,3 +117,9 @@ export const getCountryCodes = (): Promise<GetCountryCodesDto> => callService({
     parent: "user",
     action: 'getCountryCodes'
 })
+
+export const deleteProfilePicture = (): Promise => callService({
+    method: "DELETE",
+    parent: "user",
+    action: 'deleteProfilePicture'
+})
