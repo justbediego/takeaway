@@ -105,8 +105,8 @@ export default function TabProfileScreen({navigation}) {
                 <FontAwesome
                     name="pencil"
                     style={{
-                        color: Colors[colorScheme].background,
-                        backgroundColor: Colors[colorScheme].tint,
+                        color: Colors[colorScheme].text,
+                        backgroundColor: Colors[colorScheme].background,
                         borderColor: Colors[colorScheme].imageBorder,
                         ...styles.pictureEditIcon
                     }}/>
@@ -178,11 +178,12 @@ const styles = StyleSheet.create({
     },
     pictureEditIcon: {
         fontSize: 20,
-        borderWidth: 2,
+        borderWidth: 1,
         borderRadius: 15,
         padding: 3,
-        paddingLeft: 7,
-        paddingTop: 5
+        paddingLeft: 6,
+        paddingTop: 3,
+        overflow: 'hidden'
     },
     picOptions: {
         flexDirection: 'column',

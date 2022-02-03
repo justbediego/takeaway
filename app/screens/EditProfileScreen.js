@@ -163,7 +163,8 @@ const styles = StyleSheet.create({
         flex: 4,
     },
     pickerCountryCode: {
-        height: 50,
+
+        overflow:'hidden',
     },
     phoneNumberView: {
         flexDirection: "row",
