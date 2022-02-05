@@ -97,7 +97,7 @@ export default function EditProfileScreen({navigation}) {
                                     onValueChange={(value) => setFieldValue('phoneNumberCountryCode', value)}
                                     placeholder={{}}
                                     style={styles.pickerCountryCode}
-                                    textInputStyle={{...styles.textInput, ...styles.textCountryCode}}
+                                    textInputStyle={styles.textInput}
                                     items={countryCodes.map((value, index) =>
                                         ({
                                             label: `${value.countryName} (${value.countryCode})`,
@@ -152,15 +152,14 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         paddingLeft: 10,
         padding: 5,
-    },
-    textCountryCode: {
-        borderRightWidth: 1,
+        height: 40
     },
     pickerCountryCode: {
         flex: 1,
+        marginRight:10
     },
     textPhoneNumber: {
-        flex: 4,
+        flex: 5,
     },
     phoneNumberView: {
         flexDirection: "row",
