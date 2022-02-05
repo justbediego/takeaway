@@ -3,14 +3,11 @@ import {Platform, StyleSheet} from 'react-native';
 import {Button, Picker, Text, TextInput, View} from '../components/Themed';
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-
-import {Picker as DefaultPicker} from '@react-native-picker/picker'
 import {getBasicInfo, getCountryCodes, updateBasicInfo} from "../services";
 import {useDispatch, useSelector} from "react-redux";
 import {update as updateBasicInfoSlice} from "../store/basicInfoSlice";
 import {Formik} from "formik";
 import Colors from "../constants/Colors";
-
 
 const LabeledInput = ({label, value, ...otherProps}) => {
     return (
@@ -77,7 +74,7 @@ export default function EditProfileScreen({navigation}) {
         <>
             <StatusBar style={Platform.OS === 'ios' ? 'light' : 'dark'}/>
             <Formik initialValues={basicInfo} onSubmit={submitBasicInfo}>
-                {({handleChange, handleBlur, handleSubmit, values}) => (
+                {({handleChange, setFieldValue, handleBlur, handleSubmit, values}) => (
                     <View style={styles.container}>
                         <LabeledInput
                             label={t('labelFirstName')}
@@ -91,31 +88,32 @@ export default function EditProfileScreen({navigation}) {
                             onChangeText={handleChange('lastName')}
                             onBlur={handleBlur('lastName')}
                         />
+                        {countryCodes?.map &&
                         <View style={styles.labeledInput}>
                             <Text style={styles.inputLabel}>{t('labelPhoneNumber')}</Text>
-                            <Picker
-                                mode="dropdown"
-                                selectedValue={values.phoneNumberCountryCode}
-                                onValueChange={handleChange('phoneNumberCountryCode')}
-                                style={styles.pickerCountryCode}>
-                                {countryCodes && countryCodes.map((value, index) =>
-                                    <DefaultPicker.Item
-                                        key={index}
-                                        label={value.countryName}
-                                        value={value.countryCode}/>
-                                )}
-                            </Picker>
                             <View style={styles.phoneNumberView}>
-                                <TextInput
+                                <Picker
                                     value={values.phoneNumberCountryCode}
-                                    style={[styles.textInput, styles.textCountryCode]}/>
+                                    onValueChange={(value) => setFieldValue('phoneNumberCountryCode', value)}
+                                    placeholder={{}}
+                                    style={styles.pickerCountryCode}
+                                    textInputStyle={{...styles.textInput, ...styles.textCountryCode}}
+                                    items={countryCodes.map((value, index) =>
+                                        ({
+                                            label: `${value.countryName} (${value.countryCode})`,
+                                            value: value.countryCode,
+                                            inputLabel: value.countryCode,
+                                            key: index
+                                        })
+                                    )}>
+                                </Picker>
                                 <TextInput
                                     value={values.phoneNumber}
                                     onChangeText={handleChange('phoneNumber')}
                                     onBlur={handleBlur('phoneNumber')}
                                     style={[styles.textInput, styles.textPhoneNumber]}/>
                             </View>
-                        </View>
+                        </View>}
                         <Button
                             title={t('submitButton')}
                             style={{
@@ -156,15 +154,13 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     textCountryCode: {
-        flex: 1,
         borderRightWidth: 1,
+    },
+    pickerCountryCode: {
+        flex: 1,
     },
     textPhoneNumber: {
         flex: 4,
-    },
-    pickerCountryCode: {
-
-        overflow:'hidden',
     },
     phoneNumberView: {
         flexDirection: "row",

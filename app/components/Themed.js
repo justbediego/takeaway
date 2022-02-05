@@ -11,7 +11,7 @@ import {
     View as DefaultView
 } from 'react-native';
 
-import {Picker as DefaultPicker} from '@react-native-picker/picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 import Colors from '../constants/Colors';
 import React from "react";
@@ -81,11 +81,16 @@ export function TextInput(props) {
 }
 
 export function Picker(props) {
-    const {style, lightColor, darkColor, ...otherProps} = props;
+    const {style, lightColor, darkColor, textInputStyle, ...otherProps} = props;
     const color = useThemeColor({light: lightColor, dark: darkColor}, 'text');
     const backgroundColor = useThemeColor({light: lightColor, dark: darkColor}, 'inputBackground');
     const borderColor = useThemeColor({light: lightColor, dark: darkColor}, 'inputBorder');
 
-    return <DefaultPicker style={[{color, backgroundColor, borderColor}, style]} {...otherProps} />;
+    return <DefaultView style={style}>
+        <RNPickerSelect
+            textInputProps={{style: {color, backgroundColor, borderColor, ...textInputStyle}}}
+            useNativeAndroidPickerStyle={false}
+            {...otherProps} />
+    </DefaultView>;
 }
 

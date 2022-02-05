@@ -14,6 +14,7 @@ const translations = {
             deleteProfilePictureBtn: 'Delete',
             uploadProfilePictureBtn: 'Upload',
             modalProfilePictureTitle: 'Profile Picture',
+            selectAnItem: 'Select an item...',
             exceptions: {
                 UnexpectedClientSideException: 'UnexpectedClientSideException',
                 CityNotSelectedException: 'CityNotSelectedException',
