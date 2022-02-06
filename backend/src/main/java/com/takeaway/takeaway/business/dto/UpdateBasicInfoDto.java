@@ -1,19 +1,24 @@
 package com.takeaway.takeaway.business.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
+import lombok.*;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateBasicInfoDto implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class UpdateBasicInfoDto extends BaseDto {
     private String firstName;
     private String lastName;
     private String phoneNumber;
     private String phoneNumberCountryCode;
+
+    public static UpdateBasicInfoDto fromOutside(UpdateBasicInfoDto data) {
+        return UpdateBasicInfoDto.builder()
+                .firstName(trim(data.getFirstName()))
+                .lastName(trim(data.getLastName()))
+                .phoneNumber(trim(data.getPhoneNumber()))
+                .phoneNumberCountryCode(trim(data.getPhoneNumberCountryCode()))
+                .build();
+    }
 }

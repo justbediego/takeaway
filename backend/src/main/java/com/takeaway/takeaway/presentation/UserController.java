@@ -2,18 +2,15 @@ package com.takeaway.takeaway.presentation;
 
 import com.takeaway.takeaway.business.UserLogic;
 import com.takeaway.takeaway.business.dto.*;
-import com.takeaway.takeaway.business.exception.FileUploadException;
 import com.takeaway.takeaway.business.exception.TakeawayException;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
-public class UserController extends BaseController {
+public class UserController {
 
     private final UserLogic userLogic;
 
@@ -25,76 +22,37 @@ public class UserController extends BaseController {
 
     @PatchMapping(path = "/updateBasicInfo")
     public void updateBasicInfo(@RequestBody UpdateBasicInfoDto data) throws TakeawayException {
-        userLogic.updateBasicInfo(userID,
-                UpdateBasicInfoDto.builder()
-                        .firstName(trim(data.getFirstName()))
-                        .lastName(trim(data.getLastName()))
-                        .phoneNumber(trim(data.getPhoneNumber()))
-                        .phoneNumberCountryCode(trim(data.getPhoneNumberCountryCode()))
-                        .build()
-        );
+        userLogic.updateBasicInfo(userID, UpdateBasicInfoDto.fromOutside(data));
     }
 
     @PatchMapping(path = "/updateUsername")
     public void updateUsername(@RequestBody UpdateUsernameDto data) throws TakeawayException {
-        userLogic.updateUsername(userID,
-                UpdateUsernameDto.builder()
-                        .username(trim(data.getUsername()))
-                        .build()
-        );
+        userLogic.updateUsername(userID, UpdateUsernameDto.fromOutside(data));
     }
 
     @PatchMapping(path = "/updateEmail")
     public void updateEmail(@RequestBody UpdateEmailDto data) throws TakeawayException {
-        userLogic.updateEmail(userID,
-                UpdateEmailDto.builder()
-                        .email(trim(data.getEmail()))
-                        .build()
-        );
+        userLogic.updateEmail(userID, UpdateEmailDto.fromOutside(data));
     }
 
     @PatchMapping(path = "/changePassword")
     public void changePassword(@RequestBody ChangePasswordDto data) throws TakeawayException {
-        // no trimming for passwords
-        userLogic.changePassword(userID, data);
+        userLogic.changePassword(userID, ChangePasswordDto.fromOutside(data));
     }
 
     @PatchMapping(path = "/modifyAddress")
     public void modifyAddress(@RequestBody ModifyAddressDto data) throws TakeawayException {
-        userLogic.modifyAddress(userID,
-                ModifyAddressDto.builder()
-                        .houseNumber(trim(data.getHouseNumber()))
-                        .streetName(trim(data.getStreetName()))
-                        .streetName2(trim(data.getStreetName2()))
-                        .title(trim(data.getTitle()))
-                        .additionalInfo(trim(data.getAdditionalInfo()))
-                        .accuracyM(data.getAccuracyM())
-                        .cityId(data.getCityId())
-                        .countryId(data.getCountryId())
-                        .latitude(data.getLatitude())
-                        .longitude(data.getLongitude())
-                        .stateId(data.getStateId())
-                        .build()
-        );
+        userLogic.modifyAddress(userID, ModifyAddressDto.fromOutside(data));
     }
 
     @DeleteMapping(path = "/deleteProfilePicture")
-    public void deleteProfilePicture() throws TakeawayException{
+    public void deleteProfilePicture() throws TakeawayException {
         userLogic.deleteProfilePicture(userID);
     }
 
     @PatchMapping(path = "/updateProfilePicture")
     public void updateProfilePicture(@RequestPart MultipartFile file) throws TakeawayException {
-        CreateAttachmentDto attachmentDto;
-        try {
-            attachmentDto = CreateAttachmentDto.builder()
-                    .fileData(file.getBytes())
-                    .filename(trim(file.getOriginalFilename()))
-                    .build();
-        } catch (IOException ioException) {
-            throw new FileUploadException();
-        }
-        userLogic.updateProfilePicture(userID, attachmentDto);
+        userLogic.updateProfilePicture(userID, CreateAttachmentDto.fromFile(file));
     }
 
     @GetMapping(path = "/getBasicInfo")
@@ -104,26 +62,51 @@ public class UserController extends BaseController {
 
     @PostMapping(path = "/authenticateUsername")
     public void authenticateUsername(@RequestBody UsernameAuthenticateDto data) throws TakeawayException {
-        userID = userLogic.authenticateByUsername(
-                UsernameAuthenticateDto.builder()
-                        .username(trim(data.getUsername()))
-                        .password(data.getPassword())
-                        .build()
-        );
+        userID = userLogic.authenticateByUsername(UsernameAuthenticateDto.fromOutside(data));
     }
 
     @PostMapping(path = "/authenticateEmail")
     public void authenticateEmail(@RequestBody EmailAuthenticateDto data) throws TakeawayException {
-        userID = userLogic.authenticateByEmail(
-                EmailAuthenticateDto.builder()
-                        .email(trim(data.getEmail()))
-                        .password(data.getPassword())
-                        .build()
-        );
+        userID = userLogic.authenticateByEmail(EmailAuthenticateDto.fromOutside(data));
     }
 
-    @GetMapping(path = "/getCountryCodes")
-    public GetCountryCodesDto getCountryCodes() {
-        return userLogic.getCountryCodes();
+    @PostMapping(path = "/createNewItem")
+    public UUID createNewItem(@RequestBody UpdateItemDto data, @RequestParam MultipartFile[] files) throws TakeawayException {
+        return userLogic.createNewItem(userID, CreateItemDto.fromOutside(data, files));
+    }
+
+    @PatchMapping(path = "/updateItemDetails")
+    public void updateItemDetails(@RequestBody UpdateItemDto data) throws TakeawayException {
+        userLogic.updateItemDetails(userID, UpdateItemDto.fromOutside(data));
+    }
+
+    @DeleteMapping(path = "/deactivateItem/{itemId}")
+    public void deactivateItem(@PathVariable UUID itemId) throws TakeawayException {
+        userLogic.deactivateItem(userID, itemId);
+    }
+
+    @PostMapping(path = "/renewItem/{itemId}")
+    public void renewItem(@PathVariable UUID itemId) throws TakeawayException {
+        userLogic.renewItem(userID, itemId);
+    }
+
+    @DeleteMapping(path = "/deleteItem/{itemId}")
+    public void deleteItem(@PathVariable UUID itemId) throws TakeawayException {
+        userLogic.deleteItem(userID, itemId);
+    }
+
+    @PatchMapping(path = "/changeItemAttachmentOrder")
+    public void changeItemAttachmentOrder(@RequestBody ChangeItemAttachmentOrderDto data) throws TakeawayException {
+        userLogic.changeItemAttachmentOrder(userID, ChangeItemAttachmentOrderDto.fromOutside(data));
+    }
+
+    @PostMapping(path = "/addAttachmentToItem")
+    public void addAttachmentToItem(@RequestPart MultipartFile file) throws TakeawayException {
+        userLogic.addAttachmentToItem(userID, CreateAttachmentDto.fromFile(file));
+    }
+
+    @DeleteMapping(path = "/deleteAttachmentFromItem/{itemId}/{attachmentId}")
+    public void deleteAttachmentFromItem(@PathVariable UUID itemId, @PathVariable UUID attachmentId) throws TakeawayException {
+        userLogic.deleteAttachmentFromItem(userID, itemId, attachmentId);
     }
 }

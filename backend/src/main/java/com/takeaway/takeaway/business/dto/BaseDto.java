@@ -1,10 +1,12 @@
-package com.takeaway.takeaway.presentation;
+package com.takeaway.takeaway.business.dto;
 
 import org.apache.commons.lang3.StringUtils;
 
-public abstract class BaseController {
+import java.io.Serializable;
 
-    protected String trim(String input) {
+public abstract class BaseDto implements Serializable {
+
+    protected static String trim(String input) {
 
         if (StringUtils.isNotBlank(input)) {
             return input.trim();
@@ -12,7 +14,7 @@ public abstract class BaseController {
         return input;
     }
 
-    protected String trimLower(String input) {
+    protected static String trimLower(String input) {
         final String trimmed = trim(input);
         if (StringUtils.isNotBlank(trimmed)) {
             return trimmed.toLowerCase();

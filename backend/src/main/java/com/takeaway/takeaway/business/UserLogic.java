@@ -8,7 +8,10 @@ import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
 import com.takeaway.takeaway.dataaccess.model.enums.EntityTypes;
 import com.takeaway.takeaway.dataaccess.model.geo.*;
-import com.takeaway.takeaway.dataaccess.repository.*;
+import com.takeaway.takeaway.dataaccess.repository.AttachmentRepository;
+import com.takeaway.takeaway.dataaccess.repository.GeolocationRepository;
+import com.takeaway.takeaway.dataaccess.repository.LocationRepository;
+import com.takeaway.takeaway.dataaccess.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +19,8 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -44,16 +45,13 @@ public class UserLogic {
 
     private final AttachmentRepository attachmentRepository;
 
-    private final CountryRepository countryRepository;
-
-    public UserLogic(ValidationLogic validationLogic, AttachmentLogic attachmentLogic, UserRepository userRepository, LocationRepository locationRepository, GeolocationRepository geolocationRepository, AttachmentRepository attachmentRepository, CountryRepository countryRepository) {
+    public UserLogic(ValidationLogic validationLogic, AttachmentLogic attachmentLogic, UserRepository userRepository, LocationRepository locationRepository, GeolocationRepository geolocationRepository, AttachmentRepository attachmentRepository) {
         this.validationLogic = validationLogic;
         this.attachmentLogic = attachmentLogic;
         this.userRepository = userRepository;
         this.locationRepository = locationRepository;
         this.geolocationRepository = geolocationRepository;
         this.attachmentRepository = attachmentRepository;
-        this.countryRepository = countryRepository;
     }
 
     private String getHashedPassword(String password) {
@@ -65,10 +63,10 @@ public class UserLogic {
     public void deleteProfilePicture(UUID userId) throws TakeawayException {
         User user = validationLogic.validateGetUserById(userId);
         if (user.getProfilePicture() == null) {
-            throw  new EntityNotFound(EntityTypes.ATTACHMENT);
+            throw new EntityNotFound(EntityTypes.ATTACHMENT);
         }
         if (user.getProfilePictureOriginal() == null) {
-            throw  new EntityNotFound(EntityTypes.ATTACHMENT);
+            throw new EntityNotFound(EntityTypes.ATTACHMENT);
         }
         attachmentLogic.removeAttachment(user.getProfilePicture().getId());
         attachmentLogic.removeAttachment(user.getProfilePictureOriginal().getId());
@@ -294,16 +292,35 @@ public class UserLogic {
         return optionalUser.get().getId();
     }
 
-    public GetCountryCodesDto getCountryCodes() {
-        List<CountryCodeDto> countries = countryRepository.findAll().stream()
-                .filter(c -> StringUtils.isNotBlank(c.getCountryCode()))
-                .map(c -> CountryCodeDto.builder()
-                        .countryName(c.getName())
-                        .countryCode(c.getCountryCode())
-                        .build())
-                .collect(Collectors.toList());
-        return GetCountryCodesDto.builder()
-                .countries(countries)
-                .build();
+    public UUID createNewItem(UUID userId, CreateItemDto data) throws TakeawayException {
+        return null;
+    }
+
+    public void updateItemDetails(UUID userId, UpdateItemDto data) throws TakeawayException {
+
+    }
+
+    public void deactivateItem(UUID userId, UUID itemId) throws TakeawayException {
+
+    }
+
+    public void renewItem(UUID userId, UUID itemId) throws TakeawayException {
+
+    }
+
+    public void deleteItem(UUID userId, UUID itemId) throws TakeawayException {
+
+    }
+
+    public void changeItemAttachmentOrder(UUID userId, ChangeItemAttachmentOrderDto data) throws TakeawayException {
+
+    }
+
+    public void addAttachmentToItem(UUID userId, CreateAttachmentDto attachmentDto) throws TakeawayException {
+
+    }
+
+    public void deleteAttachmentFromItem(UUID userId, UUID itemId, UUID attachmentId) throws TakeawayException {
+
     }
 }

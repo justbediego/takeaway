@@ -1,18 +1,15 @@
 package com.takeaway.takeaway.business.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModifyAddressDto implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class ModifyAddressDto extends BaseDto {
     private String title;
     private UUID countryId;
     private UUID stateId;
@@ -24,4 +21,20 @@ public class ModifyAddressDto implements Serializable {
     private String streetName2;
     private String houseNumber;
     private String additionalInfo;
+
+    public static ModifyAddressDto fromOutside(ModifyAddressDto data) {
+        return ModifyAddressDto.builder()
+                .houseNumber(trim(data.getHouseNumber()))
+                .streetName(trim(data.getStreetName()))
+                .streetName2(trim(data.getStreetName2()))
+                .title(trim(data.getTitle()))
+                .additionalInfo(trim(data.getAdditionalInfo()))
+                .accuracyM(data.getAccuracyM())
+                .cityId(data.getCityId())
+                .countryId(data.getCountryId())
+                .latitude(data.getLatitude())
+                .longitude(data.getLongitude())
+                .stateId(data.getStateId())
+                .build();
+    }
 }

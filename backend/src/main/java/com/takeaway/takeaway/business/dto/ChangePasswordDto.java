@@ -1,18 +1,22 @@
 package com.takeaway.takeaway.business.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
+import lombok.*;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChangePasswordDto implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class ChangePasswordDto extends BaseDto {
     private String oldPassword;
     private String newPassword;
     private String newPasswordVerify;
+
+    public static ChangePasswordDto fromOutside(ChangePasswordDto data) {
+        return ChangePasswordDto.builder()
+                .oldPassword(data.getOldPassword())
+                .newPassword(data.getNewPassword())
+                .newPasswordVerify(data.getNewPasswordVerify())
+                .build();
+    }
 }

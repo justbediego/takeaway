@@ -1,19 +1,16 @@
 package com.takeaway.takeaway.business.dto;
 
 import com.takeaway.takeaway.dataaccess.model.enums.GenderTypes;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetBasicInfoDto implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class GetBasicInfoDto extends BaseDto {
     private UUID profilePictureId;
     private UUID profilePictureKey;
     private UUID profilePictureOriginalId;

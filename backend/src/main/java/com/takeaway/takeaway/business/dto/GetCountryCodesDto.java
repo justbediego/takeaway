@@ -1,17 +1,14 @@
 package com.takeaway.takeaway.business.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetCountryCodesDto implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class GetCountryCodesDto extends BaseDto {
     private List<CountryCodeDto> countries;
 }

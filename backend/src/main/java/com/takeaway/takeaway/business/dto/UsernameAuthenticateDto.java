@@ -1,17 +1,20 @@
 package com.takeaway.takeaway.business.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
+import lombok.*;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsernameAuthenticateDto implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class UsernameAuthenticateDto extends BaseDto {
     private String username;
     private String password;
+
+    public static UsernameAuthenticateDto fromOutside(UsernameAuthenticateDto data) {
+        return UsernameAuthenticateDto.builder()
+                .username(trim(data.getUsername()))
+                .password(data.getPassword())
+                .build();
+    }
 }

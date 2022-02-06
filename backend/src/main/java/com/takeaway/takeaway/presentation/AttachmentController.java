@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/attachment")
-public class AttachmentController extends BaseController{
+public class AttachmentController {
 
     private final AttachmentLogic attachmentLogic;
 
