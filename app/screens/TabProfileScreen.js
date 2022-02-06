@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     pictureOptionBtnText: {
-        fontSize: 15
+        fontSize: 15,
     },
     pictureOptionBtnIcon: {
         fontSize: 25,

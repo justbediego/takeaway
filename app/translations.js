@@ -15,6 +15,11 @@ const translations = {
             uploadProfilePictureBtn: 'Upload',
             modalProfilePictureTitle: 'Profile Picture',
             selectAnItem: 'Select an item...',
+            labelTitle:'Title',
+            labelDescription:'Description',
+            labelImage:'Add Image',
+            labelCategory:'Category',
+            labelLocation:'Location',
             exceptions: {
                 UnexpectedClientSideException: 'UnexpectedClientSideException',
                 CityNotSelectedException: 'CityNotSelectedException',
