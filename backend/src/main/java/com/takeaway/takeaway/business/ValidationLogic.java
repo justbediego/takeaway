@@ -1,6 +1,5 @@
 package com.takeaway.takeaway.business;
 
-import com.google.common.base.Strings;
 import com.takeaway.takeaway.business.exception.*;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.EntityTypes;
@@ -12,6 +11,7 @@ import com.takeaway.takeaway.dataaccess.repository.CountryRepository;
 import com.takeaway.takeaway.dataaccess.repository.StateRepository;
 import com.takeaway.takeaway.dataaccess.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -106,7 +106,7 @@ public class ValidationLogic {
 
     @SuppressWarnings("squid:S5998")
     public void validateEmail(String email) throws TakeawayException {
-        if (Strings.isNullOrEmpty(email) || email.length() > 200) {
+        if (StringUtils.isBlank(email) || email.length() > 200) {
             throw new InvalidEmailException();
         }
         final String emailPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
@@ -172,7 +172,7 @@ public class ValidationLogic {
         if (!streetName.matches(streetPattern)) {
             throw new InvalidAddressException();
         }
-        if (!Strings.isNullOrEmpty(streetName2) && !streetName2.matches(streetPattern)) {
+        if (StringUtils.isNotBlank(streetName2) && !streetName2.matches(streetPattern)) {
             throw new InvalidAddressException();
         }
         String houseNumberPattern = "^[a-zA-Z0-9'._\\-$#&*()+\\/\\\\<>\"{}|;:@ ]{1,20}$";
@@ -193,10 +193,10 @@ public class ValidationLogic {
     }
 
     public void validateFileData(byte[] fileData) throws TakeawayException {
-        if(fileData == null || fileData.length == 0){
+        if (fileData == null || fileData.length == 0) {
             throw new EmptyFileUploadedException();
         }
-        if(fileData.length > maxUploadFileSizeInBytes){
+        if (fileData.length > maxUploadFileSizeInBytes) {
             throw new FileSizeExceededException();
         }
     }

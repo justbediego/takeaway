@@ -4,6 +4,7 @@ import com.takeaway.takeaway.dataaccess.model.enums.GenderTypes;
 import com.takeaway.takeaway.dataaccess.model.geo.Location;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ import java.util.List;
         @Index(name = "email_idx", columnList = "email", unique = true),
         @Index(name = "username_idx", columnList = "username", unique = true)
 })
+@EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity {
 
     @Column(length = 200, nullable = false)

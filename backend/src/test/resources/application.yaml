@@ -13,7 +13,8 @@ spring:
         dialetct: org.hibernate.dialect.H2Dialect
   application:
     name: takeaway
-    attachmentsPath: ~/takeaway_attachments/
+    attachmentsPath: funnyPath
     profilePictureSize: 10
     profilePictureMaxSize: 100
     passwordHashSalt: Test Salt String
+    maxUploadFileSizeInBytes: 26214400

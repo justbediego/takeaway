@@ -2,10 +2,9 @@ package com.takeaway.takeaway.business.exception;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.logging.log4j.util.Strings;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public abstract class TakeawayException extends Exception {
     private final String details;
 
@@ -15,10 +14,10 @@ public abstract class TakeawayException extends Exception {
     }
 
     protected TakeawayException(String message) {
-        this(message, Strings.EMPTY);
+        this(message, "");
     }
 
     protected TakeawayException() {
-        this(Strings.EMPTY);
+        this("");
     }
 }

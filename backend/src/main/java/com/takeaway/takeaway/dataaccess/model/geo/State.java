@@ -3,6 +3,7 @@ package com.takeaway.takeaway.dataaccess.model.geo;
 import com.takeaway.takeaway.dataaccess.model.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "states")
+@EqualsAndHashCode(callSuper = true)
 public class State extends BaseEntity {
 
     @Column(length = 100, nullable = false)

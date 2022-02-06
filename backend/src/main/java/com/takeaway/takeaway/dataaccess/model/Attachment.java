@@ -3,6 +3,7 @@ package com.takeaway.takeaway.dataaccess.model;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "attachments")
+@EqualsAndHashCode(callSuper = true)
 public class Attachment extends BaseEntity {
 
     @Column(nullable = false)

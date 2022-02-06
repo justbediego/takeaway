@@ -1,6 +1,5 @@
 package com.takeaway.takeaway.business;
 
-import com.google.common.base.Strings;
 import com.google.common.hash.Hashing;
 import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.business.exception.*;
@@ -11,6 +10,7 @@ import com.takeaway.takeaway.dataaccess.model.enums.EntityTypes;
 import com.takeaway.takeaway.dataaccess.model.geo.*;
 import com.takeaway.takeaway.dataaccess.repository.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -137,14 +137,14 @@ public class UserLogic {
 
     public void updateBasicInfo(UUID userId, UpdateBasicInfoDto updateBasicInfoDto) throws TakeawayException {
         // validation
-        if (!Strings.isNullOrEmpty(updateBasicInfoDto.getFirstName())) {
+        if (StringUtils.isNotBlank(updateBasicInfoDto.getFirstName())) {
             validationLogic.validateFirstName(updateBasicInfoDto.getFirstName());
         }
-        if (!Strings.isNullOrEmpty(updateBasicInfoDto.getLastName())) {
+        if (StringUtils.isNotBlank(updateBasicInfoDto.getLastName())) {
             validationLogic.validateLastName(updateBasicInfoDto.getLastName());
         }
-        if (!Strings.isNullOrEmpty(updateBasicInfoDto.getPhoneNumberCountryCode()) ||
-                !Strings.isNullOrEmpty(updateBasicInfoDto.getPhoneNumber())) {
+        if (StringUtils.isNotBlank(updateBasicInfoDto.getPhoneNumberCountryCode()) ||
+                StringUtils.isNotBlank(updateBasicInfoDto.getPhoneNumber())) {
             validationLogic.validatePhoneNumber(
                     updateBasicInfoDto.getPhoneNumberCountryCode(),
                     updateBasicInfoDto.getPhoneNumber()
@@ -220,7 +220,7 @@ public class UserLogic {
             );
             hasGeolocation = true;
         }
-        if (!Strings.isNullOrEmpty(modifyAddressDto.getTitle())) {
+        if (StringUtils.isNotBlank(modifyAddressDto.getTitle())) {
             validationLogic.validateLocationTitle(modifyAddressDto.getTitle());
         }
         validationLogic.validateLocationAddress(
@@ -296,7 +296,7 @@ public class UserLogic {
 
     public GetCountryCodesDto getCountryCodes() {
         List<CountryCodeDto> countries = countryRepository.findAll().stream()
-                .filter(c -> !Strings.isNullOrEmpty(c.getCountryCode()))
+                .filter(c -> StringUtils.isNotBlank(c.getCountryCode()))
                 .map(c -> CountryCodeDto.builder()
                         .countryName(c.getName())
                         .countryCode(c.getCountryCode())

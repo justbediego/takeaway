@@ -5,6 +5,7 @@ import com.takeaway.takeaway.dataaccess.model.Item;
 import com.takeaway.takeaway.dataaccess.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "locations")
+@EqualsAndHashCode(callSuper = true)
 public class Location extends BaseEntity {
 
     @Column(length = 100)

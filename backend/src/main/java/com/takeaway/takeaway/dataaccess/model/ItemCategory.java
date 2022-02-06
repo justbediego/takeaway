@@ -2,6 +2,7 @@ package com.takeaway.takeaway.dataaccess.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "item_categories")
+@EqualsAndHashCode(callSuper = true)
 public class ItemCategory extends BaseEntity {
 
     // an algorithm to best find children

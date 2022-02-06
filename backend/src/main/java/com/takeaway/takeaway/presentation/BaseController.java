@@ -1,11 +1,12 @@
 package com.takeaway.takeaway.presentation;
 
-import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
 
 public abstract class BaseController {
 
     protected String trim(String input) {
-        if (!Strings.isNullOrEmpty(input)) {
+
+        if (StringUtils.isNotBlank(input)) {
             return input.trim();
         }
         return input;
@@ -13,7 +14,7 @@ public abstract class BaseController {
 
     protected String trimLower(String input) {
         final String trimmed = trim(input);
-        if (!Strings.isNullOrEmpty(trimmed)) {
+        if (StringUtils.isNotBlank(trimmed)) {
             return trimmed.toLowerCase();
         }
         return trimmed;

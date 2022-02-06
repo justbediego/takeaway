@@ -2,6 +2,7 @@ package com.takeaway.takeaway.dataaccess.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "direct_messages")
+@EqualsAndHashCode(callSuper = true)
 public class DirectMessage extends BaseEntity {
 
     @Column(length = 500)

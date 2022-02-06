@@ -3,6 +3,7 @@ package com.takeaway.takeaway.dataaccess.model.geo;
 import com.takeaway.takeaway.dataaccess.model.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "geolocations")
+@EqualsAndHashCode(callSuper = true)
 public class Geolocation extends BaseEntity {
 
     @Column(nullable = false)

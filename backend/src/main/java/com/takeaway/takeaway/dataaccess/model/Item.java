@@ -3,6 +3,7 @@ package com.takeaway.takeaway.dataaccess.model;
 import com.takeaway.takeaway.dataaccess.model.geo.Location;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ import java.util.List;
 @Table(name = "items", indexes = {
         @Index(name = "category_idx", columnList = "item_category_id")
 })
+@EqualsAndHashCode(callSuper = true)
 public class Item extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
