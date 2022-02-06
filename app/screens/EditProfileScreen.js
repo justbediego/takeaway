@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     },
     pickerCountryCode: {
         flex: 1,
-        marginRight:10
+        marginRight: 10
     },
     textPhoneNumber: {
         flex: 5,
