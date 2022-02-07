@@ -71,7 +71,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/createNewItem")
-    public UUID createNewItem(@RequestBody UpdateItemDto data, @RequestParam MultipartFile[] files) throws TakeawayException {
+    public UUID createNewItem(@RequestBody UpdateItemDto data, @RequestPart MultipartFile[] files) throws TakeawayException {
         return userLogic.createNewItem(userID, CreateItemDto.fromOutside(data, files));
     }
 

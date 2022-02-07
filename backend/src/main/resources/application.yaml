@@ -1,12 +1,17 @@
 spring:
+  cloud:
+    gcp:
+      credentials:
+        location: file:/home/hossein/Documents/our-lovely-project-54f7ee3a9f58.json
+      sql:
+        instance-connection-name: our-lovely-project:europe-north1:takeaway-db
+        database-name: takeawayDB
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/takeawayDB
-    username: postgres
-    password: postgres
+    username: takeaway
+    password: -hM9/WW[GKpT;9DX
   jpa:
     database: POSTGRESQL
     show-sql: true
