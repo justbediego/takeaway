@@ -1,7 +1,21 @@
+buildscript {
+	repositories {
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+	dependencies {
+		classpath 'com.google.cloud.tools:appengine-gradle-plugin'
+		classpath 'com.google.appengine:appengine-api-1.0-sdk:2.0.3'
+		classpath "org.springframework.boot:spring-boot-gradle-plugin"
+	}
+}
+
 plugins {
+	id 'java'
 	id 'org.springframework.boot' version '2.6.3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
+	id 'com.google.cloud.tools.appengine' version '2.4.2' // App Engine tasks
 }
 
 group = 'com.takeaway'
@@ -20,6 +34,7 @@ repositories {
 
 ext {
 	springfoxVersion = '3.0.0'
+	gcpVersion = '1.2.8.RELEASE'
 }
 
 dependencies {
@@ -43,6 +58,23 @@ dependencies {
 	testImplementation "org.apache.httpcomponents:httpclient:4.5.13"
 	testImplementation "com.h2database:h2"
 	testImplementation "junit:junit"
+	// google
+	implementation "org.springframework.cloud:spring-cloud-gcp-starter:$gcpVersion"
+	implementation "org.springframework.cloud:spring-cloud-gcp-starter-logging:$gcpVersion"
+	implementation "org.springframework.cloud:spring-cloud-gcp-starter-sql-postgresql:$gcpVersion"
+	implementation "org.springframework.cloud:spring-cloud-gcp-starter-storage:$gcpVersion"
+}
+
+appengine {
+	deploy {
+		version = "GCLOUD_CONFIG"
+		projectId = "GCLOUD_CONFIG"
+	}
+}
+
+jar {
+	enabled = false
+	archiveClassifier = ''
 }
 
 tasks.named('test') {
