@@ -1,10 +1,11 @@
 spring:
   cloud:
     gcp:
-      credentials:
-        location: file:/home/hossein/Documents/our-lovely-project-54f7ee3a9f58.json
+      project-id: silent-card
+      #      credentials:
+      #        location: file:/home/hossein/Documents/our-lovely-project-54f7ee3a9f58.json
       sql:
-        instance-connection-name: our-lovely-project:europe-north1:takeaway-db
+        instance-connection-name: silent-card:europe-west1:takeaway-db
         database-name: takeawayDB
   mvc:
     pathmatch:
@@ -27,4 +28,4 @@ spring:
     passwordHashSalt: May we all be one day free!
     maxUploadFileSizeInBytes: 26214400
 server:
-  port: 2102
+  port: 8080
