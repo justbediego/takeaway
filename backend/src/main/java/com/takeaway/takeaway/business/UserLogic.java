@@ -1,8 +1,9 @@
 package com.takeaway.takeaway.business;
 
-import com.google.common.hash.Hashing;
 import com.takeaway.takeaway.business.dto.*;
-import com.takeaway.takeaway.business.exception.*;
+import com.takeaway.takeaway.business.exception.EntityNotFound;
+import com.takeaway.takeaway.business.exception.TakeawayException;
+import com.takeaway.takeaway.business.exception.UnrecognizedException;
 import com.takeaway.takeaway.dataaccess.model.Attachment;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
@@ -18,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 

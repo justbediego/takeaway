@@ -31,7 +31,7 @@ public class User extends BaseEntity {
     @Column(length = 5)
     private String phoneNumberCountryCode;
 
-    @Column(length = 200, nullable = false)
+    @Column(length = 200)
     private String username;
 
     // a user might not have a password set

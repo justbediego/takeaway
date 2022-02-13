@@ -2,15 +2,14 @@ package com.takeaway.takeaway.business;
 
 import com.google.common.hash.Hashing;
 import com.takeaway.takeaway.business.dto.ChangePasswordDto;
-import com.takeaway.takeaway.business.dto.EmailAuthenticateDto;
-import com.takeaway.takeaway.business.dto.UsernameAuthenticateDto;
+import com.takeaway.takeaway.business.exception.InvalidFirstNameException;
 import com.takeaway.takeaway.business.exception.TakeawayException;
-import com.takeaway.takeaway.business.exception.UserOrPasswordWrongException;
 import com.takeaway.takeaway.business.exception.VerifyPasswordException;
 import com.takeaway.takeaway.business.exception.WrongPasswordException;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +41,6 @@ public class AuthenticationLogic {
                 .toString();
     }
 
-
     public void changePassword(UUID userId, ChangePasswordDto changePasswordDto) throws TakeawayException {
         // validation
         validationLogic.validatePassword(changePasswordDto.getNewPassword());
@@ -61,31 +59,41 @@ public class AuthenticationLogic {
         userRepository.save(user);
     }
 
-    public UUID authenticateByUsername(UsernameAuthenticateDto authenticateDto) throws TakeawayException {
+    public UUID authenticateByEmail(String email, String firstName, String lastName) throws TakeawayException {
         // validate
-        validationLogic.validateUsername(authenticateDto.getUsername());
-        validationLogic.validatePassword(authenticateDto.getPassword());
+        validationLogic.validateEmail(email);
+        String firstNameVerified = null;
+        String lastNameVerified = null;
+        if (StringUtils.isNotBlank(firstName)) {
+            try {
+                validationLogic.validateFirstName(firstName);
+                firstNameVerified = firstName;
+            } catch (InvalidFirstNameException ex) {
+                log.warn("Couldn't use the first name from Principal");
+            }
+        }
+        if (StringUtils.isNotBlank(lastName)) {
+            try {
+                validationLogic.validateLastName(lastName);
+                lastNameVerified = lastName;
+            } catch (InvalidFirstNameException ex) {
+                log.warn("Couldn't use the last name from Principal");
+            }
+        }
 
         // business
-        String hashedPassword = getHashedPassword(authenticateDto.getPassword());
-        Optional<User> optionalUser = userRepository.findByUsernamePassword(authenticateDto.getUsername(), hashedPassword);
-        if (optionalUser.isEmpty()) {
-            throw new UserOrPasswordWrongException();
+        UUID userId;
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (!optionalUser.isEmpty()) {
+            userId = optionalUser.get().getId();
+        } else {
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setFirstName(firstNameVerified);
+            newUser.setLastName(lastNameVerified);
+            userRepository.save(newUser);
+            userId = newUser.getId();
         }
-        return optionalUser.get().getId();
-    }
-
-    public UUID authenticateByEmail(EmailAuthenticateDto authenticateDto) throws TakeawayException {
-        // validate
-        validationLogic.validateEmail(authenticateDto.getEmail());
-        validationLogic.validatePassword(authenticateDto.getPassword());
-
-        // business
-        String hashedPassword = getHashedPassword(authenticateDto.getPassword());
-        Optional<User> optionalUser = userRepository.findByEmailPassword(authenticateDto.getEmail(), hashedPassword);
-        if (optionalUser.isEmpty()) {
-            throw new UserOrPasswordWrongException();
-        }
-        return optionalUser.get().getId();
+        return userId;
     }
 }

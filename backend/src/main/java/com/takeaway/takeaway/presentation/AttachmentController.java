@@ -1,6 +1,7 @@
 package com.takeaway.takeaway.presentation;
 
 import com.takeaway.takeaway.business.AttachmentLogic;
+import com.takeaway.takeaway.business.AuthenticationLogic;
 import com.takeaway.takeaway.business.dto.GetAttachmentDto;
 import com.takeaway.takeaway.business.exception.TakeawayException;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
@@ -15,7 +16,8 @@ public class AttachmentController extends BaseController {
 
     private final AttachmentLogic attachmentLogic;
 
-    public AttachmentController(AttachmentLogic attachmentLogic) {
+    public AttachmentController(AttachmentLogic attachmentLogic, AuthenticationLogic authenticationLogic) {
+        super(authenticationLogic);
         this.attachmentLogic = attachmentLogic;
     }
 

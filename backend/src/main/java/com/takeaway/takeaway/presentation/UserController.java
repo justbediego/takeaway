@@ -1,5 +1,6 @@
 package com.takeaway.takeaway.presentation;
 
+import com.takeaway.takeaway.business.AuthenticationLogic;
 import com.takeaway.takeaway.business.UserLogic;
 import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.business.exception.TakeawayException;
@@ -12,42 +13,43 @@ public class UserController extends BaseController {
 
     private final UserLogic userLogic;
 
-    public UserController(UserLogic userLogic) {
+    public UserController(UserLogic userLogic, AuthenticationLogic authenticationLogic) {
+        super(authenticationLogic);
         this.userLogic = userLogic;
     }
 
     @PatchMapping(path = "/updateBasicInfo")
     public void updateBasicInfo(@RequestBody UpdateBasicInfoDto data) throws TakeawayException {
-        userLogic.updateBasicInfo(userID, UpdateBasicInfoDto.fromOutside(data));
+        userLogic.updateBasicInfo(getUserId(), UpdateBasicInfoDto.fromOutside(data));
     }
 
     @PatchMapping(path = "/updateUsername")
     public void updateUsername(@RequestBody UpdateUsernameDto data) throws TakeawayException {
-        userLogic.updateUsername(userID, UpdateUsernameDto.fromOutside(data));
+        userLogic.updateUsername(getUserId(), UpdateUsernameDto.fromOutside(data));
     }
 
     @PatchMapping(path = "/updateEmail")
     public void updateEmail(@RequestBody UpdateEmailDto data) throws TakeawayException {
-        userLogic.updateEmail(userID, UpdateEmailDto.fromOutside(data));
+        userLogic.updateEmail(getUserId(), UpdateEmailDto.fromOutside(data));
     }
 
     @PatchMapping(path = "/modifyAddress")
     public void modifyAddress(@RequestBody ModifyAddressDto data) throws TakeawayException {
-        userLogic.modifyAddress(userID, ModifyAddressDto.fromOutside(data));
+        userLogic.modifyAddress(getUserId(), ModifyAddressDto.fromOutside(data));
     }
 
     @DeleteMapping(path = "/deleteProfilePicture")
     public void deleteProfilePicture() throws TakeawayException {
-        userLogic.deleteProfilePicture(userID);
+        userLogic.deleteProfilePicture(getUserId());
     }
 
     @PatchMapping(path = "/updateProfilePicture")
     public void updateProfilePicture(@RequestPart MultipartFile file) throws TakeawayException {
-        userLogic.updateProfilePicture(userID, CreateAttachmentDto.fromFile(file));
+        userLogic.updateProfilePicture(getUserId(), CreateAttachmentDto.fromFile(file));
     }
 
     @GetMapping(path = "/getBasicInfo")
     public GetBasicInfoDto getBasicInfo() throws TakeawayException {
-        return userLogic.getBasicInfo(userID);
+        return userLogic.getBasicInfo(getUserId());
     }
 }
