@@ -35,7 +35,6 @@ repositories {
 ext {
     springfoxVersion = '3.0.0'
     gcpVersion = '1.2.8.RELEASE'
-    oauthVersion = '2.5.1.RELEASE'
 }
 
 dependencies {
@@ -60,11 +59,11 @@ dependencies {
     testImplementation "com.h2database:h2"
     testImplementation "junit:junit"
     // google
-    implementation "org.springframework.security.oauth:spring-security-oauth2:$oauthVersion"
     implementation "org.springframework.cloud:spring-cloud-gcp-starter:$gcpVersion"
     implementation "org.springframework.cloud:spring-cloud-gcp-starter-logging:$gcpVersion"
     implementation "org.springframework.cloud:spring-cloud-gcp-starter-sql-postgresql:$gcpVersion"
     implementation "org.springframework.cloud:spring-cloud-gcp-starter-storage:$gcpVersion"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-client:2.3.3.RELEASE"
 }
 
 appengine {

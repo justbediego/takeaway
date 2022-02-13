@@ -13,11 +13,9 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/userItem")
-public class UserItemController {
+public class UserItemController extends BaseController {
 
     private final UserItemLogic userItemLogic;
-
-    private UUID userID = UUID.fromString("19cc7d52-7369-46e9-aae0-60139e5f19dd");
 
     public UserItemController(UserItemLogic userItemLogic) {
         this.userItemLogic = userItemLogic;

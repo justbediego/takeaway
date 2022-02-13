@@ -6,15 +6,11 @@ import com.takeaway.takeaway.business.exception.TakeawayException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/user")
 public class UserController extends BaseController {
 
     private final UserLogic userLogic;
-
-    private UUID userID = UUID.fromString("19cc7d52-7369-46e9-aae0-60139e5f19dd");
 
     public UserController(UserLogic userLogic) {
         this.userLogic = userLogic;

@@ -27,5 +27,12 @@ spring:
     profilePictureMaxSize: 1000
     passwordHashSalt: May we all be one day free!
     maxUploadFileSizeInBytes: 26214400
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 1074261486455-1sbnuiulgt7a46sbkc0ig22th62bcv9h.apps.googleusercontent.com
+            clientSecret: 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
 server:
   port: 8080
