@@ -1,6 +1,6 @@
 package com.takeaway.takeaway.presentation;
 
-import com.takeaway.takeaway.business.GeneralLogic;
+import com.takeaway.takeaway.business.GuesLogic;
 import com.takeaway.takeaway.business.dto.GetCountryCodesDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
-public class GeneralController {
+public class GuestController extends BaseController{
 
-    private final GeneralLogic generalLogic;
+    private final GuesLogic guesLogic;
 
-    public GeneralController(GeneralLogic generalLogic) {
-        this.generalLogic = generalLogic;
+    public GuestController(GuesLogic guesLogic) {
+        this.guesLogic = guesLogic;
     }
 
     @GetMapping(path = "/getCountryCodes")
     public GetCountryCodesDto getCountryCodes() {
-        return generalLogic.getCountryCodes();
+        return guesLogic.getCountryCodes();
     }
 
 }

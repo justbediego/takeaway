@@ -30,9 +30,6 @@ public class UserLogic {
     @Value("${spring.application.profilePictureSize}")
     private Integer profilePictureSize;
 
-    @Value("${spring.application.passwordHashSalt}")
-    private String passwordHashSalt;
-
     private final ValidationLogic validationLogic;
 
     private final AttachmentLogic attachmentLogic;
@@ -52,12 +49,6 @@ public class UserLogic {
         this.locationRepository = locationRepository;
         this.geolocationRepository = geolocationRepository;
         this.attachmentRepository = attachmentRepository;
-    }
-
-    private String getHashedPassword(String password) {
-        return Hashing.sha256()
-                .hashString(String.format("%s%s", passwordHashSalt, password), StandardCharsets.UTF_8)
-                .toString();
     }
 
     public void deleteProfilePicture(UUID userId) throws TakeawayException {
@@ -188,24 +179,6 @@ public class UserLogic {
         userRepository.save(user);
     }
 
-    public void changePassword(UUID userId, ChangePasswordDto changePasswordDto) throws TakeawayException {
-        // validation
-        validationLogic.validatePassword(changePasswordDto.getNewPassword());
-        if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getNewPasswordVerify())) {
-            throw new VerifyPasswordException();
-        }
-        final String hashedOldPassword = getHashedPassword(changePasswordDto.getOldPassword());
-        User user = validationLogic.validateGetUserById(userId);
-        if (!hashedOldPassword.equals(user.getHashedPassword())) {
-            throw new WrongPasswordException();
-        }
-
-        // business
-        user.setHashedPassword(getHashedPassword(changePasswordDto.getNewPassword()));
-        user.updateDateModified();
-        userRepository.save(user);
-    }
-
     public void modifyAddress(UUID userId, ModifyAddressDto modifyAddressDto) throws TakeawayException {
         // validation
         User user = validationLogic.validateGetUserById(userId);
@@ -262,65 +235,5 @@ public class UserLogic {
         geolocationRepository.save(geolocation);
         locationRepository.save(address);
         userRepository.save(user);
-    }
-
-    public UUID authenticateByUsername(UsernameAuthenticateDto authenticateDto) throws TakeawayException {
-        // validate
-        validationLogic.validateUsername(authenticateDto.getUsername());
-        validationLogic.validatePassword(authenticateDto.getPassword());
-
-        // business
-        String hashedPassword = getHashedPassword(authenticateDto.getPassword());
-        Optional<User> optionalUser = userRepository.findByUsernamePassword(authenticateDto.getUsername(), hashedPassword);
-        if (optionalUser.isEmpty()) {
-            throw new UserOrPasswordWrongException();
-        }
-        return optionalUser.get().getId();
-    }
-
-    public UUID authenticateByEmail(EmailAuthenticateDto authenticateDto) throws TakeawayException {
-        // validate
-        validationLogic.validateEmail(authenticateDto.getEmail());
-        validationLogic.validatePassword(authenticateDto.getPassword());
-
-        // business
-        String hashedPassword = getHashedPassword(authenticateDto.getPassword());
-        Optional<User> optionalUser = userRepository.findByEmailPassword(authenticateDto.getEmail(), hashedPassword);
-        if (optionalUser.isEmpty()) {
-            throw new UserOrPasswordWrongException();
-        }
-        return optionalUser.get().getId();
-    }
-
-    public UUID createNewItem(UUID userId, CreateItemDto data) throws TakeawayException {
-        return null;
-    }
-
-    public void updateItemDetails(UUID userId, UpdateItemDto data) throws TakeawayException {
-
-    }
-
-    public void deactivateItem(UUID userId, UUID itemId) throws TakeawayException {
-
-    }
-
-    public void renewItem(UUID userId, UUID itemId) throws TakeawayException {
-
-    }
-
-    public void deleteItem(UUID userId, UUID itemId) throws TakeawayException {
-
-    }
-
-    public void changeItemAttachmentOrder(UUID userId, ChangeItemAttachmentOrderDto data) throws TakeawayException {
-
-    }
-
-    public void addAttachmentToItem(UUID userId, CreateAttachmentDto attachmentDto) throws TakeawayException {
-
-    }
-
-    public void deleteAttachmentFromItem(UUID userId, UUID itemId, UUID attachmentId) throws TakeawayException {
-
     }
 }

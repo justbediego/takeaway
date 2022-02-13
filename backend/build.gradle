@@ -1,21 +1,21 @@
 buildscript {
-	repositories {
-		maven {
-			url "https://plugins.gradle.org/m2/"
-		}
-	}
-	dependencies {
-		classpath 'com.google.cloud.tools:appengine-gradle-plugin'
-		classpath 'com.google.appengine:appengine-api-1.0-sdk:2.0.3'
-		classpath "org.springframework.boot:spring-boot-gradle-plugin"
-	}
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'com.google.cloud.tools:appengine-gradle-plugin'
+        classpath 'com.google.appengine:appengine-api-1.0-sdk:2.0.3'
+        classpath "org.springframework.boot:spring-boot-gradle-plugin"
+    }
 }
 
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.6.3'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'com.google.cloud.tools.appengine' version '2.4.2' // App Engine tasks
+    id 'java'
+    id 'org.springframework.boot' version '2.6.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'com.google.cloud.tools.appengine' version '2.4.2' // App Engine tasks
 }
 
 group = 'com.takeaway'
@@ -23,60 +23,62 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 ext {
-	springfoxVersion = '3.0.0'
-	gcpVersion = '1.2.8.RELEASE'
+    springfoxVersion = '3.0.0'
+    gcpVersion = '1.2.8.RELEASE'
+    oauthVersion = '2.5.1.RELEASE'
 }
 
 dependencies {
-	implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-	implementation "org.springframework.boot:spring-boot-starter-web"
-	compileOnly "org.projectlombok:lombok"
-	developmentOnly "org.springframework.boot:spring-boot-devtools"
-	annotationProcessor "org.projectlombok:lombok"
-	testImplementation "org.springframework.boot:spring-boot-starter-test"
-	// custom
-	implementation "com.google.code.gson:gson"
-	implementation "joda-time:joda-time:2.10.13"
-	implementation "org.imgscalr:imgscalr-lib:4.2"
-	implementation "com.google.guava:guava:31.0.1-jre"
-	implementation "org.apache.commons:commons-lang3"
-	implementation "org.slf4j:log4j-over-slf4j"
-	implementation "org.postgresql:postgresql"
-	implementation "io.springfox:springfox-swagger2:$springfoxVersion"
-	implementation "io.springfox:springfox-boot-starter:$springfoxVersion"
-	implementation "io.springfox:springfox-swagger-ui:$springfoxVersion"
-	testImplementation "org.apache.httpcomponents:httpclient:4.5.13"
-	testImplementation "com.h2database:h2"
-	testImplementation "junit:junit"
-	// google
-	implementation "org.springframework.cloud:spring-cloud-gcp-starter:$gcpVersion"
-	implementation "org.springframework.cloud:spring-cloud-gcp-starter-logging:$gcpVersion"
-	implementation "org.springframework.cloud:spring-cloud-gcp-starter-sql-postgresql:$gcpVersion"
-	implementation "org.springframework.cloud:spring-cloud-gcp-starter-storage:$gcpVersion"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    compileOnly "org.projectlombok:lombok"
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    annotationProcessor "org.projectlombok:lombok"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    // custom
+    implementation "com.google.code.gson:gson"
+    implementation "joda-time:joda-time:2.10.13"
+    implementation "org.imgscalr:imgscalr-lib:4.2"
+    implementation "com.google.guava:guava:31.0.1-jre"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "org.slf4j:log4j-over-slf4j"
+    implementation "org.postgresql:postgresql"
+    implementation "io.springfox:springfox-swagger2:$springfoxVersion"
+    implementation "io.springfox:springfox-boot-starter:$springfoxVersion"
+    implementation "io.springfox:springfox-swagger-ui:$springfoxVersion"
+    testImplementation "org.apache.httpcomponents:httpclient:4.5.13"
+    testImplementation "com.h2database:h2"
+    testImplementation "junit:junit"
+    // google
+    implementation "org.springframework.security.oauth:spring-security-oauth2:$oauthVersion"
+    implementation "org.springframework.cloud:spring-cloud-gcp-starter:$gcpVersion"
+    implementation "org.springframework.cloud:spring-cloud-gcp-starter-logging:$gcpVersion"
+    implementation "org.springframework.cloud:spring-cloud-gcp-starter-sql-postgresql:$gcpVersion"
+    implementation "org.springframework.cloud:spring-cloud-gcp-starter-storage:$gcpVersion"
 }
 
 appengine {
-	deploy {
-		version = "GCLOUD_CONFIG"
-		projectId = "GCLOUD_CONFIG"
-	}
+    deploy {
+        version = "GCLOUD_CONFIG"
+        projectId = "GCLOUD_CONFIG"
+    }
 }
 
 jar {
-	enabled = false
-	archiveClassifier = ''
+    enabled = false
+    archiveClassifier = ''
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

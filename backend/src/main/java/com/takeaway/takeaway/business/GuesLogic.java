@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @Transactional
-public class GeneralLogic {
+public class GuesLogic {
 
     private final CountryRepository countryRepository;
 
-    public GeneralLogic(CountryRepository countryRepository) {
+    public GuesLogic(CountryRepository countryRepository) {
         this.countryRepository = countryRepository;
     }
 
