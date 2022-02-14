@@ -1,7 +1,7 @@
 import axios from 'axios';
 import i18n from "i18next";
 
-export const basePath = "http://192.168.1.198:2102/";
+export const basePath = "http://192.168.1.198:8080/";
 
 type RequestInfo = {
     method: 'GET' | 'POST' | 'PATCH' | 'DELETE';

@@ -1,5 +1,6 @@
 package com.takeaway.takeaway.dataaccess.model;
 
+import com.takeaway.takeaway.dataaccess.model.enums.ItemStates;
 import com.takeaway.takeaway.dataaccess.model.geo.Location;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +31,9 @@ public class Item extends BaseEntity {
     @Column(length = 5000)
     private String description;
 
+    @Column
+    private ItemStates state;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "picture_item_id")
     private List<Attachment> pictures = new ArrayList<>();
@@ -45,4 +49,8 @@ public class Item extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private List<DirectMessage> directMessages = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    private List<ItemReport> itemReports = new ArrayList<>();
 }

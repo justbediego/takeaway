@@ -70,4 +70,8 @@ public class User extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "to_user_id")
     private List<DirectMessage> directMessagesTo = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private List<ItemReport> itemReports = new ArrayList<>();
 }
