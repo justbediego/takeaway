@@ -34,8 +34,8 @@ public class UserController extends BaseController {
     }
 
     @PatchMapping(path = "/modifyAddress")
-    public void modifyAddress(@RequestBody ModifyAddressDto data) throws TakeawayException {
-        userLogic.modifyAddress(getUserId(), ModifyAddressDto.fromOutside(data));
+    public void modifyAddress(@RequestBody ModifyLocationDto data) throws TakeawayException {
+        userLogic.modifyAddress(getUserId(), ModifyLocationDto.fromOutside(data));
     }
 
     @DeleteMapping(path = "/deleteProfilePicture")

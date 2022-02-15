@@ -2,10 +2,7 @@ package com.takeaway.takeaway.presentation;
 
 import com.takeaway.takeaway.business.AuthenticationLogic;
 import com.takeaway.takeaway.business.UserItemLogic;
-import com.takeaway.takeaway.business.dto.ChangeItemAttachmentOrderDto;
-import com.takeaway.takeaway.business.dto.CreateAttachmentDto;
-import com.takeaway.takeaway.business.dto.CreateItemDto;
-import com.takeaway.takeaway.business.dto.UpdateItemDto;
+import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.business.exception.TakeawayException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,4 +59,10 @@ public class UserItemController extends BaseController {
     public void deleteAttachmentFromItem(@PathVariable UUID itemId, @PathVariable UUID attachmentId) throws TakeawayException {
         userItemLogic.deleteAttachmentFromItem(getUserId(), itemId, attachmentId);
     }
+
+    @PostMapping(path = "/reportItem")
+    public void reportItem(ReportItemDto reportItemDto) throws TakeawayException{
+        userItemLogic.reportItem(getUserId(), reportItemDto);
+    }
+
 }

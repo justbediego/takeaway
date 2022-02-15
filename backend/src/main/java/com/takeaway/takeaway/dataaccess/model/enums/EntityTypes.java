@@ -7,7 +7,8 @@ public enum EntityTypes {
     STATE("STATE"),
     CITY("CITY"),
     LOCATION("LOCATION"),
-    GEOLOCATION("GEOLOCATION");
+    GEOLOCATION("GEOLOCATION"),
+    ITEM_CATEGORY("ITEM_CATEGORY");
 
     private String inText;
 

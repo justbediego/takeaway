@@ -15,7 +15,7 @@ public class UpdateItemDto extends BaseDto {
     private String title;
     private String description;
     private UUID itemCategoryId;
-    private ModifyAddressDto location;
+    private ModifyLocationDto location;
 
     public static UpdateItemDto fromOutside(UpdateItemDto data) throws TakeawayException {
         if (data.getLocation() == null) {
@@ -25,7 +25,7 @@ public class UpdateItemDto extends BaseDto {
                 .title(trim(data.getTitle()))
                 .description(trim(data.getDescription()))
                 .itemCategoryId(data.getItemCategoryId())
-                .location(ModifyAddressDto.fromOutside(data.getLocation()))
+                .location(ModifyLocationDto.fromOutside(data.getLocation()))
                 .build();
     }
 }

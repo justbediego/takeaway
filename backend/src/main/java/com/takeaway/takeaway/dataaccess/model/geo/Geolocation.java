@@ -37,9 +37,9 @@ public class Geolocation extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "geolocation_id")
-    private List<Location> inLocations = new ArrayList<>();
+    private List<State> inStates = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "geolocation_id")
-    private List<State> inStates = new ArrayList<>();
+    private List<Location> inLocations = new ArrayList<>();
 }

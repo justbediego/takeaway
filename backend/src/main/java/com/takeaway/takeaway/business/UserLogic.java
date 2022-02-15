@@ -65,27 +65,19 @@ public class UserLogic {
         byte[] smallData = attachmentLogic.prepareImage(attachmentDto.getFileData(), profilePictureSize);
 
         // business
-        UUID originalId = attachmentLogic.createAttachment(
+        Attachment originalPicture = attachmentLogic.createAttachment(
                 CreateAttachmentDto.builder()
                         // not trusting the incoming data
                         .fileData(originalData)
                         .filename(attachmentDto.getFilename())
                         .build(),
                 AttachmentTypes.IMAGE);
-        UUID smallId = attachmentLogic.createAttachment(
+        Attachment smallPicture = attachmentLogic.createAttachment(
                 CreateAttachmentDto.builder()
                         .fileData(smallData)
                         .filename(attachmentDto.getFilename())
                         .build(),
                 AttachmentTypes.IMAGE);
-
-        Optional<Attachment> optionalOriginal = attachmentRepository.findById(originalId);
-        Optional<Attachment> optionalSmall = attachmentRepository.findById(smallId);
-        if (optionalOriginal.isEmpty() || optionalSmall.isEmpty()) {
-            throw new UnrecognizedException("Attachments are not accessible after being created");
-        }
-        Attachment originalPicture = optionalOriginal.get();
-        Attachment smallPicture = optionalSmall.get();
 
         if (user.getProfilePicture() != null) {
             attachmentLogic.removeAttachment(user.getProfilePicture().getId());
@@ -173,32 +165,12 @@ public class UserLogic {
         userRepository.save(user);
     }
 
-    public void modifyAddress(UUID userId, ModifyAddressDto modifyAddressDto) throws TakeawayException {
+    public void modifyAddress(UUID userId, ModifyLocationDto modifyLocationDto) throws TakeawayException {
         // validation
         User user = validationLogic.validateGetUserById(userId);
-        boolean hasGeolocation = false;
-        if (modifyAddressDto.getLatitude() != null || modifyAddressDto.getLongitude() != null) {
-            validationLogic.validateLongitudeLatitude(
-                    modifyAddressDto.getLongitude(),
-                    modifyAddressDto.getLatitude(),
-                    modifyAddressDto.getAccuracyM()
-            );
-            hasGeolocation = true;
-        }
-        if (StringUtils.isNotBlank(modifyAddressDto.getTitle())) {
-            validationLogic.validateLocationTitle(modifyAddressDto.getTitle());
-        }
-        validationLogic.validateLocationAddress(
-                modifyAddressDto.getStreetName(),
-                modifyAddressDto.getStreetName2(),
-                modifyAddressDto.getHouseNumber(),
-                modifyAddressDto.getAdditionalInfo()
-        );
+        ValidModifyLocationDto validLocationDto = validationLogic.validateGetLocation(modifyLocationDto);
 
         // business
-        Country country = validationLogic.validateGetCountryById(modifyAddressDto.getCountryId());
-        State state = validationLogic.validateGetStateById(country.getId(), modifyAddressDto.getStateId());
-        City city = validationLogic.validateGetCityById(state.getId(), modifyAddressDto.getCityId());
         if (user.getAddress() == null) {
             user.setAddress(new Location());
         }
@@ -206,28 +178,25 @@ public class UserLogic {
         if (address.getGeolocation() == null) {
             address.setGeolocation(new Geolocation());
         }
+
         Geolocation geolocation = address.getGeolocation();
-        address.setCountry(country);
-        address.setState(state);
-        address.setCity(city);
-        if (hasGeolocation) {
-            geolocation.setLatitude(modifyAddressDto.getLatitude());
-            geolocation.setLongitude(modifyAddressDto.getLongitude());
-            geolocation.setAccuracyM(modifyAddressDto.getAccuracyM());
-        } else {
-            geolocation.setLatitude(null);
-            geolocation.setLongitude(null);
-            geolocation.setAccuracyM(null);
-        }
-        address.setTitle(modifyAddressDto.getTitle());
-        address.setStreetName(modifyAddressDto.getStreetName());
-        address.setStreetName2(modifyAddressDto.getStreetName2());
-        address.setHouseNumber(modifyAddressDto.getHouseNumber());
-        address.setAdditionalInfo(modifyAddressDto.getAdditionalInfo());
-        address.updateDateModified();
+        geolocation.setLatitude(validLocationDto.getLatitude());
+        geolocation.setLongitude(validLocationDto.getLongitude());
+        geolocation.setAccuracyM(validLocationDto.getAccuracyM());
         geolocation.updateDateModified();
         geolocationRepository.save(geolocation);
+
+        address.setCountry(validLocationDto.getCountry());
+        address.setState(validLocationDto.getState());
+        address.setCity(validLocationDto.getCity());
+        address.setTitle(validLocationDto.getTitle());
+        address.setStreetName(validLocationDto.getStreetName());
+        address.setStreetName2(validLocationDto.getStreetName2());
+        address.setHouseNumber(validLocationDto.getHouseNumber());
+        address.setAdditionalInfo(validLocationDto.getAdditionalInfo());
+        address.updateDateModified();
         locationRepository.save(address);
+
         userRepository.save(user);
     }
 }

@@ -455,7 +455,7 @@ class UserControllerIT {
         try {
             restTemplate.patchForObject(
                     apiPath,
-                    ModifyAddressDto.builder()
+                    ModifyLocationDto.builder()
                             .latitude(500.0)
                             .longitude(20.0)
                             .title("my-title's test")
@@ -483,7 +483,7 @@ class UserControllerIT {
         try {
             restTemplate.patchForObject(
                     apiPath,
-                    ModifyAddressDto.builder()
+                    ModifyLocationDto.builder()
                             .latitude(-80.0)
                             .longitude(20.0)
                             .title("m")
@@ -511,7 +511,7 @@ class UserControllerIT {
         try {
             restTemplate.patchForObject(
                     apiPath,
-                    ModifyAddressDto.builder()
+                    ModifyLocationDto.builder()
                             .latitude(-80.0)
                             .longitude(20.0)
                             .title("my-title's test")
@@ -540,7 +540,7 @@ class UserControllerIT {
         try {
             restTemplate.patchForObject(
                     apiPath,
-                    ModifyAddressDto.builder()
+                    ModifyLocationDto.builder()
                             .latitude(-80.0)
                             .longitude(20.0)
                             .title("my-title's test")
@@ -566,7 +566,7 @@ class UserControllerIT {
         String apiPath = String.format("%s%s", basePath, "modifyAddress");
         restTemplate.patchForObject(
                 apiPath,
-                ModifyAddressDto.builder()
+                ModifyLocationDto.builder()
                         .latitude(-80.0)
                         .longitude(20.0)
                         .title("my-title's test")

@@ -33,8 +33,8 @@ public class AttachmentLogic {
     @Value("${spring.application.attachmentsBucket}")
     private String attachmentsBucket;
 
-    @Value("${spring.application.profilePictureMaxSize}")
-    private Integer profilePictureMaxSize;
+    @Value("${spring.application.pictureMaxSize}")
+    private Integer pictureMaxSize;
 
     private final ValidationLogic validationLogic;
     private final Storage storage;
@@ -61,8 +61,8 @@ public class AttachmentLogic {
             Integer height = image.getHeight();
             Integer width = image.getWidth();
             Integer maxSide = Math.max(height, width);
-            if (rescaleSide == null && maxSide > profilePictureMaxSize) {
-                rescaleSide = profilePictureMaxSize;
+            if (rescaleSide == null && maxSide > pictureMaxSize) {
+                rescaleSide = pictureMaxSize;
             }
             if (rescaleSide != null) {
                 height = (int) Math.ceil((double) height / maxSide * rescaleSide);
@@ -94,7 +94,7 @@ public class AttachmentLogic {
     }
 
     // only used internally
-    public UUID createAttachment(CreateAttachmentDto attachmentDto, AttachmentTypes type) throws TakeawayException {
+    public Attachment createAttachment(CreateAttachmentDto attachmentDto, AttachmentTypes type) throws TakeawayException {
         // validation
         validationLogic.validateFilename(attachmentDto.getFilename());
         validationLogic.validateFileData(attachmentDto.getFileData());
@@ -113,7 +113,7 @@ public class AttachmentLogic {
             throw new UnrecognizedException("Unable to create attachment");
         }
         this.attachmentRepository.save(newAttachment);
-        return newAttachment.getId();
+        return newAttachment;
     }
 
     // only used internally

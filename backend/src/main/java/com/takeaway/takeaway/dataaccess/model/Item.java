@@ -1,6 +1,7 @@
 package com.takeaway.takeaway.dataaccess.model;
 
-import com.takeaway.takeaway.dataaccess.model.enums.ItemStates;
+import com.takeaway.takeaway.dataaccess.model.enums.ItemApprovalStates;
+import com.takeaway.takeaway.dataaccess.model.enums.ItemPublishStates;
 import com.takeaway.takeaway.dataaccess.model.geo.Location;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -31,8 +33,14 @@ public class Item extends BaseEntity {
     @Column(length = 5000)
     private String description;
 
-    @Column
-    private ItemStates state;
+    @Column(nullable = false)
+    private ItemApprovalStates approvalState;
+
+    @Column(nullable = false)
+    private ItemPublishStates publishState;
+
+    @Column(nullable = false)
+    private Date publishStart;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "picture_item_id")

@@ -1,13 +1,13 @@
 package com.takeaway.takeaway.dataaccess.model.enums;
 
-public enum ItemStates {
-    EDIT("EDIT"),
-    ACTIVE("ACTIVE"),
+public enum ItemApprovalStates {
+    QUEUE("QUEUE"),
+    APPROVED("APPROVED"),
     BLOCKED("BLOCKED");
 
     private String inText;
 
-    ItemStates(String inText) {
+    ItemApprovalStates(String inText) {
         this.inText = inText;
     }
 

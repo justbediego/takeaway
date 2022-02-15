@@ -24,7 +24,7 @@ spring:
     name: takeaway
     attachmentsBucket: takeaway_attachments
     profilePictureSize: 100
-    profilePictureMaxSize: 1000
+    pictureMaxSize: 1000
     passwordHashSalt: May we all be one day free!
     maxUploadFileSizeInBytes: 26214400
   security:

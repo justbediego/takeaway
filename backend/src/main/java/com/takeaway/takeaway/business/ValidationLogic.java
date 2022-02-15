@@ -1,15 +1,13 @@
 package com.takeaway.takeaway.business;
 
+import com.takeaway.takeaway.business.dto.ModifyLocationDto;
+import com.takeaway.takeaway.business.dto.ValidModifyLocationDto;
 import com.takeaway.takeaway.business.exception.*;
+import com.takeaway.takeaway.dataaccess.model.ItemCategory;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.EntityTypes;
-import com.takeaway.takeaway.dataaccess.model.geo.City;
-import com.takeaway.takeaway.dataaccess.model.geo.Country;
-import com.takeaway.takeaway.dataaccess.model.geo.State;
-import com.takeaway.takeaway.dataaccess.repository.CityRepository;
-import com.takeaway.takeaway.dataaccess.repository.CountryRepository;
-import com.takeaway.takeaway.dataaccess.repository.StateRepository;
-import com.takeaway.takeaway.dataaccess.repository.UserRepository;
+import com.takeaway.takeaway.dataaccess.model.geo.*;
+import com.takeaway.takeaway.dataaccess.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,15 +24,17 @@ public class ValidationLogic {
     private final CountryRepository countryRepository;
     private final StateRepository stateRepository;
     private final CityRepository cityRepository;
+    private final ItemCategoryRepository itemCategoryRepository;
 
     @Value("${spring.application.maxUploadFileSizeInBytes}")
     private Long maxUploadFileSizeInBytes;
 
-    public ValidationLogic(UserRepository userRepository, CountryRepository countryRepository, StateRepository stateRepository, CityRepository cityRepository) {
+    public ValidationLogic(UserRepository userRepository, CountryRepository countryRepository, StateRepository stateRepository, CityRepository cityRepository, ItemCategoryRepository itemCategoryRepository) {
         this.userRepository = userRepository;
         this.countryRepository = countryRepository;
         this.stateRepository = stateRepository;
         this.cityRepository = cityRepository;
+        this.itemCategoryRepository = itemCategoryRepository;
     }
 
 
@@ -199,5 +199,59 @@ public class ValidationLogic {
         if (fileData.length > maxUploadFileSizeInBytes) {
             throw new FileSizeExceededException();
         }
+    }
+
+    public void validateItemDescription(String description)throws TakeawayException {
+
+    }
+
+    public void validateItemTitle(String title)throws TakeawayException {
+
+    }
+
+    public ItemCategory validateGetItemCategoryById(UUID categoryId) throws EntityNotFound {
+        Optional<ItemCategory> optionalCategory = itemCategoryRepository.findById(categoryId);
+        if (optionalCategory.isEmpty()){
+            throw new EntityNotFound(EntityTypes.ITEM_CATEGORY, categoryId);
+        }
+        return optionalCategory.get();
+    }
+
+    public ValidModifyLocationDto validateGetLocation(ModifyLocationDto modifyLocationDto)  throws TakeawayException{
+        boolean hasGeolocation = false;
+        if (modifyLocationDto.getLatitude() != null || modifyLocationDto.getLongitude() != null) {
+            validateLongitudeLatitude(
+                    modifyLocationDto.getLongitude(),
+                    modifyLocationDto.getLatitude(),
+                    modifyLocationDto.getAccuracyM()
+            );
+            hasGeolocation = true;
+        }
+        if (StringUtils.isNotBlank(modifyLocationDto.getTitle())) {
+            validateLocationTitle(modifyLocationDto.getTitle());
+        }
+        validateLocationAddress(
+                modifyLocationDto.getStreetName(),
+                modifyLocationDto.getStreetName2(),
+                modifyLocationDto.getHouseNumber(),
+                modifyLocationDto.getAdditionalInfo()
+        );
+        Country country = validateGetCountryById(modifyLocationDto.getCountryId());
+        State state = validateGetStateById(country.getId(), modifyLocationDto.getStateId());
+        City city = validateGetCityById(state.getId(), modifyLocationDto.getCityId());
+        return ValidModifyLocationDto.builder()
+                .title(modifyLocationDto.getTitle())
+                .streetName(modifyLocationDto.getStreetName())
+                .streetName2(modifyLocationDto.getStreetName2())
+                .houseNumber(modifyLocationDto.getHouseNumber())
+                .additionalInfo(modifyLocationDto.getAdditionalInfo())
+                .hasGeolocation(hasGeolocation)
+                .country(country)
+                .state(state)
+                .city(city)
+                .latitude(hasGeolocation ? modifyLocationDto.getLatitude(): null)
+                .longitude(hasGeolocation ? modifyLocationDto.getLongitude(): null)
+                .accuracyM(hasGeolocation ? modifyLocationDto.getAccuracyM(): null)
+                .build();
     }
 }

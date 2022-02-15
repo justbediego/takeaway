@@ -18,7 +18,7 @@ public class CreateItemDto extends BaseDto {
     private String title;
     private String description;
     private UUID itemCategoryId;
-    private ModifyAddressDto location;
+    private ModifyLocationDto location;
     private List<CreateAttachmentDto> images;
 
     public static CreateItemDto fromOutside(UpdateItemDto data, MultipartFile[] files) throws TakeawayException {
@@ -33,7 +33,7 @@ public class CreateItemDto extends BaseDto {
                 .title(trim(data.getTitle()))
                 .description(trim(data.getDescription()))
                 .itemCategoryId(data.getItemCategoryId())
-                .location(ModifyAddressDto.fromOutside(data.getLocation()))
+                .location(ModifyLocationDto.fromOutside(data.getLocation()))
                 .images(attachmentList)
                 .build();
     }
