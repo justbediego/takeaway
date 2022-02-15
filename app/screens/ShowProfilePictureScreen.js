@@ -1,13 +1,29 @@
 import {Platform, StyleSheet} from 'react-native';
-import React, {useLayoutEffect} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import {Image, View} from "../components/Themed";
-import {getImageSource} from "../services";
+import {getAttachmentLink} from "../services";
 import {StatusBar} from "expo-status-bar";
 
 
 export default function ShowProfilePictureScreen({route, navigation}) {
 
     const {title, picId, picKey} = route.params;
+    const [picLink, setPicLink] = useState(null);
+
+    const getPictureLink = async () => {
+        try {
+            const imageLink = await getAttachmentLink(picId, picKey);
+            setPicLink(imageLink);
+        } catch (e) {
+            // todo
+            console.log(e.translation);
+        }
+    }
+
+    useEffect(() => {
+        getPictureLink();
+    }, []);
+
 
     useLayoutEffect(() => {
         navigation.setOptions({title});
@@ -18,7 +34,7 @@ export default function ShowProfilePictureScreen({route, navigation}) {
             <StatusBar style={Platform.OS === 'ios' ? 'light' : 'dark'}/>
             <View style={styles.container}>
                 <Image
-                    source={{uri: getImageSource(picId, picKey)}}
+                    source={picLink ? {uri: picLink} : require('../assets/images/anonymous.png')}
                     style={styles.profilePicture}
                 />
             </View>
@@ -33,7 +49,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     profilePicture: {
-        flexGrow: 1,
+        width: '100%',
+        height: '100%',
         resizeMode: 'contain',
     }
 });

@@ -1,12 +1,12 @@
 import {StyleSheet, View as DefaultView} from 'react-native';
 
 import {Image, Pressable, Text, View} from '../components/Themed';
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Colors from "../constants/Colors";
 
 import {useDispatch, useSelector} from 'react-redux';
 import {update as updateBasicInfoSlice} from '../store/basicInfoSlice';
-import {deleteProfilePicture, getBasicInfo, getImageSource, updateProfilePicture} from "../services";
+import {deleteProfilePicture, getAttachmentLink, getBasicInfo, updateProfilePicture} from "../services";
 import {FontAwesome} from "@expo/vector-icons";
 import Modal from 'react-native-modalbox';
 import {useTranslation} from "react-i18next";
@@ -16,14 +16,29 @@ export default function TabProfileScreen({navigation}) {
     const {t} = useTranslation();
     // const colorScheme = useColorScheme();
     const colorScheme = 'light';
-    const basicInfo = useSelector((state) => state.basicInfo.value)
+    const basicInfo = useSelector((state) => state.basicInfo.value);
     const dispatch = useDispatch();
     const picOptions = useRef();
+    const [profilePicLink, setProfilePicLink] = useState(null);
+
+    const getProfilePictureLink = async (attachmentId, attachmentKey) => {
+        try {
+            let imageLink = null;
+            if (attachmentId && attachmentKey) {
+                imageLink = await getAttachmentLink(attachmentId, attachmentKey);
+            }
+            setProfilePicLink(imageLink);
+        } catch (e) {
+            // todo
+            console.log(e.translation);
+        }
+    }
 
     const refreshBasicInfo = async () => {
         try {
             const response = await getBasicInfo();
             await dispatch(updateBasicInfoSlice(response));
+            getProfilePictureLink(response?.profilePictureId, response?.profilePictureKey);
         } catch (e) {
             // todo
             console.log(e.translation);
@@ -91,10 +106,7 @@ export default function TabProfileScreen({navigation}) {
         <View style={styles.container}>
             <Pressable onPress={openProfilePictureModal}>
                 <Image
-                    source={basicInfo?.profilePictureId ?
-                        {uri: getImageSource(basicInfo?.profilePictureId, basicInfo?.profilePictureKey)} :
-                        require('../assets/images/anonymous.png')
-                    }
+                    source={profilePicLink ? {uri: profilePicLink} : require('../assets/images/anonymous.png')}
                     style={{
                         ...styles.profilePicture,
                         borderColor: Colors[colorScheme].imageBorder

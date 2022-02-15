@@ -40,8 +40,6 @@ type UpdateBasicInfoDto = {
     phoneNumberCountryCode: string;
 }
 
-export const getImageSource = (imageId, securityKey) => `${basePath}/attachment/getImage/${imageId}/${securityKey}`
-
 const handleServiceException = async (callMethod: Promise) => {
     try {
         return (await callMethod())?.data;
@@ -140,4 +138,10 @@ export const deleteProfilePicture = (): Promise => callJsonService({
     method: "DELETE",
     parent: "user",
     action: 'deleteProfilePicture'
+})
+
+export const getAttachmentLink = (attachmentId, attachmentKey): Promise => callJsonService({
+    method: "GET",
+    parent: "attachment",
+    action: `getAttachmentLink/${attachmentId}/${attachmentKey}`
 })
