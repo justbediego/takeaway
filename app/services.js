@@ -1,13 +1,13 @@
 import axios from 'axios';
 import i18n from "i18next";
 
-export const basePath = "http://192.168.1.198:8080/";
+export const basePath = "http://192.168.1.198:8080";
 
 type RequestInfo = {
     method: 'GET' | 'POST' | 'PATCH' | 'DELETE';
     data: any;
     headers: any;
-    parent: 'user' | 'attachment';
+    parent: 'user' | 'attachment' | 'authentication' | 'guest' | 'user-item';
     action: string;
 }
 
@@ -132,7 +132,7 @@ export const updateUsername = () => {
 
 export const getCountryCodes = (): Promise<GetCountryCodesDto> => callJsonService({
     method: "GET",
-    parent: "user",
+    parent: "guest",
     action: 'getCountryCodes'
 })
 

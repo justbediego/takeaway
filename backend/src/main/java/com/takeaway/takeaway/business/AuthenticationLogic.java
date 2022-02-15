@@ -27,7 +27,6 @@ public class AuthenticationLogic {
     private String passwordHashSalt;
 
     private final ValidationLogic validationLogic;
-
     private final UserRepository userRepository;
 
     public AuthenticationLogic(ValidationLogic validationLogic, UserRepository userRepository) {

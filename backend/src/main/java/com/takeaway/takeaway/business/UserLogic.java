@@ -29,17 +29,11 @@ public class UserLogic {
 
     @Value("${spring.application.profilePictureSize}")
     private Integer profilePictureSize;
-
     private final ValidationLogic validationLogic;
-
     private final AttachmentLogic attachmentLogic;
-
     private final UserRepository userRepository;
-
     private final LocationRepository locationRepository;
-
     private final GeolocationRepository geolocationRepository;
-
     private final AttachmentRepository attachmentRepository;
 
     public UserLogic(ValidationLogic validationLogic, AttachmentLogic attachmentLogic, UserRepository userRepository, LocationRepository locationRepository, GeolocationRepository geolocationRepository, AttachmentRepository attachmentRepository) {

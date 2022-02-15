@@ -1,7 +1,7 @@
 package com.takeaway.takeaway.business;
 
+import com.google.cloud.storage.*;
 import com.takeaway.takeaway.business.dto.CreateAttachmentDto;
-import com.takeaway.takeaway.business.dto.GetAttachmentDto;
 import com.takeaway.takeaway.business.exception.EntityNotFound;
 import com.takeaway.takeaway.business.exception.TakeawayException;
 import com.takeaway.takeaway.business.exception.UnableToParseImage;
@@ -18,33 +18,37 @@ import org.springframework.stereotype.Component;
 import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.net.URL;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
 @Transactional
 public class AttachmentLogic {
 
-    @Value("${spring.application.attachmentsPath}")
-    private String attachmentsPath;
+    @Value("${spring.application.attachmentsBucket}")
+    private String attachmentsBucket;
 
     @Value("${spring.application.profilePictureMaxSize}")
     private Integer profilePictureMaxSize;
 
-    private ValidationLogic validationLogic;
+    private final ValidationLogic validationLogic;
+    private final Storage storage;
 
-    private String getFullPath(UUID fileId) {
-        return String.format("%s/%s.TAKE", attachmentsPath, fileId);
+    private BlobId getBlobId(Attachment attachment) {
+        String extension = attachment.getType() == AttachmentTypes.IMAGE ? "PNG" : "DAT";
+        return BlobId.of(attachmentsBucket, String.format("%s/%s_%s.%s", extension, attachment.getFileId(), attachment.getSecurityKey(), extension));
     }
 
     private final AttachmentRepository attachmentRepository;
 
-    public AttachmentLogic(ValidationLogic validationLogic, AttachmentRepository attachmentRepository) {
+    public AttachmentLogic(ValidationLogic validationLogic, Storage storage, AttachmentRepository attachmentRepository) {
         this.validationLogic = validationLogic;
+        this.storage = storage;
         this.attachmentRepository = attachmentRepository;
     }
 
@@ -73,29 +77,20 @@ public class AttachmentLogic {
         return outputStream.toByteArray();
     }
 
-    public GetAttachmentDto getAttachment(UUID attachmentId, UUID attachmentKey, AttachmentTypes typeCheck) throws TakeawayException {
+    public String getAttachmentLink(UUID attachmentId, UUID attachmentKey) throws TakeawayException {
         Optional<Attachment> optionalAttachment = attachmentRepository.findByIdAndKey(attachmentId, attachmentKey);
         if (optionalAttachment.isEmpty()) {
             throw new EntityNotFound(EntityTypes.ATTACHMENT, attachmentId);
         }
         Attachment attachment = optionalAttachment.get();
-        if (typeCheck != null && attachment.getType() != typeCheck) {
-            throw new EntityNotFound(EntityTypes.ATTACHMENT, attachmentId);
-        }
-        byte[] fileData;
-        try {
-            try (FileInputStream fileStream = new FileInputStream(getFullPath(attachment.getFileId()))) {
-                fileData = fileStream.readAllBytes();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new UnrecognizedException("Unable to access attachment");
-        }
-        return GetAttachmentDto.builder()
-                .type(attachment.getType())
-                .filename(attachment.getFilename())
-                .fileData(fileData)
-                .build();
+        BlobId blobId = getBlobId(attachment);
+        Blob blob = storage.get(blobId);
+        URL url = blob.signUrl(
+                3,
+                TimeUnit.HOURS,
+                Storage.SignUrlOption.httpMethod(HttpMethod.GET)
+        );
+        return url.toString();
     }
 
     // only used internally
@@ -111,16 +106,18 @@ public class AttachmentLogic {
         newAttachment.setSecurityKey(UUID.randomUUID());
         newAttachment.setFileSize(attachmentDto.getFileData().length);
         newAttachment.setType(type);
-        this.attachmentRepository.save(newAttachment);
         try {
-            try (FileOutputStream fileStream = new FileOutputStream(getFullPath(newAttachment.getFileId()))) {
-                fileStream.write(attachmentDto.getFileData());
-                fileStream.flush();
-            }
-        } catch (IOException e) {
+            storage.create(
+                    BlobInfo.newBuilder(getBlobId(newAttachment))
+                            .setContentType("image/png")
+                            .build(),
+                    attachmentDto.getFileData()
+            );
+        } catch (Exception e) {
             e.printStackTrace();
             throw new UnrecognizedException("Unable to create attachment");
         }
+        this.attachmentRepository.save(newAttachment);
         return newAttachment.getId();
     }
 
@@ -132,11 +129,11 @@ public class AttachmentLogic {
         }
         Attachment attachment = optionalAttachment.get();
         try {
-            Files.delete(Path.of(getFullPath(attachment.getFileId())));
-            attachmentRepository.delete(attachment);
-        } catch (IOException e) {
+            storage.delete(getBlobId(attachment));
+        } catch (Exception e) {
             e.printStackTrace();
             throw new UnrecognizedException("Unable to access attachment");
         }
+        attachmentRepository.delete(attachment);
     }
 }

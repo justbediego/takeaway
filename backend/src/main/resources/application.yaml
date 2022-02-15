@@ -22,7 +22,7 @@ spring:
         enable_lazy_load_no_trans: true
   application:
     name: takeaway
-    attachmentsPath: C:\Users\diego\takeaway_attachments\
+    attachmentsBucket: takeaway_attachments
     profilePictureSize: 100
     profilePictureMaxSize: 1000
     passwordHashSalt: May we all be one day free!

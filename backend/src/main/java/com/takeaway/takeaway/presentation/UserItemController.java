@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/userItem")
+@RequestMapping("/user-item")
 public class UserItemController extends BaseController {
 
     private final UserItemLogic userItemLogic;
