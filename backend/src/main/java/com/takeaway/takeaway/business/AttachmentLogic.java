@@ -41,7 +41,7 @@ public class AttachmentLogic {
 
     private BlobId getBlobId(Attachment attachment) {
         String extension = attachment.getType() == AttachmentTypes.IMAGE ? "PNG" : "DAT";
-        return BlobId.of(attachmentsBucket, String.format("%s/%s_%s.%s", extension, attachment.getFileId(), attachment.getSecurityKey(), extension));
+        return BlobId.of(attachmentsBucket, String.format("%s/%s.%s", extension, attachment.getFileId(), extension));
     }
 
     private final AttachmentRepository attachmentRepository;
@@ -107,12 +107,7 @@ public class AttachmentLogic {
         newAttachment.setFileSize(attachmentDto.getFileData().length);
         newAttachment.setType(type);
         try {
-            storage.create(
-                    BlobInfo.newBuilder(getBlobId(newAttachment))
-                            .setContentType("image/png")
-                            .build(),
-                    attachmentDto.getFileData()
-            );
+            storage.create(BlobInfo.newBuilder(getBlobId(newAttachment)).build(), attachmentDto.getFileData());
         } catch (Exception e) {
             e.printStackTrace();
             throw new UnrecognizedException("Unable to create attachment");
