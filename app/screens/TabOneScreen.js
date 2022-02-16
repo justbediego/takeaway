@@ -7,7 +7,8 @@ import ItemBox from "../components/ItemBox";
 export default function TabOneScreen({navigation}) {
     return (
         <View style={styles.container}>
-            <ScrollView style={styles.itemBoxContainer} showsVerticalScrollIndicator={false} contentContainerStyle={{flexWrap:'wrap',  flexDirection: 'row'}}>
+            <ScrollView style={styles.itemBoxContainer}
+                        showsVerticalScrollIndicator={false} contentContainerStyle={styles.itemBoxContainer}>
                 <ItemBox style={styles.itemBox}></ItemBox>
                 <ItemBox style={styles.itemBox}></ItemBox>
                 <ItemBox style={styles.itemBox}></ItemBox>
@@ -32,11 +33,10 @@ export default function TabOneScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     itemBoxContainer: {
-        padding: 10,
+        flexWrap:'wrap',
+        flexDirection: 'row'
     },
     itemBox: {
         flexBasis: '45%',
