@@ -18,16 +18,16 @@ public abstract class BaseController {
     }
 
     protected UUID getUserId() throws TakeawayException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null ||
-                !authentication.isAuthenticated() ||
-                !(authentication.getPrincipal() instanceof DefaultOidcUser)) {
-            throw new UnrecognizedException("Unable to get the principal user");
-        }
-        DefaultOidcUser user = (DefaultOidcUser) authentication.getPrincipal();
-        String email = user.getClaims().get("email").toString();
-        String name = user.getClaims().get("name").toString();
-        return authenticationLogic.authenticateByEmail(email, name, "");
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication == null ||
+//                !authentication.isAuthenticated() ||
+//                !(authentication.getPrincipal() instanceof DefaultOidcUser)) {
+//            throw new UnrecognizedException("Unable to get the principal user");
+//        }
+//        DefaultOidcUser user = (DefaultOidcUser) authentication.getPrincipal();
+//        String email = user.getClaims().get("email").toString();
+//        String name = user.getClaims().get("name").toString();
+        return authenticationLogic.authenticateByEmail("halizadehir@gmail.com", null, null);
     }
 
 }

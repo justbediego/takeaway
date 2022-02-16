@@ -13,7 +13,7 @@ public class OAuth2LoginConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers("/", "/guest/**")
+                .antMatchers("/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
