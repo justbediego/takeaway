@@ -1,13 +1,31 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet,ScrollView} from 'react-native';
 
-import {Text, View} from '../components/Themed';
+import {View} from '../components/Themed';
 import React from "react";
+import ItemBox from "../components/ItemBox";
 
 export default function TabOneScreen({navigation}) {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Tab One</Text>
-            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
+            <ScrollView style={styles.itemBoxContainer} showsVerticalScrollIndicator={false}>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+                <ItemBox style={styles.itemBox}></ItemBox>
+            </ScrollView>
+
         </View>
     );
 }
@@ -15,16 +33,19 @@ export default function TabOneScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+        // alignItems: 'center',
+        // justifyContent: 'flex-start',
     },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
+    itemBoxContainer: {
+        // flexDirection: 'row',
+        // flexWrap: 'wrap',
+        // padding: 10,
     },
-    separator: {
-        marginVertical: 30,
-        height: 1,
-        width: '80%',
-    },
+    itemBox: {
+        flexBasis: '40%',
+        margin: 10,
+        backgroundColor: 'orange',
+        textAlign: 'center',
+    }
+
 });
