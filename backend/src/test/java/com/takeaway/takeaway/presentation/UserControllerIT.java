@@ -1,7 +1,9 @@
 package com.takeaway.takeaway.presentation;
 
 import com.takeaway.takeaway.business.dto.*;
+import com.takeaway.takeaway.dataaccess.model.DataTranslation;
 import com.takeaway.takeaway.dataaccess.model.User;
+import com.takeaway.takeaway.dataaccess.model.enums.UserLanguages;
 import com.takeaway.takeaway.dataaccess.model.geo.City;
 import com.takeaway.takeaway.dataaccess.model.geo.Country;
 import com.takeaway.takeaway.dataaccess.model.geo.State;
@@ -105,18 +107,28 @@ class UserControllerIT {
 
     void initLocation() {
         Country c1 = new Country();
-        c1.setName("CNT1");
+        DataTranslation c1T = new DataTranslation();
+        c1T.setTitle("CNT1");
+        c1.getTranslations().add(c1T);
         Country c2 = new Country();
-        c2.setName("CNT2");
+        DataTranslation c2T = new DataTranslation();
+        c2T.setTitle("CNT2");
+        c2.getTranslations().add(c2T);
         countryRepository.save(c1);
         countryRepository.save(c2);
 
         State s1 = new State();
-        s1.setName("CNT1_S1");
+        DataTranslation s1T = new DataTranslation();
+        s1T.setTitle("CNT1_S1");
+        s1.getTranslations().add(s1T);
         State s2 = new State();
-        s2.setName("CNT1_S2");
+        DataTranslation s2T = new DataTranslation();
+        s2T.setTitle("CNT1_S2");
+        s2.getTranslations().add(s2T);
         State s3 = new State();
-        s3.setName("CNT2_S1");
+        DataTranslation s3T = new DataTranslation();
+        s3T.setTitle("CNT2_S1");
+        s3.getTranslations().add(s3T);
         s1.setCountry(c1);
         s2.setCountry(c1);
         s3.setCountry(c2);
@@ -125,13 +137,21 @@ class UserControllerIT {
         stateRepository.save(s3);
 
         City ct1 = new City();
-        ct1.setName("CNT1_S1_CT1");
+        DataTranslation ct1T = new DataTranslation();
+        ct1T.setTitle("CNT1_S1_CT1");
+        ct1.getTranslations().add(ct1T);
         City ct2 = new City();
-        ct2.setName("CNT1_S1_CT2");
+        DataTranslation ct2T = new DataTranslation();
+        ct2T.setTitle("CNT1_S1_CT2");
+        ct2.getTranslations().add(ct2T);
         City ct3 = new City();
-        ct3.setName("CNT1_S2_CT1");
+        DataTranslation ct3T = new DataTranslation();
+        ct3T.setTitle("CNT1_S2_CT1");
+        ct3.getTranslations().add(ct3T);
         City ct4 = new City();
-        ct4.setName("CNT2_S1_CT1");
+        DataTranslation ct4T = new DataTranslation();
+        ct4T.setTitle("CNT2_S1_CT1");
+        ct4.getTranslations().add(ct4T);
         ct1.setState(s1);
         ct2.setState(s1);
         ct3.setState(s2);

@@ -1,6 +1,7 @@
 package com.takeaway.takeaway.dataaccess.model;
 
 import com.takeaway.takeaway.dataaccess.model.enums.GenderTypes;
+import com.takeaway.takeaway.dataaccess.model.enums.UserLanguages;
 import com.takeaway.takeaway.dataaccess.model.geo.Location;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,6 +47,9 @@ public class User extends BaseEntity {
 
     @Column
     private GenderTypes gender;
+
+    @Column(nullable = false)
+    private UserLanguages language = UserLanguages.EN;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_address_id")
