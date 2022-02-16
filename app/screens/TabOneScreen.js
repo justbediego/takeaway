@@ -32,8 +32,6 @@ export default function TabOneScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     itemBoxContainer: {
         padding: 10,
