@@ -1,6 +1,7 @@
 package com.takeaway.takeaway.dataaccess.model;
 
 import com.takeaway.takeaway.dataaccess.model.enums.GenderTypes;
+import com.takeaway.takeaway.dataaccess.model.enums.UserLanguages;
 import com.takeaway.takeaway.dataaccess.model.geo.Location;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users", indexes = {
+        @Index(name = "user_id_idx", columnList = "id", unique = true),
         @Index(name = "email_idx", columnList = "email", unique = true),
         @Index(name = "username_idx", columnList = "username", unique = true)
 })
@@ -46,6 +48,9 @@ public class User extends BaseEntity {
 
     @Column
     private GenderTypes gender;
+
+    @Column(nullable = false)
+    private UserLanguages language = UserLanguages.EN;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_address_id")

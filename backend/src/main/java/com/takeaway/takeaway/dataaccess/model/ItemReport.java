@@ -12,7 +12,9 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "item_reports")
+@Table(name = "item_reports", indexes = {
+        @Index(name = "item_report_id_idx", columnList = "id", unique = true)
+})
 @EqualsAndHashCode(callSuper = true)
 public class ItemReport extends BaseEntity {
 

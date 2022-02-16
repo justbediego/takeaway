@@ -15,7 +15,9 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "attachments")
+@Table(name = "attachments", indexes = {
+        @Index(name = "attachment_id_idx", columnList = "id", unique = true)
+})
 @EqualsAndHashCode(callSuper = true)
 public class Attachment extends BaseEntity {
 

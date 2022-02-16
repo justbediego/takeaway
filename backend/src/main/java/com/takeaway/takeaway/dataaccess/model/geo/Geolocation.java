@@ -14,7 +14,9 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "geolocations")
+@Table(name = "geolocations", indexes = {
+        @Index(name = "geolocation_id_idx", columnList = "id", unique = true)
+})
 @EqualsAndHashCode(callSuper = true)
 public class Geolocation extends BaseEntity {
 

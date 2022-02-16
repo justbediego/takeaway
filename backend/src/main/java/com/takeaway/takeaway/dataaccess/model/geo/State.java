@@ -1,6 +1,7 @@
 package com.takeaway.takeaway.dataaccess.model.geo;
 
 import com.takeaway.takeaway.dataaccess.model.BaseEntity;
+import com.takeaway.takeaway.dataaccess.model.DataTranslation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,12 +15,15 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "states")
+@Table(name = "states", indexes = {
+        @Index(name = "state_id_idx", columnList = "id", unique = true)
+})
 @EqualsAndHashCode(callSuper = true)
 public class State extends BaseEntity {
 
-    @Column(length = 100, nullable = false)
-    private String name;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_id")
+    private List<DataTranslation> translations = new ArrayList<>();
 
     // relations
 

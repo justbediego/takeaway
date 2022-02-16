@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "items", indexes = {
+        @Index(name = "item_id_idx", columnList = "id", unique = true),
         @Index(name = "category_idx", columnList = "item_category_id")
 })
 @EqualsAndHashCode(callSuper = true)

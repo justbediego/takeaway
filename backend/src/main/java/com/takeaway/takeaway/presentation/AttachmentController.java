@@ -18,9 +18,9 @@ public class AttachmentController extends BaseController {
         this.attachmentLogic = attachmentLogic;
     }
 
-    @GetMapping(path = "/getAttachmentLink/{attachmentId}/{securityKey}")
+    @GetMapping(path = "/getAttachmentLink")
     public @ResponseBody
-    String getAttachmentLink(@PathVariable UUID attachmentId, @PathVariable UUID securityKey) throws TakeawayException {
+    String getAttachmentLink(@RequestParam UUID attachmentId, @RequestParam UUID securityKey) throws TakeawayException {
         return attachmentLogic.getAttachmentLink(attachmentId, securityKey);
     }
 }
