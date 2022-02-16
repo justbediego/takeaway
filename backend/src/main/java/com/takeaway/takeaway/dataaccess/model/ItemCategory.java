@@ -13,7 +13,10 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "item_categories")
+@Table(name = "item_categories", indexes = {
+        @Index(name = "item_category_id_idx", columnList = "id", unique = true),
+        @Index(name="category_code_idx", columnList = "categoryCode", unique = true),
+})
 @EqualsAndHashCode(callSuper = true)
 public class ItemCategory extends BaseEntity {
 

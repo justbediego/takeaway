@@ -11,7 +11,9 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "direct_messages")
+@Table(name = "direct_messages", indexes = {
+        @Index(name = "direct_message_id_idx", columnList = "id", unique = true)
+})
 @EqualsAndHashCode(callSuper = true)
 public class DirectMessage extends BaseEntity {
 

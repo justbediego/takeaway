@@ -2,8 +2,7 @@ package com.takeaway.takeaway.presentation;
 
 import com.takeaway.takeaway.business.AuthenticationLogic;
 import com.takeaway.takeaway.business.GuestLogic;
-import com.takeaway.takeaway.business.dto.GetCountryCodesDto;
-import com.takeaway.takeaway.business.dto.GetItemCategoriesDto;
+import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.dataaccess.model.enums.UserLanguages;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,5 +30,20 @@ public class GuestController extends BaseController {
     @GetMapping(path = "/getItemCategories")
     public GetItemCategoriesDto getItemCategories(@RequestParam(required = false) UUID parentId, @RequestParam UserLanguages language) {
         return guestLogic.getItemCategories(parentId, language);
+    }
+
+    @GetMapping(path = "/getCountries")
+    public GetCountriesDto getCountries(@RequestParam UserLanguages language) {
+        return guestLogic.getCountries(language);
+    }
+
+    @GetMapping(path = "/getStates")
+    public GetStatesDto getStates(@RequestParam UUID countryId, @RequestParam UserLanguages language) {
+        return guestLogic.getStates(countryId, language);
+    }
+
+    @GetMapping(path = "/getCities")
+    public GetCitiesDto getCities(@RequestParam UUID stateId, @RequestParam UserLanguages language) {
+        return guestLogic.getCities(stateId, language);
     }
 }

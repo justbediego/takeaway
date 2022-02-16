@@ -1,0 +1,2 @@
+INSERT INTO public.countries (id, date_created, date_modified, country_code, geolocation_id) VALUES ('9364a37c-e8d1-4367-b737-d9f6f8b9a250', '2022-02-16 22:32:34.000000', '2022-02-16 22:32:37.000000', '+49', null);
+INSERT INTO public.countries (id, date_created, date_modified, country_code, geolocation_id) VALUES ('9c0c4699-2fb3-4c13-af2b-0565e572e75f', '2022-02-16 22:32:53.000000', '2022-02-16 22:32:55.000000', '+98', null);

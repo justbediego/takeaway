@@ -16,6 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "data_translations", indexes = {
+        @Index(name = "data_translation_id_idx", columnList = "id", unique = true),
         @Index(name = "language_idx", columnList = "language"),
         @Index(name = "language_country_idx", columnList = "language, country_id", unique = true),
         @Index(name = "language_state_idx", columnList = "language, state_id", unique = true),

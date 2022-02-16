@@ -15,7 +15,9 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "countries")
+@Table(name = "countries", indexes = {
+        @Index(name = "country_id_idx", columnList = "id", unique = true)
+})
 @EqualsAndHashCode(callSuper = true)
 public class Country extends BaseEntity {
 

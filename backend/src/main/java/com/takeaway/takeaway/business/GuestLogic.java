@@ -1,13 +1,12 @@
 package com.takeaway.takeaway.business;
 
-import com.takeaway.takeaway.business.dto.CountryCodeDto;
-import com.takeaway.takeaway.business.dto.GetCountryCodesDto;
-import com.takeaway.takeaway.business.dto.GetItemCategoriesDto;
-import com.takeaway.takeaway.business.dto.ItemCategoryDto;
+import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.dataaccess.model.ItemCategory;
 import com.takeaway.takeaway.dataaccess.model.enums.UserLanguages;
+import com.takeaway.takeaway.dataaccess.repository.CityRepository;
 import com.takeaway.takeaway.dataaccess.repository.CountryRepository;
 import com.takeaway.takeaway.dataaccess.repository.ItemCategoryRepository;
+import com.takeaway.takeaway.dataaccess.repository.StateRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -23,10 +22,14 @@ import java.util.stream.Collectors;
 public class GuestLogic {
 
     private final CountryRepository countryRepository;
+    private final StateRepository stateRepository;
+    private final CityRepository cityRepository;
     private final ItemCategoryRepository itemCategoryRepository;
 
-    public GuestLogic(CountryRepository countryRepository, ItemCategoryRepository itemCategoryRepository) {
+    public GuestLogic(CountryRepository countryRepository, StateRepository stateRepository, CityRepository cityRepository, ItemCategoryRepository itemCategoryRepository) {
         this.countryRepository = countryRepository;
+        this.stateRepository = stateRepository;
+        this.cityRepository = cityRepository;
         this.itemCategoryRepository = itemCategoryRepository;
     }
 
@@ -70,5 +73,54 @@ public class GuestLogic {
                 .build();
     }
 
+    public GetCountriesDto getCountries(UserLanguages language) {
+        List<CountryDto> countries = countryRepository.findAll().stream()
+                .map(c -> CountryDto.builder()
+                        .id(c.getId())
+                        .name(c.getTranslations().stream()
+                                .filter(t -> t.getLanguage().equals(language))
+                                .map(t -> t.getTitle())
+                                .findFirst()
+                                .orElseThrow())
+                        .build())
+                .collect(Collectors.toList());
+        return GetCountriesDto.builder()
+                .countries(countries)
+                .build();
+    }
+
+    public GetStatesDto getStates(UUID countryId, UserLanguages language) {
+        List<StateDto> states = stateRepository.findByCountryId(countryId).stream()
+                .map(s -> StateDto.builder()
+                        .id(s.getId())
+                        .name(s.getTranslations().stream()
+                                .filter(t -> t.getLanguage().equals(language))
+                                .map(t -> t.getTitle())
+                                .findFirst()
+                                .orElseThrow())
+                        .build())
+                .collect(Collectors.toList());
+        return GetStatesDto.builder()
+                .countryId(countryId)
+                .states(states)
+                .build();
+    }
+
+    public GetCitiesDto getCities(UUID stateId, UserLanguages language) {
+        List<CityDto> cities = cityRepository.findByStateId(stateId).stream()
+                .map(c -> CityDto.builder()
+                        .id(c.getId())
+                        .name(c.getTranslations().stream()
+                                .filter(t -> t.getLanguage().equals(language))
+                                .map(t -> t.getTitle())
+                                .findFirst()
+                                .orElseThrow())
+                        .build())
+                .collect(Collectors.toList());
+        return GetCitiesDto.builder()
+                .stateId(stateId)
+                .cities(cities)
+                .build();
+    }
 
 }
