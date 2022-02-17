@@ -30,7 +30,7 @@ public class DataTranslation extends BaseEntity {
     private UserLanguages language;
 
     @Column(length = 100, nullable = false)
-    private String title;
+    private String value;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id")

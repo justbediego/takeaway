@@ -21,6 +21,9 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Country extends BaseEntity {
 
+    @Column(length = 100, nullable = false)
+    private String englishName;
+
     @Column(length = 5)
     private String countryCode;
 

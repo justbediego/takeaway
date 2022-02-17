@@ -24,6 +24,9 @@ public class ItemCategory extends BaseEntity {
     @Column(nullable = false)
     private Long categoryCode;
 
+    @Column(length = 100, nullable = false)
+    private String englishName;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_category_id")
     private List<DataTranslation> translations = new ArrayList<>();

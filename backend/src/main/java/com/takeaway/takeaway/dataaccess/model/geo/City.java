@@ -21,6 +21,9 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class City extends BaseEntity {
 
+    @Column(length = 100, nullable = false)
+    private String englishName;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     private List<DataTranslation> translations = new ArrayList<>();
