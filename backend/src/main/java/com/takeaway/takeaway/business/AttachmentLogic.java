@@ -20,10 +20,9 @@ import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -41,7 +40,7 @@ public class AttachmentLogic {
 
     private BlobId getBlobId(Attachment attachment) {
         String extension = attachment.getType() == AttachmentTypes.IMAGE ? "PNG" : "DAT";
-        return BlobId.of(attachmentsBucket, String.format("%s/%s.%s", extension, attachment.getFileId(), extension));
+        return BlobId.of(attachmentsBucket, String.format("%s/%s_%s.%s", extension, attachment.getFileId(), attachment.getSecurityKey(), extension));
     }
 
     private final AttachmentRepository attachmentRepository;
@@ -85,12 +84,7 @@ public class AttachmentLogic {
         Attachment attachment = optionalAttachment.get();
         BlobId blobId = getBlobId(attachment);
         Blob blob = storage.get(blobId);
-        URL url = blob.signUrl(
-                3,
-                TimeUnit.HOURS,
-                Storage.SignUrlOption.httpMethod(HttpMethod.GET)
-        );
-        return url.toString();
+        return blob.getMediaLink();
     }
 
     // only used internally
@@ -107,7 +101,12 @@ public class AttachmentLogic {
         newAttachment.setFileSize(attachmentDto.getFileData().length);
         newAttachment.setType(type);
         try {
-            storage.create(BlobInfo.newBuilder(getBlobId(newAttachment)).build(), attachmentDto.getFileData());
+            storage.create(
+                    BlobInfo.newBuilder(getBlobId(newAttachment))
+                            .setAcl(List.of(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER)))
+                            .build(),
+                    attachmentDto.getFileData()
+            );
         } catch (Exception e) {
             e.printStackTrace();
             throw new UnrecognizedException("Unable to create attachment");

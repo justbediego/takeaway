@@ -3,7 +3,7 @@ spring:
     gcp:
       project-id: silent-card
       credentials:
-        location: file:C:/Users/diego/Documents/silent-card-a1a5068bdf05.json
+        location: file:/home/hossein/Documents/silent-card-a1a5068bdf05.json
       sql:
         instance-connection-name: silent-card:europe-west1:takeaway-db
         database-name: takeawayDB
