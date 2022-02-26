@@ -59,31 +59,32 @@ public class AuthenticationLogic {
     public UUID authenticateByEmail(String email, String firstName, String lastName) throws TakeawayException {
         // validate
         validationLogic.validateEmail(email);
-        String firstNameVerified = null;
-        String lastNameVerified = null;
-        if (StringUtils.isNotBlank(firstName)) {
-            try {
-                validationLogic.validateFirstName(firstName);
-                firstNameVerified = firstName;
-            } catch (TakeawayException ex) {
-                log.warn("Couldn't use the first name from Principal");
-            }
-        }
-        if (StringUtils.isNotBlank(lastName)) {
-            try {
-                validationLogic.validateLastName(lastName);
-                lastNameVerified = lastName;
-            } catch (TakeawayException ex) {
-                log.warn("Couldn't use the last name from Principal");
-            }
-        }
 
         // business
         UUID userId;
         Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (!optionalUser.isEmpty()) {
+        if (optionalUser.isPresent()) {
             userId = optionalUser.get().getId();
         } else {
+            String firstNameVerified = null;
+            String lastNameVerified = null;
+            if (StringUtils.isNotBlank(firstName)) {
+                try {
+                    validationLogic.validateFirstName(firstName);
+                    firstNameVerified = firstName;
+                } catch (TakeawayException ex) {
+                    log.warn("Couldn't use the first name from Principal");
+                }
+            }
+            if (StringUtils.isNotBlank(lastName)) {
+                try {
+                    validationLogic.validateLastName(lastName);
+                    lastNameVerified = lastName;
+                } catch (TakeawayException ex) {
+                    log.warn("Couldn't use the last name from Principal");
+                }
+            }
+
             User newUser = new User();
             newUser.setEmail(email);
             newUser.setFirstName(firstNameVerified);

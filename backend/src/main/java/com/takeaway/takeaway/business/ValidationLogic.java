@@ -97,14 +97,14 @@ public class ValidationLogic {
     }
 
     public void validateFirstName(String firsName) throws TakeawayException {
-        String firstNamePattern = "^[a-zA-Z]([- ',.a-zA-Z]{0,40}[a-zA-Z])$";
+        String firstNamePattern = "^[\\p{L}]([- ',.\\p{L}]{0,90}[\\p{L}])$";
         if (!firsName.matches(firstNamePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_FIRST_NAME);
         }
     }
 
     public void validateLastName(String lastName) throws TakeawayException {
-        String lastNamePattern = "^[a-zA-Z]([- ',.a-zA-Z]{0,90}[a-zA-Z])$";
+        String lastNamePattern = "^[\\p{L}]([- ',.\\p{L}]{0,90}[\\p{L}])$";
         if (!lastName.matches(lastNamePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_LAST_NAME);
         }
@@ -133,7 +133,7 @@ public class ValidationLogic {
     }
 
     public void validateUsername(String username) throws TakeawayException {
-        final String usernamePattern = "^[a-zA-Z][a-zA-Z0-9._]{3,40}[a-zA-Z0-9]$";
+        final String usernamePattern = "^[a-zA-Z][a-zA-Z0-9._]{3,190}[a-zA-Z0-9]$";
         if (!username.matches(usernamePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_USERNAME);
         }
@@ -145,7 +145,7 @@ public class ValidationLogic {
             throw new TakeawayException(ExceptionTypes.NEW_USERNAME_SAME_AS_OLD);
         }
         Optional<User> optionalNewUser = userRepository.findByUsername(newUsername);
-        if (!optionalNewUser.isEmpty()) {
+        if (optionalNewUser.isPresent()) {
             throw new TakeawayException(ExceptionTypes.USERNAME_ALREADY_IN_USE);
         }
     }
@@ -156,14 +156,14 @@ public class ValidationLogic {
             throw new TakeawayException(ExceptionTypes.NEW_EMAIL_SAME_AS_OLD);
         }
         Optional<User> optionalNewUser = userRepository.findByEmail(newEmail);
-        if (!optionalNewUser.isEmpty()) {
+        if (optionalNewUser.isPresent()) {
             throw new TakeawayException(ExceptionTypes.EMAIL_ALREADY_IN_USE);
         }
     }
 
     public void validatePassword(String password) throws TakeawayException {
         // Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
-        final String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        final String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[\\p{L}\\p{N}\\d@$!%*?&]{8,}$";
         if (!password.matches(passwordPattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_PASSWORD);
         }
@@ -178,32 +178,32 @@ public class ValidationLogic {
     }
 
     public void validateLocationTitle(String title) throws TakeawayException {
-        String locationTitlePattern = "^[a-zA-Z0-9'._\\- ]{3,80}$";
+        String locationTitlePattern = "^[\\p{L}\\p{N}\\d'._\\- ]{3,90}$";
         if (!title.matches(locationTitlePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_LOCATION_TITLE);
         }
     }
 
     public void validateLocationAddress(String streetName, String streetName2, String houseNumber, String additionalInfo) throws TakeawayException {
-        String streetPattern = "^[a-zA-Z0-9'._\\-$#&*()+\\/\\\\<>\"{}|;:@ ]{3,80}$";
+        String streetPattern = "^[\\p{L}\\p{N}\\d'._\\-$#&*()+/\\\\<>\"{}|;:@ ]{3,100}$";
         if (!streetName.matches(streetPattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS);
         }
         if (StringUtils.isNotBlank(streetName2) && !streetName2.matches(streetPattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS);
         }
-        String houseNumberPattern = "^[a-zA-Z0-9'._\\-$#&*()+\\/\\\\<>\"{}|;:@ ]{1,20}$";
+        String houseNumberPattern = "^[\\p{L}\\p{N}\\d'._\\-$#&*()+/\\\\<>\"{}|;:@ ]{1,20}$";
         if (!houseNumber.matches(houseNumberPattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS);
         }
-        String additionalPattern = "^[a-zA-Z0-9'._\\-$#&*()+\\/\\\\<>\"{}|;:@ ]{1,200}$";
+        String additionalPattern = "^[\\p{L}\\p{N}\\d'._\\-$#&*()+/\\\\<>\"{}|;:@ ]{1,200}$";
         if (!additionalInfo.matches(additionalPattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS);
         }
     }
 
     public void validateFilename(String filename) throws TakeawayException {
-        final String filenamePattern = "^[\\p{L}0-9\\-_ (),.*:\\\\\\/]{1,300}$";
+        final String filenamePattern = "^[\\p{L}\\p{N}\\d\\-_ (),.*:\\\\/]{1,300}$";
         if (!filename.matches(filenamePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_FILENAME);
         }
