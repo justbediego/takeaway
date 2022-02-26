@@ -1,6 +1,7 @@
 package com.takeaway.takeaway.business;
 
 import com.takeaway.takeaway.business.dto.*;
+import com.takeaway.takeaway.dataaccess.model.DataTranslation;
 import com.takeaway.takeaway.dataaccess.model.ItemCategory;
 import com.takeaway.takeaway.dataaccess.model.enums.UserLanguages;
 import com.takeaway.takeaway.dataaccess.repository.CityRepository;
@@ -39,7 +40,7 @@ public class GuestLogic {
                 .map(c -> CountryCodeDto.builder()
                         .countryName(c.getTranslations().stream()
                                 .filter(t -> t.getLanguage().equals(language))
-                                .map(t -> t.getValue())
+                                .map(DataTranslation::getValue)
                                 .findFirst()
                                 .orElse(c.getEnglishName()))
                         .countryCode(c.getCountryCode())
@@ -62,7 +63,7 @@ public class GuestLogic {
                         .id(ic.getId())
                         .categoryName(ic.getTranslations().stream()
                                 .filter(t -> t.getLanguage().equals(languages))
-                                .map(t -> t.getValue())
+                                .map(DataTranslation::getValue)
                                 .findFirst()
                                 .orElse(ic.getEnglishName()))
                         .categoryCode(ic.getCategoryCode())
@@ -79,7 +80,7 @@ public class GuestLogic {
                         .id(c.getId())
                         .name(c.getTranslations().stream()
                                 .filter(t -> t.getLanguage().equals(language))
-                                .map(t -> t.getValue())
+                                .map(DataTranslation::getValue)
                                 .findFirst()
                                 .orElse(c.getEnglishName()))
                         .build())
@@ -95,7 +96,7 @@ public class GuestLogic {
                         .id(s.getId())
                         .name(s.getTranslations().stream()
                                 .filter(t -> t.getLanguage().equals(language))
-                                .map(t -> t.getValue())
+                                .map(DataTranslation::getValue)
                                 .findFirst()
                                 .orElse(s.getEnglishName()))
                         .build())
@@ -112,7 +113,7 @@ public class GuestLogic {
                         .id(c.getId())
                         .name(c.getTranslations().stream()
                                 .filter(t -> t.getLanguage().equals(language))
-                                .map(t -> t.getValue())
+                                .map(DataTranslation::getValue)
                                 .findFirst()
                                 .orElse(c.getEnglishName()))
                         .build())

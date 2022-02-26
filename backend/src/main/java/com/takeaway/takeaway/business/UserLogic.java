@@ -8,7 +8,6 @@ import com.takeaway.takeaway.dataaccess.model.Attachment;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
 import com.takeaway.takeaway.dataaccess.model.geo.Location;
-import com.takeaway.takeaway.dataaccess.repository.AttachmentRepository;
 import com.takeaway.takeaway.dataaccess.repository.GeolocationRepository;
 import com.takeaway.takeaway.dataaccess.repository.LocationRepository;
 import com.takeaway.takeaway.dataaccess.repository.UserRepository;
@@ -32,15 +31,13 @@ public class UserLogic {
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
     private final GeolocationRepository geolocationRepository;
-    private final AttachmentRepository attachmentRepository;
 
-    public UserLogic(ValidationLogic validationLogic, AttachmentLogic attachmentLogic, UserRepository userRepository, LocationRepository locationRepository, GeolocationRepository geolocationRepository, AttachmentRepository attachmentRepository) {
+    public UserLogic(ValidationLogic validationLogic, AttachmentLogic attachmentLogic, UserRepository userRepository, LocationRepository locationRepository, GeolocationRepository geolocationRepository) {
         this.validationLogic = validationLogic;
         this.attachmentLogic = attachmentLogic;
         this.userRepository = userRepository;
         this.locationRepository = locationRepository;
         this.geolocationRepository = geolocationRepository;
-        this.attachmentRepository = attachmentRepository;
     }
 
     public void deleteProfilePicture(UUID userId) throws TakeawayException {

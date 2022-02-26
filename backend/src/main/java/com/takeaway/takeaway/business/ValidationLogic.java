@@ -97,14 +97,14 @@ public class ValidationLogic {
     }
 
     public void validateFirstName(String firsName) throws TakeawayException {
-        String firstNamePattern = "^[\\p{L}]([- ',.\\p{L}]{0,90}[\\p{L}])$";
+        String firstNamePattern = "^[\\p{L}]([\\- '\",.\\p{L}]{0,90}[\\p{L}])$";
         if (!firsName.matches(firstNamePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_FIRST_NAME);
         }
     }
 
     public void validateLastName(String lastName) throws TakeawayException {
-        String lastNamePattern = "^[\\p{L}]([- ',.\\p{L}]{0,90}[\\p{L}])$";
+        String lastNamePattern = "^[\\p{L}]([\\- '\",.\\p{L}]{0,90}[\\p{L}])$";
         if (!lastName.matches(lastNamePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_LAST_NAME);
         }
@@ -163,7 +163,7 @@ public class ValidationLogic {
 
     public void validatePassword(String password) throws TakeawayException {
         // Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
-        final String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[\\p{L}\\p{N}\\d@$!%*?&]{8,}$";
+        final String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$";
         if (!password.matches(passwordPattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_PASSWORD);
         }
@@ -178,32 +178,32 @@ public class ValidationLogic {
     }
 
     public void validateLocationTitle(String title) throws TakeawayException {
-        String locationTitlePattern = "^[\\p{L}\\p{N}\\d'._\\- ]{3,90}$";
+        String locationTitlePattern = "^[\\p{L}\\p{N}\\d\"\\[\\]~,;:<>|{}()*&%#'._\\-+ ]{3,90}$";
         if (!title.matches(locationTitlePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_LOCATION_TITLE);
         }
     }
 
     public void validateLocationAddress(String streetName, String streetName2, String houseNumber, String additionalInfo) throws TakeawayException {
-        String streetPattern = "^[\\p{L}\\p{N}\\d'._\\-$#&*()+/\\\\<>\"{}|;:@ ]{3,100}$";
+        String streetPattern = "^[\\p{L}\\p{N}\\d\"\\[\\]~,;:<>|{}()*&#'._\\-+ /\\\\@]{3,100}$";
         if (!streetName.matches(streetPattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS);
         }
         if (StringUtils.isNotBlank(streetName2) && !streetName2.matches(streetPattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS);
         }
-        String houseNumberPattern = "^[\\p{L}\\p{N}\\d'._\\-$#&*()+/\\\\<>\"{}|;:@ ]{1,20}$";
+        String houseNumberPattern = "^[\\p{L}\\p{N}\\d\"\\[\\]~,;:<>|{}()*&#'._\\-+ /\\\\@]{1,20}$";
         if (!houseNumber.matches(houseNumberPattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS);
         }
-        String additionalPattern = "^[\\p{L}\\p{N}\\d'._\\-$#&*()+/\\\\<>\"{}|;:@ ]{1,200}$";
+        String additionalPattern = "^[\\p{L}\\p{N}\\d\"\\[\\]~,;:<>|{}()*&#'._\\-+ /\\\\@]{1,200}$";
         if (!additionalInfo.matches(additionalPattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS);
         }
     }
 
     public void validateFilename(String filename) throws TakeawayException {
-        final String filenamePattern = "^[\\p{L}\\p{N}\\d\\-_ (),.*:\\\\/]{1,300}$";
+        final String filenamePattern = "^[\\p{L}\\p{N}\\d\"\\[\\]~,;:<>|{}()*&#'._\\-+ /\\\\@$^!]{1,300}$";
         if (!filename.matches(filenamePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_FILENAME);
         }
@@ -219,11 +219,17 @@ public class ValidationLogic {
     }
 
     public void validateItemDescription(String description) throws TakeawayException {
-
+        String titlePattern = "^.{20,5000}$";
+        if (!description.matches(titlePattern)) {
+            throw new TakeawayException(ExceptionTypes.INVALID_ITEM_DESCRIPTION);
+        }
     }
 
     public void validateItemTitle(String title) throws TakeawayException {
-
+        String titlePattern = "^[\\p{L}\\p{N}\\d\"\\[\\]~,;:<>|{}()*&%#'._\\-+ ]{5,100}$";
+        if (!title.matches(titlePattern)) {
+            throw new TakeawayException(ExceptionTypes.INVALID_ITEM_TITLE);
+        }
     }
 
     public ItemCategory validateGetItemCategoryById(UUID categoryId) throws TakeawayException {
@@ -234,6 +240,9 @@ public class ValidationLogic {
                     ExceptionEntities.ITEM_CATEGORY,
                     categoryId.toString()
             );
+        }
+        if (!optionalCategory.get().getChildCategories().isEmpty()) {
+            throw new TakeawayException(ExceptionTypes.INVALID_ITEM_CATEGORY);
         }
         return optionalCategory.get();
     }
