@@ -1,7 +1,7 @@
 package com.takeaway.takeaway.configuration;
 
+import com.takeaway.takeaway.business.exception.ExceptionTypes;
 import com.takeaway.takeaway.business.exception.TakeawayException;
-import com.takeaway.takeaway.business.exception.UnrecognizedException;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Data
 class ExceptionResponse {
     private String type;
+    private String entity;
     private String message;
     private String details;
 }
@@ -26,9 +27,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<ExceptionResponse> handleConflict(TakeawayException ex, WebRequest request) {
         ex.printStackTrace();
         ExceptionResponse responseBody = ExceptionResponse.builder()
-                .type(ex.getClass().getSimpleName())
+                .type(ex.getExceptionType().toString())
                 .message(ex.getMessage())
                 .details(ex.getDetails())
+                .entity(ex.getEntity() == null ? null : ex.getEntity().toString())
                 .build();
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
@@ -36,17 +38,15 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 
     @ExceptionHandler(value = Exception.class)
-    protected ResponseEntity<Object> handleConflict(Exception ex, WebRequest request) {
+    protected ResponseEntity<ExceptionResponse> handleConflict(Exception ex, WebRequest request) {
         ex.printStackTrace();
-        UnrecognizedException newException = new UnrecognizedException(ex.getMessage());
         ExceptionResponse responseBody = ExceptionResponse.builder()
-                .type(newException.getClass().getSimpleName())
-                .message(newException.getMessage())
-                .details(newException.getDetails())
+                .type(ExceptionTypes.UNRECOGNIZED.toString())
+                .message(ex.getMessage())
+                .details("uncaught")
                 .build();
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(responseBody);
     }
-
 }

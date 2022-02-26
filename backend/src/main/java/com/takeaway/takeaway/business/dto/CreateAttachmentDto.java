@@ -1,6 +1,7 @@
 package com.takeaway.takeaway.business.dto;
 
-import com.takeaway.takeaway.business.exception.FileUploadException;
+import com.takeaway.takeaway.business.exception.ExceptionTypes;
+import com.takeaway.takeaway.business.exception.TakeawayException;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +16,7 @@ public class CreateAttachmentDto extends BaseDto {
     private String filename;
     private byte[] fileData;
 
-    public static CreateAttachmentDto fromFile(MultipartFile file) throws FileUploadException {
+    public static CreateAttachmentDto fromFile(MultipartFile file) throws TakeawayException {
         CreateAttachmentDto attachmentDto;
         try {
             attachmentDto = CreateAttachmentDto.builder()
@@ -23,7 +24,7 @@ public class CreateAttachmentDto extends BaseDto {
                     .filename(trim(file.getOriginalFilename()))
                     .build();
         } catch (IOException ioException) {
-            throw new FileUploadException();
+            throw new TakeawayException(ExceptionTypes.FILE_UPLOAD);
         }
         return attachmentDto;
     }

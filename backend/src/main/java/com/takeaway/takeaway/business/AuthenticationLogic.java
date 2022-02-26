@@ -2,10 +2,8 @@ package com.takeaway.takeaway.business;
 
 import com.google.common.hash.Hashing;
 import com.takeaway.takeaway.business.dto.ChangePasswordDto;
-import com.takeaway.takeaway.business.exception.InvalidFirstNameException;
+import com.takeaway.takeaway.business.exception.ExceptionTypes;
 import com.takeaway.takeaway.business.exception.TakeawayException;
-import com.takeaway.takeaway.business.exception.VerifyPasswordException;
-import com.takeaway.takeaway.business.exception.WrongPasswordException;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -44,12 +42,12 @@ public class AuthenticationLogic {
         // validation
         validationLogic.validatePassword(changePasswordDto.getNewPassword());
         if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getNewPasswordVerify())) {
-            throw new VerifyPasswordException();
+            throw new TakeawayException(ExceptionTypes.VERIFY_PASSWORD);
         }
         final String hashedOldPassword = getHashedPassword(changePasswordDto.getOldPassword());
         User user = validationLogic.validateGetUserById(userId);
         if (!hashedOldPassword.equals(user.getHashedPassword())) {
-            throw new WrongPasswordException();
+            throw new TakeawayException(ExceptionTypes.WRONG_PASSWORD);
         }
 
         // business
@@ -67,7 +65,7 @@ public class AuthenticationLogic {
             try {
                 validationLogic.validateFirstName(firstName);
                 firstNameVerified = firstName;
-            } catch (InvalidFirstNameException ex) {
+            } catch (TakeawayException ex) {
                 log.warn("Couldn't use the first name from Principal");
             }
         }
@@ -75,7 +73,7 @@ public class AuthenticationLogic {
             try {
                 validationLogic.validateLastName(lastName);
                 lastNameVerified = lastName;
-            } catch (InvalidFirstNameException ex) {
+            } catch (TakeawayException ex) {
                 log.warn("Couldn't use the last name from Principal");
             }
         }

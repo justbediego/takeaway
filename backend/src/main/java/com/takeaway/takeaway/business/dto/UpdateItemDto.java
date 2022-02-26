@@ -1,6 +1,6 @@
 package com.takeaway.takeaway.business.dto;
 
-import com.takeaway.takeaway.business.exception.ItemWithoutLocationException;
+import com.takeaway.takeaway.business.exception.ExceptionTypes;
 import com.takeaway.takeaway.business.exception.TakeawayException;
 import lombok.*;
 
@@ -19,7 +19,7 @@ public class UpdateItemDto extends BaseDto {
 
     public static UpdateItemDto fromOutside(UpdateItemDto data) throws TakeawayException {
         if (data.getLocation() == null) {
-            throw new ItemWithoutLocationException();
+            throw new TakeawayException(ExceptionTypes.ITEM_WITHOUT_LOCATION);
         }
         return UpdateItemDto.builder()
                 .title(trim(data.getTitle()))

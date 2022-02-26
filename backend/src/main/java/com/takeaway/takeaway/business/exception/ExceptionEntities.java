@@ -1,6 +1,6 @@
-package com.takeaway.takeaway.dataaccess.model.enums;
+package com.takeaway.takeaway.business.exception;
 
-public enum EntityTypes {
+public enum ExceptionEntities {
     ATTACHMENT("ATTACHMENT"),
     USER("USER"),
     COUNTRY("COUNTRY"),
@@ -12,7 +12,7 @@ public enum EntityTypes {
 
     private String inText;
 
-    EntityTypes(String inText) {
+    ExceptionEntities(String inText) {
         this.inText = inText;
     }
 

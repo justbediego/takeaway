@@ -2,13 +2,11 @@ package com.takeaway.takeaway.business;
 
 import com.google.cloud.storage.*;
 import com.takeaway.takeaway.business.dto.CreateAttachmentDto;
-import com.takeaway.takeaway.business.exception.EntityNotFound;
+import com.takeaway.takeaway.business.exception.ExceptionEntities;
+import com.takeaway.takeaway.business.exception.ExceptionTypes;
 import com.takeaway.takeaway.business.exception.TakeawayException;
-import com.takeaway.takeaway.business.exception.UnableToParseImage;
-import com.takeaway.takeaway.business.exception.UnrecognizedException;
 import com.takeaway.takeaway.dataaccess.model.Attachment;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
-import com.takeaway.takeaway.dataaccess.model.enums.EntityTypes;
 import com.takeaway.takeaway.dataaccess.repository.AttachmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.imgscalr.Scalr;
@@ -71,7 +69,7 @@ public class AttachmentLogic {
             ImageIO.write(resized, "png", outputStream);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new UnableToParseImage();
+            throw new TakeawayException(ExceptionTypes.UNABLE_TO_PARSE_IMAGE);
         }
         return outputStream.toByteArray();
     }
@@ -79,7 +77,11 @@ public class AttachmentLogic {
     public String getAttachmentLink(UUID attachmentId, UUID attachmentKey) throws TakeawayException {
         Optional<Attachment> optionalAttachment = attachmentRepository.findByIdAndKey(attachmentId, attachmentKey);
         if (optionalAttachment.isEmpty()) {
-            throw new EntityNotFound(EntityTypes.ATTACHMENT, attachmentId);
+            throw new TakeawayException(
+                    ExceptionTypes.ENTITY_NOT_FOUND,
+                    ExceptionEntities.ATTACHMENT,
+                    attachmentId.toString()
+            );
         }
         Attachment attachment = optionalAttachment.get();
         BlobId blobId = getBlobId(attachment);
@@ -109,7 +111,11 @@ public class AttachmentLogic {
             );
         } catch (Exception e) {
             e.printStackTrace();
-            throw new UnrecognizedException("Unable to create attachment");
+            throw new TakeawayException(
+                    ExceptionTypes.UNRECOGNIZED,
+                    ExceptionEntities.ATTACHMENT,
+                    "Unable to create attachment"
+            );
         }
         this.attachmentRepository.save(newAttachment);
         return newAttachment;
@@ -119,14 +125,22 @@ public class AttachmentLogic {
     public void removeAttachment(UUID attachmentId) throws TakeawayException {
         Optional<Attachment> optionalAttachment = attachmentRepository.findById(attachmentId);
         if (optionalAttachment.isEmpty()) {
-            throw new EntityNotFound(EntityTypes.ATTACHMENT, attachmentId);
+            throw new TakeawayException(
+                    ExceptionTypes.ENTITY_NOT_FOUND,
+                    ExceptionEntities.ATTACHMENT,
+                    attachmentId.toString()
+            );
         }
         Attachment attachment = optionalAttachment.get();
         try {
             storage.delete(getBlobId(attachment));
         } catch (Exception e) {
             e.printStackTrace();
-            throw new UnrecognizedException("Unable to access attachment");
+            throw new TakeawayException(
+                    ExceptionTypes.UNRECOGNIZED,
+                    ExceptionEntities.ATTACHMENT,
+                    "Unable to access attachment"
+            );
         }
         attachmentRepository.delete(attachment);
     }

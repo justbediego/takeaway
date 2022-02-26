@@ -108,26 +108,26 @@ class UserControllerIT {
     void initLocation() {
         Country c1 = new Country();
         DataTranslation c1T = new DataTranslation();
-        c1T.setTitle("CNT1");
+        c1T.setValue("CNT1");
         c1.getTranslations().add(c1T);
         Country c2 = new Country();
         DataTranslation c2T = new DataTranslation();
-        c2T.setTitle("CNT2");
+        c2T.setValue("CNT2");
         c2.getTranslations().add(c2T);
         countryRepository.save(c1);
         countryRepository.save(c2);
 
         State s1 = new State();
         DataTranslation s1T = new DataTranslation();
-        s1T.setTitle("CNT1_S1");
+        s1T.setValue("CNT1_S1");
         s1.getTranslations().add(s1T);
         State s2 = new State();
         DataTranslation s2T = new DataTranslation();
-        s2T.setTitle("CNT1_S2");
+        s2T.setValue("CNT1_S2");
         s2.getTranslations().add(s2T);
         State s3 = new State();
         DataTranslation s3T = new DataTranslation();
-        s3T.setTitle("CNT2_S1");
+        s3T.setValue("CNT2_S1");
         s3.getTranslations().add(s3T);
         s1.setCountry(c1);
         s2.setCountry(c1);
@@ -138,19 +138,19 @@ class UserControllerIT {
 
         City ct1 = new City();
         DataTranslation ct1T = new DataTranslation();
-        ct1T.setTitle("CNT1_S1_CT1");
+        ct1T.setValue("CNT1_S1_CT1");
         ct1.getTranslations().add(ct1T);
         City ct2 = new City();
         DataTranslation ct2T = new DataTranslation();
-        ct2T.setTitle("CNT1_S1_CT2");
+        ct2T.setValue("CNT1_S1_CT2");
         ct2.getTranslations().add(ct2T);
         City ct3 = new City();
         DataTranslation ct3T = new DataTranslation();
-        ct3T.setTitle("CNT1_S2_CT1");
+        ct3T.setValue("CNT1_S2_CT1");
         ct3.getTranslations().add(ct3T);
         City ct4 = new City();
         DataTranslation ct4T = new DataTranslation();
-        ct4T.setTitle("CNT2_S1_CT1");
+        ct4T.setValue("CNT2_S1_CT1");
         ct4.getTranslations().add(ct4T);
         ct1.setState(s1);
         ct2.setState(s1);

@@ -1,8 +1,9 @@
 package com.takeaway.takeaway.presentation;
 
 import com.takeaway.takeaway.business.AuthenticationLogic;
+import com.takeaway.takeaway.business.exception.ExceptionEntities;
+import com.takeaway.takeaway.business.exception.ExceptionTypes;
 import com.takeaway.takeaway.business.exception.TakeawayException;
-import com.takeaway.takeaway.business.exception.UnrecognizedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -22,7 +23,11 @@ public abstract class BaseController {
         if (authentication == null ||
                 !authentication.isAuthenticated() ||
                 !(authentication.getPrincipal() instanceof DefaultOidcUser)) {
-            throw new UnrecognizedException("Unable to get the principal user");
+            throw new TakeawayException(
+                    ExceptionTypes.UNRECOGNIZED,
+                    ExceptionEntities.USER,
+                    "Unable to get the principal user"
+            );
         }
         DefaultOidcUser user = (DefaultOidcUser) authentication.getPrincipal();
         String email = user.getClaims().get("email").toString();

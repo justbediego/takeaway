@@ -9,7 +9,6 @@ import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
 import com.takeaway.takeaway.dataaccess.model.enums.ItemApprovalStates;
 import com.takeaway.takeaway.dataaccess.model.enums.ItemPublishStates;
-import com.takeaway.takeaway.dataaccess.model.geo.Geolocation;
 import com.takeaway.takeaway.dataaccess.model.geo.Location;
 import com.takeaway.takeaway.dataaccess.repository.GeolocationRepository;
 import com.takeaway.takeaway.dataaccess.repository.ItemRepository;
@@ -48,7 +47,7 @@ public class UserItemLogic {
         validationLogic.validateItemTitle(data.getTitle());
         validationLogic.validateItemDescription(data.getDescription());
         ItemCategory itemCategory = validationLogic.validateGetItemCategoryById(data.getItemCategoryId());
-        ValidModifyLocationDto validLocationDto = validationLogic.validateGetLocation(data.getLocation());
+        Location newLocation = validationLogic.validateNewLocation(data.getLocation());
         List<CreateAttachmentDto> validPreparedImages = new ArrayList<>();
         for (CreateAttachmentDto imageDto : data.getImages()) {
             validPreparedImages.add(CreateAttachmentDto.builder()
@@ -58,27 +57,11 @@ public class UserItemLogic {
         }
 
         // business
-        Geolocation geolocation = new Geolocation();
-        geolocation.setLatitude(validLocationDto.getLatitude());
-        geolocation.setLongitude(validLocationDto.getLongitude());
-        geolocation.setAccuracyM(validLocationDto.getAccuracyM());
-        geolocationRepository.save(geolocation);
-
-        Location location = new Location();
-        location.setGeolocation(geolocation);
-        location.setCountry(validLocationDto.getCountry());
-        location.setState(validLocationDto.getState());
-        location.setCity(validLocationDto.getCity());
-        location.setTitle(validLocationDto.getTitle());
-        location.setStreetName(validLocationDto.getStreetName());
-        location.setStreetName2(validLocationDto.getStreetName2());
-        location.setHouseNumber(validLocationDto.getHouseNumber());
-        location.setAdditionalInfo(validLocationDto.getAdditionalInfo());
-        locationRepository.save(location);
-
+        geolocationRepository.save(newLocation.getGeolocation());
+        locationRepository.save(newLocation);
         Item item = new Item();
         item.setUser(user);
-        item.setLocation(location);
+        item.setLocation(newLocation);
         item.setApprovalState(ItemApprovalStates.QUEUE);
         item.setPublishState(ItemPublishStates.INACTIVE);
         item.setPublishStart(new Date());

@@ -5,19 +5,27 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public abstract class TakeawayException extends Exception {
+public class TakeawayException extends Exception {
     private final String details;
+    private final ExceptionTypes exceptionType;
+    private final ExceptionEntities entity;
 
-    protected TakeawayException(String message, String details) {
+    public TakeawayException(ExceptionTypes exceptionType, ExceptionEntities entity, String message, String details) {
         super(message);
         this.details = details;
+        this.exceptionType = exceptionType;
+        this.entity = entity;
     }
 
-    protected TakeawayException(String message) {
-        this(message, "");
+    public TakeawayException(ExceptionTypes exceptionType, ExceptionEntities entity, String message) {
+        this(exceptionType, entity, message, null);
     }
 
-    protected TakeawayException() {
-        this("");
+    public TakeawayException(ExceptionTypes exceptionType, ExceptionEntities entity) {
+        this(exceptionType, entity, null);
+    }
+
+    public TakeawayException(ExceptionTypes exceptionType) {
+        this(exceptionType, null);
     }
 }

@@ -1,14 +1,13 @@
 package com.takeaway.takeaway.business;
 
 import com.takeaway.takeaway.business.dto.*;
-import com.takeaway.takeaway.business.exception.EntityNotFound;
+import com.takeaway.takeaway.business.exception.ExceptionEntities;
+import com.takeaway.takeaway.business.exception.ExceptionTypes;
 import com.takeaway.takeaway.business.exception.TakeawayException;
-import com.takeaway.takeaway.business.exception.UnrecognizedException;
 import com.takeaway.takeaway.dataaccess.model.Attachment;
 import com.takeaway.takeaway.dataaccess.model.User;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
-import com.takeaway.takeaway.dataaccess.model.enums.EntityTypes;
-import com.takeaway.takeaway.dataaccess.model.geo.*;
+import com.takeaway.takeaway.dataaccess.model.geo.Location;
 import com.takeaway.takeaway.dataaccess.repository.AttachmentRepository;
 import com.takeaway.takeaway.dataaccess.repository.GeolocationRepository;
 import com.takeaway.takeaway.dataaccess.repository.LocationRepository;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -48,10 +46,16 @@ public class UserLogic {
     public void deleteProfilePicture(UUID userId) throws TakeawayException {
         User user = validationLogic.validateGetUserById(userId);
         if (user.getProfilePicture() == null) {
-            throw new EntityNotFound(EntityTypes.ATTACHMENT);
+            throw new TakeawayException(
+                    ExceptionTypes.ENTITY_NOT_FOUND,
+                    ExceptionEntities.ATTACHMENT
+            );
         }
         if (user.getProfilePictureOriginal() == null) {
-            throw new EntityNotFound(EntityTypes.ATTACHMENT);
+            throw new TakeawayException(
+                    ExceptionTypes.ENTITY_NOT_FOUND,
+                    ExceptionEntities.ATTACHMENT
+            );
         }
         attachmentLogic.removeAttachment(user.getProfilePicture().getId());
         attachmentLogic.removeAttachment(user.getProfilePictureOriginal().getId());
@@ -168,35 +172,19 @@ public class UserLogic {
     public void modifyAddress(UUID userId, ModifyLocationDto modifyLocationDto) throws TakeawayException {
         // validation
         User user = validationLogic.validateGetUserById(userId);
-        ValidModifyLocationDto validLocationDto = validationLogic.validateGetLocation(modifyLocationDto);
+        Location newLocation = validationLogic.validateNewLocation(modifyLocationDto);
 
         // business
-        if (user.getAddress() == null) {
-            user.setAddress(new Location());
+        geolocationRepository.save(newLocation.getGeolocation());
+        locationRepository.save(newLocation);
+
+        if (user.getAddress() != null) {
+            if (user.getAddress().getGeolocation() != null) {
+                geolocationRepository.delete(user.getAddress().getGeolocation());
+            }
+            locationRepository.delete(user.getAddress());
         }
-        Location address = user.getAddress();
-        if (address.getGeolocation() == null) {
-            address.setGeolocation(new Geolocation());
-        }
-
-        Geolocation geolocation = address.getGeolocation();
-        geolocation.setLatitude(validLocationDto.getLatitude());
-        geolocation.setLongitude(validLocationDto.getLongitude());
-        geolocation.setAccuracyM(validLocationDto.getAccuracyM());
-        geolocation.updateDateModified();
-        geolocationRepository.save(geolocation);
-
-        address.setCountry(validLocationDto.getCountry());
-        address.setState(validLocationDto.getState());
-        address.setCity(validLocationDto.getCity());
-        address.setTitle(validLocationDto.getTitle());
-        address.setStreetName(validLocationDto.getStreetName());
-        address.setStreetName2(validLocationDto.getStreetName2());
-        address.setHouseNumber(validLocationDto.getHouseNumber());
-        address.setAdditionalInfo(validLocationDto.getAdditionalInfo());
-        address.updateDateModified();
-        locationRepository.save(address);
-
+        user.setAddress(newLocation);
         userRepository.save(user);
     }
 }

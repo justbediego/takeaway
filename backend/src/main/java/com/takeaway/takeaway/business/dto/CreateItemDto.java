@@ -1,6 +1,6 @@
 package com.takeaway.takeaway.business.dto;
 
-import com.takeaway.takeaway.business.exception.ItemWithoutLocationException;
+import com.takeaway.takeaway.business.exception.ExceptionTypes;
 import com.takeaway.takeaway.business.exception.TakeawayException;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +27,7 @@ public class CreateItemDto extends BaseDto {
             attachmentList.add(CreateAttachmentDto.fromFile(file));
         }
         if (data.getLocation() == null) {
-            throw new ItemWithoutLocationException();
+            throw new TakeawayException(ExceptionTypes.ITEM_WITHOUT_LOCATION);
         }
         return CreateItemDto.builder()
                 .title(trim(data.getTitle()))
