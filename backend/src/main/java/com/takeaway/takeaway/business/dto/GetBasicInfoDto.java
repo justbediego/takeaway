@@ -3,18 +3,12 @@ package com.takeaway.takeaway.business.dto;
 import com.takeaway.takeaway.dataaccess.model.enums.GenderTypes;
 import lombok.*;
 
-import java.util.UUID;
-
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class GetBasicInfoDto extends BaseDto {
-    private UUID profilePictureId;
-    private UUID profilePictureKey;
-    private UUID profilePictureOriginalId;
-    private UUID profilePictureOriginalKey;
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -22,4 +16,6 @@ public class GetBasicInfoDto extends BaseDto {
     private String email;
     private String username;
     private GenderTypes gender;
+    private String profilePictureLink;
+    private String profilePictureOriginalLink;
 }

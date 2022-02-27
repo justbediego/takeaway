@@ -41,6 +41,10 @@ public class Attachment extends BaseEntity {
     @Column
     private Integer orderIndex;
 
+    // risk: everything google changes something, we need to update these
+    @Column(length = 1000, nullable = false)
+    private String mediaLink;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "picture_item_id")
     private Item forItem;

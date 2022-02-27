@@ -104,10 +104,8 @@ public class UserLogic {
                 .phoneNumber(user.getPhoneNumber())
                 .gender(user.getGender())
                 .phoneNumberCountryCode(user.getPhoneNumberCountryCode())
-                .profilePictureId(profilePicture == null ? null : profilePicture.getId())
-                .profilePictureKey(profilePicture == null ? null : profilePicture.getSecurityKey())
-                .profilePictureOriginalId(profilePictureOriginal == null ? null : profilePictureOriginal.getId())
-                .profilePictureOriginalKey(profilePictureOriginal == null ? null : profilePictureOriginal.getSecurityKey())
+                .profilePictureLink(profilePicture == null ? null : profilePicture.getMediaLink())
+                .profilePictureOriginalLink(profilePictureOriginal == null ? null : profilePictureOriginal.getMediaLink())
                 .build();
     }
 

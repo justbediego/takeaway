@@ -55,9 +55,9 @@ public class AttachmentLogic {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(imageData);
             BufferedImage image = ImageIO.read(inputStream);
-            Integer height = image.getHeight();
-            Integer width = image.getWidth();
-            Integer maxSide = Math.max(height, width);
+            int height = image.getHeight();
+            int width = image.getWidth();
+            int maxSide = Math.max(height, width);
             if (rescaleSide == null && maxSide > pictureMaxSize) {
                 rescaleSide = pictureMaxSize;
             }
@@ -74,21 +74,6 @@ public class AttachmentLogic {
         return outputStream.toByteArray();
     }
 
-    public String getAttachmentLink(UUID attachmentId, UUID attachmentKey) throws TakeawayException {
-        Optional<Attachment> optionalAttachment = attachmentRepository.findByIdAndKey(attachmentId, attachmentKey);
-        if (optionalAttachment.isEmpty()) {
-            throw new TakeawayException(
-                    ExceptionTypes.ENTITY_NOT_FOUND,
-                    ExceptionEntities.ATTACHMENT,
-                    attachmentId.toString()
-            );
-        }
-        Attachment attachment = optionalAttachment.get();
-        BlobId blobId = getBlobId(attachment);
-        Blob blob = storage.get(blobId);
-        return blob.getMediaLink();
-    }
-
     // only used internally
     public Attachment createAttachment(CreateAttachmentDto attachmentDto, AttachmentTypes type) throws TakeawayException {
         // validation
@@ -103,12 +88,13 @@ public class AttachmentLogic {
         newAttachment.setFileSize(attachmentDto.getFileData().length);
         newAttachment.setType(type);
         try {
-            storage.create(
+            Blob blob = storage.create(
                     BlobInfo.newBuilder(getBlobId(newAttachment))
                             .setAcl(List.of(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER)))
                             .build(),
                     attachmentDto.getFileData()
             );
+            newAttachment.setMediaLink(blob.getMediaLink());
         } catch (Exception e) {
             e.printStackTrace();
             throw new TakeawayException(

@@ -2,8 +2,8 @@ spring:
   cloud:
     gcp:
       project-id: silent-card
-      credentials:
-        location: file:C:/Users/diego/Documents/silent-card-a1a5068bdf05.json
+#      credentials:
+#        location: file:C:/Users/diego/Documents/silent-card-a1a5068bdf05.json
       sql:
         instance-connection-name: silent-card:europe-west1:takeaway-db
         database-name: takeawayDB
@@ -16,7 +16,7 @@ spring:
   jpa:
     database: POSTGRESQL
     show-sql: true
-    generate-ddl: true
+#    generate-ddl: true
     properties:
       hibernate:
         enable_lazy_load_no_trans: true

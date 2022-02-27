@@ -4,10 +4,7 @@ import com.takeaway.takeaway.business.AuthenticationLogic;
 import com.takeaway.takeaway.business.GuestLogic;
 import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.dataaccess.model.enums.UserLanguages;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -46,4 +43,15 @@ public class GuestController extends BaseController {
     public GetCitiesDto getCities(@RequestParam UUID stateId, @RequestParam UserLanguages language) {
         return guestLogic.getCities(stateId, language);
     }
+//
+//    @GetMapping(path = "/getItems")
+//    public GetItemsDto getItems(@RequestParam GetItemsFiltersDto filtersDto){
+//
+//    }
+//
+//    @GetMapping(path = "/getItem/{itemId}")
+//    public GetSingleItemDto getItem(@PathVariable UUID itemId){
+//
+//    }
+
 }
