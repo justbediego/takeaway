@@ -38,6 +38,9 @@ public class Attachment extends BaseEntity {
     @Column(length = 300, nullable = false)
     private String filename;
 
+    @Column
+    private Integer orderIndex;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "picture_item_id")
     private Item forItem;

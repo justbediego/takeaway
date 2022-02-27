@@ -12,5 +12,4 @@ import java.util.UUID;
 public class ItemCategoryDto extends BaseDto {
     private UUID id;
     private String categoryName;
-    private Long categoryCode;
 }

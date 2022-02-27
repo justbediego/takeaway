@@ -172,7 +172,9 @@ public class UserLogic {
         Location newLocation = validationLogic.validateNewLocation(modifyLocationDto);
 
         // business
-        geolocationRepository.save(newLocation.getGeolocation());
+        if (newLocation.getGeolocation() != null) {
+            geolocationRepository.save(newLocation.getGeolocation());
+        }
         locationRepository.save(newLocation);
 
         if (user.getAddress() != null) {

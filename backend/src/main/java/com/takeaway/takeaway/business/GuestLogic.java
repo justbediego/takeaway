@@ -51,13 +51,8 @@ public class GuestLogic {
                 .build();
     }
 
-    public GetItemCategoriesDto getItemCategories(UUID parentId, UserLanguages languages) {
-        List<ItemCategory> categories;
-        if (parentId == null) {
-            categories = itemCategoryRepository.findRootCategories();
-        } else {
-            categories = itemCategoryRepository.findByParentId(parentId);
-        }
+    public GetItemCategoriesDto getItemCategories(UserLanguages languages) {
+        List<ItemCategory> categories = itemCategoryRepository.findAll();
         List<ItemCategoryDto> itemCategories = categories.stream()
                 .map(ic -> ItemCategoryDto.builder()
                         .id(ic.getId())
@@ -66,7 +61,6 @@ public class GuestLogic {
                                 .map(DataTranslation::getValue)
                                 .findFirst()
                                 .orElse(ic.getEnglishName()))
-                        .categoryCode(ic.getCategoryCode())
                         .build())
                 .collect(Collectors.toList());
         return GetItemCategoriesDto.builder()

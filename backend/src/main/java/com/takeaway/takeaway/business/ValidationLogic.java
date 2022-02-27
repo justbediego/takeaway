@@ -5,8 +5,11 @@ import com.takeaway.takeaway.business.dto.ValidModifyLocationDto;
 import com.takeaway.takeaway.business.exception.ExceptionEntities;
 import com.takeaway.takeaway.business.exception.ExceptionTypes;
 import com.takeaway.takeaway.business.exception.TakeawayException;
+import com.takeaway.takeaway.dataaccess.model.Item;
 import com.takeaway.takeaway.dataaccess.model.ItemCategory;
 import com.takeaway.takeaway.dataaccess.model.User;
+import com.takeaway.takeaway.dataaccess.model.enums.ItemApprovalStates;
+import com.takeaway.takeaway.dataaccess.model.enums.ItemPublishStates;
 import com.takeaway.takeaway.dataaccess.model.geo.*;
 import com.takeaway.takeaway.dataaccess.repository.*;
 import lombok.extern.slf4j.Slf4j;
@@ -26,16 +29,18 @@ public class ValidationLogic {
     private final StateRepository stateRepository;
     private final CityRepository cityRepository;
     private final ItemCategoryRepository itemCategoryRepository;
+    private final ItemRepository itemRepository;
 
     @Value("${spring.application.maxUploadFileSizeInBytes}")
     private Long maxUploadFileSizeInBytes;
 
-    public ValidationLogic(UserRepository userRepository, CountryRepository countryRepository, StateRepository stateRepository, CityRepository cityRepository, ItemCategoryRepository itemCategoryRepository) {
+    public ValidationLogic(UserRepository userRepository, CountryRepository countryRepository, StateRepository stateRepository, CityRepository cityRepository, ItemCategoryRepository itemCategoryRepository, ItemRepository itemRepository) {
         this.userRepository = userRepository;
         this.countryRepository = countryRepository;
         this.stateRepository = stateRepository;
         this.cityRepository = cityRepository;
         this.itemCategoryRepository = itemCategoryRepository;
+        this.itemRepository = itemRepository;
     }
 
 
@@ -49,6 +54,46 @@ public class ValidationLogic {
             );
         }
         return optionalUser.get();
+    }
+
+    public Item validateGetModifiableItemById(UUID userId, UUID itemId) throws TakeawayException {
+        Optional<Item> optionalItem = itemRepository.findByIdAndUserId(userId, itemId);
+        if (optionalItem.isEmpty()) {
+            throw new TakeawayException(
+                    ExceptionTypes.ENTITY_NOT_FOUND,
+                    ExceptionEntities.ITEM,
+                    itemId.toString()
+            );
+        }
+        if (optionalItem.get().getApprovalState() == ItemApprovalStates.BLOCKED) {
+            throw new TakeawayException(
+                    ExceptionTypes.ITEM_IS_BLOCKED,
+                    ExceptionEntities.ITEM,
+                    itemId.toString()
+            );
+        }
+        return optionalItem.get();
+    }
+
+
+    public Item validateGetPublishedItemById(UUID itemId) throws TakeawayException {
+        Optional<Item> optionalItem = itemRepository.findById(itemId);
+        if (optionalItem.isEmpty()) {
+            throw new TakeawayException(
+                    ExceptionTypes.ENTITY_NOT_FOUND,
+                    ExceptionEntities.ITEM,
+                    itemId.toString()
+            );
+        }
+        if (optionalItem.get().getApprovalState() != ItemApprovalStates.APPROVED ||
+                optionalItem.get().getPublishState() != ItemPublishStates.ACTIVE) {
+            throw new TakeawayException(
+                    ExceptionTypes.ITEM_IS_UNPUBLISHED,
+                    ExceptionEntities.ITEM,
+                    itemId.toString()
+            );
+        }
+        return optionalItem.get();
     }
 
     public Country validateGetCountryById(UUID countryId) throws TakeawayException {
@@ -98,14 +143,14 @@ public class ValidationLogic {
 
     public void validateFirstName(String firsName) throws TakeawayException {
         String firstNamePattern = "^[\\p{L}]([\\- '\",.\\p{L}]{0,90}[\\p{L}])$";
-        if (!firsName.matches(firstNamePattern)) {
+        if (StringUtils.isBlank(firsName) || !firsName.matches(firstNamePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_FIRST_NAME);
         }
     }
 
     public void validateLastName(String lastName) throws TakeawayException {
         String lastNamePattern = "^[\\p{L}]([\\- '\",.\\p{L}]{0,90}[\\p{L}])$";
-        if (!lastName.matches(lastNamePattern)) {
+        if (StringUtils.isBlank(lastName) || !lastName.matches(lastNamePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_LAST_NAME);
         }
     }
@@ -113,10 +158,10 @@ public class ValidationLogic {
     public void validatePhoneNumber(String countryCode, String number) throws TakeawayException {
         final String countryCodePattern = "^\\+\\d{1,3}$";
         final String phoneNumberPattern = "^\\d{5,15}$";
-        if (!countryCode.matches(countryCodePattern)) {
+        if (StringUtils.isBlank(countryCode) || !countryCode.matches(countryCodePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_COUNTRY_CODE);
         }
-        if (!number.matches(phoneNumberPattern)) {
+        if (StringUtils.isBlank(number) || !number.matches(phoneNumberPattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_PHONE_NUMBER);
         }
     }
@@ -134,12 +179,13 @@ public class ValidationLogic {
 
     public void validateUsername(String username) throws TakeawayException {
         final String usernamePattern = "^[a-zA-Z][a-zA-Z0-9._]{3,190}[a-zA-Z0-9]$";
-        if (!username.matches(usernamePattern)) {
+        if (StringUtils.isBlank(username) || !username.matches(usernamePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_USERNAME);
         }
     }
 
     public void validateChangeUsername(String newUsername, String oldUsername) throws TakeawayException {
+        validateUsername(oldUsername);
         validateUsername(newUsername);
         if (newUsername.equalsIgnoreCase(oldUsername.toLowerCase())) {
             throw new TakeawayException(ExceptionTypes.NEW_USERNAME_SAME_AS_OLD);
@@ -151,6 +197,7 @@ public class ValidationLogic {
     }
 
     public void validateChangeEmail(String newEmail, String oldEmail) throws TakeawayException {
+        validateEmail(oldEmail);
         validateEmail(newEmail);
         if (newEmail.equalsIgnoreCase(oldEmail.toLowerCase())) {
             throw new TakeawayException(ExceptionTypes.NEW_EMAIL_SAME_AS_OLD);
@@ -164,7 +211,7 @@ public class ValidationLogic {
     public void validatePassword(String password) throws TakeawayException {
         // Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
         final String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$";
-        if (!password.matches(passwordPattern)) {
+        if (StringUtils.isBlank(password) || !password.matches(passwordPattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_PASSWORD);
         }
     }
@@ -172,6 +219,9 @@ public class ValidationLogic {
     public void validateLongitudeLatitude(Double longitude, Double latitude, Integer accuracyM) throws TakeawayException {
         // latitude in degrees is -90 and +90
         // Longitude is in the range -180 and +180
+        if (longitude == null || latitude == null || accuracyM == null) {
+            throw new TakeawayException(ExceptionTypes.INVALID_GEOLOCATION_VALUES);
+        }
         if (longitude < -180 || longitude > 180 || latitude < -90 || latitude > 90 || accuracyM < 0 || accuracyM > 10000) {
             throw new TakeawayException(ExceptionTypes.INVALID_GEOLOCATION_VALUES);
         }
@@ -179,32 +229,32 @@ public class ValidationLogic {
 
     public void validateLocationTitle(String title) throws TakeawayException {
         String locationTitlePattern = "^[\\p{L}\\p{N}\\d\"\\[\\]~,;:<>|{}()*&%#'._\\-+ ]{3,90}$";
-        if (!title.matches(locationTitlePattern)) {
+        if (StringUtils.isBlank(title) || !title.matches(locationTitlePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_LOCATION_TITLE);
         }
     }
 
     public void validateLocationAddress(String streetName, String streetName2, String houseNumber, String additionalInfo) throws TakeawayException {
         String streetPattern = "^[\\p{L}\\p{N}\\d\"\\[\\]~,;:<>|{}()*&#'._\\-+ /\\\\@]{3,100}$";
-        if (!streetName.matches(streetPattern)) {
-            throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS);
+        if (StringUtils.isBlank(streetName) || !streetName.matches(streetPattern)) {
+            throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS, ExceptionEntities.LOCATION, "StreetName");
         }
         if (StringUtils.isNotBlank(streetName2) && !streetName2.matches(streetPattern)) {
-            throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS);
+            throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS, ExceptionEntities.LOCATION, "StreetName2");
         }
         String houseNumberPattern = "^[\\p{L}\\p{N}\\d\"\\[\\]~,;:<>|{}()*&#'._\\-+ /\\\\@]{1,20}$";
-        if (!houseNumber.matches(houseNumberPattern)) {
-            throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS);
+        if (StringUtils.isBlank(houseNumber) || !houseNumber.matches(houseNumberPattern)) {
+            throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS, ExceptionEntities.LOCATION, "HouseNumber");
         }
         String additionalPattern = "^[\\p{L}\\p{N}\\d\"\\[\\]~,;:<>|{}()*&#'._\\-+ /\\\\@]{1,200}$";
-        if (!additionalInfo.matches(additionalPattern)) {
-            throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS);
+        if (StringUtils.isNotBlank(additionalInfo) && !additionalInfo.matches(additionalPattern)) {
+            throw new TakeawayException(ExceptionTypes.INVALID_ADDRESS, ExceptionEntities.LOCATION, "AdditionalInfo");
         }
     }
 
     public void validateFilename(String filename) throws TakeawayException {
         final String filenamePattern = "^[\\p{L}\\p{N}\\d\"\\[\\]~,;:<>|{}()*&#'._\\-+ /\\\\@$^!]{1,300}$";
-        if (!filename.matches(filenamePattern)) {
+        if (StringUtils.isBlank(filename) || !filename.matches(filenamePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_FILENAME);
         }
     }
@@ -219,15 +269,20 @@ public class ValidationLogic {
     }
 
     public void validateItemDescription(String description) throws TakeawayException {
-        String titlePattern = "^.{20,5000}$";
-        if (!description.matches(titlePattern)) {
+        if (StringUtils.isBlank(description) || description.length() < 10 || description.length() > 5000) {
             throw new TakeawayException(ExceptionTypes.INVALID_ITEM_DESCRIPTION);
+        }
+    }
+
+    public void validateReportDescription(String description) throws TakeawayException {
+        if (StringUtils.isBlank(description) || description.length() < 10 || description.length() > 5000) {
+            throw new TakeawayException(ExceptionTypes.INVALID_REPORT_DESCRIPTION);
         }
     }
 
     public void validateItemTitle(String title) throws TakeawayException {
         String titlePattern = "^[\\p{L}\\p{N}\\d\"\\[\\]~,;:<>|{}()*&%#'._\\-+ ]{5,100}$";
-        if (!title.matches(titlePattern)) {
+        if (StringUtils.isBlank(title) || !title.matches(titlePattern)) {
             throw new TakeawayException(ExceptionTypes.INVALID_ITEM_TITLE);
         }
     }
@@ -242,20 +297,21 @@ public class ValidationLogic {
             );
         }
         if (!optionalCategory.get().getChildCategories().isEmpty()) {
-            throw new TakeawayException(ExceptionTypes.INVALID_ITEM_CATEGORY);
+            throw new TakeawayException(ExceptionTypes.ITEM_CATEGORY_HAS_CHILDREN);
         }
         return optionalCategory.get();
     }
 
     public Location validateNewLocation(ModifyLocationDto modifyLocationDto) throws TakeawayException {
         ValidModifyLocationDto validLocationDto = validateGetLocation(modifyLocationDto);
-        Geolocation geolocation = new Geolocation();
-        geolocation.setLatitude(validLocationDto.getLatitude());
-        geolocation.setLongitude(validLocationDto.getLongitude());
-        geolocation.setAccuracyM(validLocationDto.getAccuracyM());
-
         Location location = new Location();
-        location.setGeolocation(geolocation);
+        if (Boolean.TRUE.equals(validLocationDto.getHasGeolocation())) {
+            Geolocation geolocation = new Geolocation();
+            geolocation.setLatitude(validLocationDto.getLatitude());
+            geolocation.setLongitude(validLocationDto.getLongitude());
+            geolocation.setAccuracyM(validLocationDto.getAccuracyM());
+            location.setGeolocation(geolocation);
+        }
         location.setCountry(validLocationDto.getCountry());
         location.setState(validLocationDto.getState());
         location.setCity(validLocationDto.getCity());

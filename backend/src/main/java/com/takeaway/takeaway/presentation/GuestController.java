@@ -28,8 +28,8 @@ public class GuestController extends BaseController {
     }
 
     @GetMapping(path = "/getItemCategories")
-    public GetItemCategoriesDto getItemCategories(@RequestParam(required = false) UUID parentId, @RequestParam UserLanguages language) {
-        return guestLogic.getItemCategories(parentId, language);
+    public GetItemCategoriesDto getItemCategories(@RequestParam UserLanguages language) {
+        return guestLogic.getItemCategories(language);
     }
 
     @GetMapping(path = "/getCountries")

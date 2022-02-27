@@ -8,7 +8,8 @@ public enum ExceptionEntities {
     CITY("CITY"),
     LOCATION("LOCATION"),
     GEOLOCATION("GEOLOCATION"),
-    ITEM_CATEGORY("ITEM_CATEGORY");
+    ITEM_CATEGORY("ITEM_CATEGORY"),
+    ITEM("ITEM");
 
     private String inText;
 
