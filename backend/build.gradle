@@ -20,7 +20,7 @@ plugins {
 
 group = 'com.takeaway'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 configurations {
     compileOnly {

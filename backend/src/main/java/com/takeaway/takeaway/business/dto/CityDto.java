@@ -6,10 +6,14 @@ import java.util.UUID;
 
 @Builder
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class CityDto extends BaseDto {
     private UUID id;
     private String name;
+
+    public CityDto(UUID id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

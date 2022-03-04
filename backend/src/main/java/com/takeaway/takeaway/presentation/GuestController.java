@@ -3,6 +3,7 @@ package com.takeaway.takeaway.presentation;
 import com.takeaway.takeaway.business.AuthenticationLogic;
 import com.takeaway.takeaway.business.GuestLogic;
 import com.takeaway.takeaway.business.dto.*;
+import com.takeaway.takeaway.business.exception.TakeawayException;
 import com.takeaway.takeaway.dataaccess.model.enums.UserLanguages;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,15 +44,15 @@ public class GuestController extends BaseController {
     public GetCitiesDto getCities(@RequestParam UUID stateId, @RequestParam UserLanguages language) {
         return guestLogic.getCities(stateId, language);
     }
-//
-//    @GetMapping(path = "/getItems")
-//    public GetItemsDto getItems(@RequestParam GetItemsFiltersDto filtersDto){
-//
-//    }
-//
-//    @GetMapping(path = "/getItem/{itemId}")
-//    public GetSingleItemDto getItem(@PathVariable UUID itemId){
-//
-//    }
+
+    @GetMapping(path = "/getItems")
+    public GetItemsDto getItems(@RequestParam GetItemsFiltersDto filtersDto) throws TakeawayException {
+        return guestLogic.getItems(GetItemsFiltersDto.fromOutside(filtersDto));
+    }
+
+    @GetMapping(path = "/getItem/{itemId}")
+    public GetSingleItemDto getItem(@PathVariable UUID itemId) throws TakeawayException {
+        return guestLogic.getItem(itemId);
+    }
 
 }
