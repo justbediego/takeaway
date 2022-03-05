@@ -1,18 +1,16 @@
 package com.takeaway.takeaway.business;
 
 import com.takeaway.takeaway.business.dto.*;
+import com.takeaway.takeaway.business.exception.ExceptionEntities;
+import com.takeaway.takeaway.business.exception.ExceptionTypes;
 import com.takeaway.takeaway.business.exception.TakeawayException;
-import com.takeaway.takeaway.dataaccess.model.Attachment;
-import com.takeaway.takeaway.dataaccess.model.Item;
 import com.takeaway.takeaway.dataaccess.model.enums.UserLanguages;
-import com.takeaway.takeaway.dataaccess.repository.CityRepository;
-import com.takeaway.takeaway.dataaccess.repository.CountryRepository;
-import com.takeaway.takeaway.dataaccess.repository.ItemCategoryRepository;
-import com.takeaway.takeaway.dataaccess.repository.StateRepository;
+import com.takeaway.takeaway.dataaccess.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -24,14 +22,14 @@ public class GuestLogic {
     private final StateRepository stateRepository;
     private final CityRepository cityRepository;
     private final ItemCategoryRepository itemCategoryRepository;
-    private final ValidationLogic validationLogic;
+    private final ItemRepository itemRepository;
 
-    public GuestLogic(CountryRepository countryRepository, StateRepository stateRepository, CityRepository cityRepository, ItemCategoryRepository itemCategoryRepository, ValidationLogic validationLogic) {
+    public GuestLogic(CountryRepository countryRepository, StateRepository stateRepository, CityRepository cityRepository, ItemCategoryRepository itemCategoryRepository, ItemRepository itemRepository) {
         this.countryRepository = countryRepository;
         this.stateRepository = stateRepository;
         this.cityRepository = cityRepository;
         this.itemCategoryRepository = itemCategoryRepository;
-        this.validationLogic = validationLogic;
+        this.itemRepository = itemRepository;
     }
 
     public GetCountryCodesDto getCountryCodes(UserLanguages language) {
@@ -66,17 +64,20 @@ public class GuestLogic {
                 .build();
     }
 
-    public GetItemsDto getItems(GetItemsFiltersDto filtersDto) {
+    public GetItemsDto getItems(GetItemsFiltersDto filtersDto, UserLanguages language) {
         return null;
     }
 
-    public GetSingleItemDto getItem(UUID itemId) throws TakeawayException {
-        Item item = validationLogic.validateGetItemById(itemId);
-        return GetSingleItemDto.builder()
-                .imageUrls(item.getPictures().stream()
-                        .map(Attachment::getMediaLink)
-                        .toList())
-                .build();
+    public GetSingleItemDto getItem(UUID itemId, UserLanguages language) throws TakeawayException {
+        Optional<GetSingleItemDto> publicItem = itemRepository.getPublicItem(itemId, language);
+        if (publicItem.isEmpty()) {
+            throw new TakeawayException(
+                    ExceptionTypes.ENTITY_NOT_FOUND,
+                    ExceptionEntities.ITEM,
+                    itemId.toString()
+            );
+        }
+        return publicItem.get();
     }
 
 }

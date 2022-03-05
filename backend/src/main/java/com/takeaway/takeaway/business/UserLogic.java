@@ -106,6 +106,8 @@ public class UserLogic {
                 .phoneNumberCountryCode(user.getPhoneNumberCountryCode())
                 .profilePictureLink(profilePicture == null ? null : profilePicture.getMediaLink())
                 .profilePictureOriginalLink(profilePictureOriginal == null ? null : profilePictureOriginal.getMediaLink())
+                .emailIsPublic(user.getEmailIsPublic())
+                .phoneNumberIsPublic(user.getPhoneNumberIsPublic())
                 .build();
     }
 
@@ -132,6 +134,8 @@ public class UserLogic {
         user.setLastName(updateBasicInfoDto.getLastName());
         user.setPhoneNumber(updateBasicInfoDto.getPhoneNumber());
         user.setPhoneNumberCountryCode(updateBasicInfoDto.getPhoneNumberCountryCode());
+        user.setEmailIsPublic(updateBasicInfoDto.getEmailIsPublic());
+        user.setPhoneNumberIsPublic(updateBasicInfoDto.getPhoneNumberIsPublic());
         user.updateDateModified();
         userRepository.save(user);
     }

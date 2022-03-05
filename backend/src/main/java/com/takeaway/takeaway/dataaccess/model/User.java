@@ -52,6 +52,12 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private UserLanguages language = UserLanguages.EN;
 
+    @Column(nullable = false)
+    private boolean phoneNumberIsPublic = false;
+
+    @Column(nullable = false)
+    private boolean emailIsPublic = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_address_id")
     private Location address;
@@ -79,4 +85,12 @@ public class User extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private List<ItemReport> itemReports = new ArrayList<>();
+
+    public boolean getEmailIsPublic(){
+        return emailIsPublic;
+    }
+
+    public boolean getPhoneNumberIsPublic(){
+        return phoneNumberIsPublic;
+    }
 }

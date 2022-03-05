@@ -1,17 +1,13 @@
 package com.takeaway.takeaway.business.dto;
 
-import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Builder
-@Data
-@NoArgsConstructor
+@Getter
 @EqualsAndHashCode(callSuper = true)
 public class CountryCodeDto extends BaseDto {
-    private String countryName;
-    private String countryCode;
+    private final String countryName;
+    private final String countryCode;
 
     public CountryCodeDto(String countryName, String countryCode) {
         this.countryName = countryName;

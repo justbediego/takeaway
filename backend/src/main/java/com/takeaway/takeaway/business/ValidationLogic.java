@@ -287,18 +287,6 @@ public class ValidationLogic {
         }
     }
 
-    public Item validateGetItemById(UUID itemId) throws TakeawayException{
-        Optional<Item> optionalItem = itemRepository.findById(itemId);
-        if (optionalItem.isEmpty()) {
-            throw new TakeawayException(
-                    ExceptionTypes.ENTITY_NOT_FOUND,
-                    ExceptionEntities.ITEM,
-                    itemId.toString()
-            );
-        }
-        return optionalItem.get();
-    }
-
     public ItemCategory validateGetItemCategoryById(UUID categoryId) throws TakeawayException {
         Optional<ItemCategory> optionalCategory = itemCategoryRepository.findById(categoryId);
         if (optionalCategory.isEmpty()) {
@@ -317,7 +305,7 @@ public class ValidationLogic {
     public Location validateNewLocation(ModifyLocationDto modifyLocationDto) throws TakeawayException {
         ValidModifyLocationDto validLocationDto = validateGetLocation(modifyLocationDto);
         Location location = new Location();
-        if (Boolean.TRUE.equals(validLocationDto.getHasGeolocation())) {
+        if (validLocationDto.getHasGeolocation()) {
             Geolocation geolocation = new Geolocation();
             geolocation.setLatitude(validLocationDto.getLatitude());
             geolocation.setLongitude(validLocationDto.getLongitude());

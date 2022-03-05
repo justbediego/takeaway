@@ -18,4 +18,6 @@ public class GetBasicInfoDto extends BaseDto {
     private GenderTypes gender;
     private String profilePictureLink;
     private String profilePictureOriginalLink;
+    private boolean phoneNumberIsPublic;
+    private boolean emailIsPublic;
 }

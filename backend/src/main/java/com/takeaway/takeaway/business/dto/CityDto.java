@@ -1,16 +1,15 @@
 package com.takeaway.takeaway.business.dto;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.UUID;
 
-@Builder
-@Data
-@NoArgsConstructor
+@Getter
 @EqualsAndHashCode(callSuper = true)
 public class CityDto extends BaseDto {
-    private UUID id;
-    private String name;
+    private final UUID id;
+    private final String name;
 
     public CityDto(UUID id, String name) {
         this.id = id;
