@@ -1,6 +1,6 @@
 package com.takeaway.takeaway.business.dto;
 
-import com.takeaway.takeaway.dataaccess.model.Attachment;
+import com.google.gson.Gson;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -26,8 +26,9 @@ public class GetSingleItemDto extends BaseDto {
     private final String stateName;
     private final UUID cityId;
     private final String cityName;
+    private final List<String> pictureUrls;
 
-    public GetSingleItemDto(String title, String description, String firstName, String lastName, String publicPhoneNumber, String publicEmail, Date publishStart, UUID itemCategoryId, UUID countryId, String countryName, UUID stateId, String stateName, UUID cityId, String cityName) {
+    public GetSingleItemDto(String title, String description, String firstName, String lastName, String publicPhoneNumber, String publicEmail, Date publishStart, UUID itemCategoryId, UUID countryId, String countryName, UUID stateId, String stateName, UUID cityId, String cityName, String pictureUrlsJson) {
         this.title = title;
         this.description = description;
         this.firstName = firstName;
@@ -42,5 +43,11 @@ public class GetSingleItemDto extends BaseDto {
         this.stateName = stateName;
         this.cityId = cityId;
         this.cityName = cityName;
+        if (pictureUrlsJson != null) {
+            Gson gson = new Gson();
+            this.pictureUrls = gson.fromJson(pictureUrlsJson, List.class);
+        } else {
+            this.pictureUrls = null;
+        }
     }
 }

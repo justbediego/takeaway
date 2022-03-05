@@ -15,7 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "geolocations", indexes = {
-        @Index(name = "geolocation_id_idx", columnList = "id", unique = true)
+        @Index(name = "geolocation_id_idx", columnList = "id", unique = true),
+        @Index(name= "location_latitude_id", columnList = "latitude"),
+        @Index(name= "location_longitude_id", columnList = "longitude")
 })
 @EqualsAndHashCode(callSuper = true)
 public class Geolocation extends BaseEntity {

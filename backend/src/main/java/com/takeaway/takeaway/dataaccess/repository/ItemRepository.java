@@ -31,7 +31,8 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
                 loc.state.id,
                 CASE WHEN state_trs.id is null THEN loc.state.englishName ELSE state_trs.value END,
                 loc.city.id,
-                CASE WHEN city_trs.id is null THEN loc.city.englishName ELSE city_trs.value END   
+                CASE WHEN city_trs.id is null THEN loc.city.englishName ELSE city_trs.value END,
+                (SELECT json_agg(p.mediaLink) FROM i.pictures p)
             ) FROM Item i
             JOIN i.user u
             LEFT JOIN i.location loc
@@ -44,4 +45,11 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
             WHERE i.id = ?1""")
     Optional<GetSingleItemDto> getPublicItem(UUID item, UserLanguages language);
 
+
+
+
+
+
 }
+
+
