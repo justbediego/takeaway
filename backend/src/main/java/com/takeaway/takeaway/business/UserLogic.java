@@ -6,6 +6,7 @@ import com.takeaway.takeaway.business.exception.ExceptionTypes;
 import com.takeaway.takeaway.business.exception.TakeawayException;
 import com.takeaway.takeaway.dataaccess.model.Attachment;
 import com.takeaway.takeaway.dataaccess.model.User;
+import com.takeaway.takeaway.dataaccess.model.enums.ActionTypes;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
 import com.takeaway.takeaway.dataaccess.model.geo.Location;
 import com.takeaway.takeaway.dataaccess.repository.GeolocationRepository;
@@ -28,13 +29,15 @@ public class UserLogic {
     private Integer profilePictureSize;
     private final ValidationLogic validationLogic;
     private final AttachmentLogic attachmentLogic;
+    private final ActionHistoryLogic actionHistoryLogic;
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
     private final GeolocationRepository geolocationRepository;
 
-    public UserLogic(ValidationLogic validationLogic, AttachmentLogic attachmentLogic, UserRepository userRepository, LocationRepository locationRepository, GeolocationRepository geolocationRepository) {
+    public UserLogic(ValidationLogic validationLogic, AttachmentLogic attachmentLogic, ActionHistoryLogic actionHistoryLogic, UserRepository userRepository, LocationRepository locationRepository, GeolocationRepository geolocationRepository) {
         this.validationLogic = validationLogic;
         this.attachmentLogic = attachmentLogic;
+        this.actionHistoryLogic = actionHistoryLogic;
         this.userRepository = userRepository;
         this.locationRepository = locationRepository;
         this.geolocationRepository = geolocationRepository;
@@ -56,6 +59,7 @@ public class UserLogic {
         }
         attachmentLogic.removeAttachment(user.getProfilePicture().getId());
         attachmentLogic.removeAttachment(user.getProfilePictureOriginal().getId());
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.USER_DELETE_PROFILE_PICTURE);
         userRepository.save(user);
     }
 
@@ -88,7 +92,7 @@ public class UserLogic {
         }
         user.setProfilePicture(smallPicture);
         user.setProfilePictureOriginal(originalPicture);
-        user.updateDateModified();
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.USER_UPDATE_PROFILE_PICTURE);
         userRepository.save(user);
     }
 
@@ -136,7 +140,7 @@ public class UserLogic {
         user.setPhoneNumberCountryCode(updateBasicInfoDto.getPhoneNumberCountryCode());
         user.setEmailIsPublic(updateBasicInfoDto.getEmailIsPublic());
         user.setPhoneNumberIsPublic(updateBasicInfoDto.getPhoneNumberIsPublic());
-        user.updateDateModified();
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.USER_UPDATE_BASIC_INFO);
         userRepository.save(user);
     }
 
@@ -150,7 +154,7 @@ public class UserLogic {
 
         // business
         user.setUsername(updateUsernameDto.getUsername());
-        user.updateDateModified();
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.USER_UPDATE_USERNAME);
         userRepository.save(user);
     }
 
@@ -164,7 +168,7 @@ public class UserLogic {
 
         // business
         user.setEmail(updateEmailDto.getEmail());
-        user.updateDateModified();
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.USER_UPDATE_EMAIL);
         userRepository.save(user);
     }
 
@@ -186,6 +190,7 @@ public class UserLogic {
             locationRepository.delete(user.getAddress());
         }
         user.setAddress(newLocation);
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.USER_MODIFY_ADDRESS);
         userRepository.save(user);
     }
 }

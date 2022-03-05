@@ -5,6 +5,7 @@ import com.takeaway.takeaway.business.exception.ExceptionEntities;
 import com.takeaway.takeaway.business.exception.ExceptionTypes;
 import com.takeaway.takeaway.business.exception.TakeawayException;
 import com.takeaway.takeaway.dataaccess.model.*;
+import com.takeaway.takeaway.dataaccess.model.enums.ActionTypes;
 import com.takeaway.takeaway.dataaccess.model.enums.AttachmentTypes;
 import com.takeaway.takeaway.dataaccess.model.enums.ItemApprovalStates;
 import com.takeaway.takeaway.dataaccess.model.enums.ItemPublishStates;
@@ -31,14 +32,16 @@ public class UserItemLogic {
     private final LocationRepository locationRepository;
     private final AttachmentLogic attachmentLogic;
     private final AttachmentRepository attachmentRepository;
+    private final ActionHistoryLogic actionHistoryLogic;
 
-    public UserItemLogic(ValidationLogic validationLogic, ItemRepository itemRepository, GeolocationRepository geolocationRepository, LocationRepository locationRepository, AttachmentLogic attachmentLogic, AttachmentRepository attachmentRepository) {
+    public UserItemLogic(ValidationLogic validationLogic, ItemRepository itemRepository, GeolocationRepository geolocationRepository, LocationRepository locationRepository, AttachmentLogic attachmentLogic, AttachmentRepository attachmentRepository, ActionHistoryLogic actionHistoryLogic) {
         this.validationLogic = validationLogic;
         this.itemRepository = itemRepository;
         this.geolocationRepository = geolocationRepository;
         this.locationRepository = locationRepository;
         this.attachmentLogic = attachmentLogic;
         this.attachmentRepository = attachmentRepository;
+        this.actionHistoryLogic = actionHistoryLogic;
     }
 
     public UUID createItem(UUID userId, CreateItemDto data) throws TakeawayException {
@@ -79,7 +82,7 @@ public class UserItemLogic {
             attachment.setOrderIndex(pictureOrder++);
             item.getPictures().add(attachment);
         }
-
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.ITEM_CREATE);
         itemRepository.save(item);
         return item.getId();
     }
@@ -111,22 +114,18 @@ public class UserItemLogic {
         item.setLocation(newLocation);
         // but it needs approval
         item.setApprovalState(ItemApprovalStates.QUEUE);
-
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.ITEM_UPDATE);
         itemRepository.save(item);
     }
 
-    public void unPublishItem(UUID userId, UUID itemId) throws TakeawayException {
+    public void setItemPublishState(UUID userId, UUID itemId, ItemPublishStates newState) throws TakeawayException {
         User user = validationLogic.validateGetUserById(userId);
         Item item = validationLogic.validateGetModifiableItemById(user.getId(), itemId);
-        item.setPublishState(ItemPublishStates.INACTIVE);
-        itemRepository.save(item);
-    }
-
-    public void rePublishItem(UUID userId, UUID itemId) throws TakeawayException {
-        User user = validationLogic.validateGetUserById(userId);
-        Item item = validationLogic.validateGetModifiableItemById(user.getId(), itemId);
-        item.setPublishState(ItemPublishStates.ACTIVE);
-        item.setPublishStart(new Date());
+        item.setPublishState(newState);
+        if(newState == ItemPublishStates.ACTIVE){
+            item.setPublishStart(new Date());
+        }
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.ITEM_SET_PUBLISH_STATE);
         itemRepository.save(item);
     }
 
@@ -139,10 +138,11 @@ public class UserItemLogic {
             }
             locationRepository.delete(item.getLocation());
         }
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.ITEM_DELETE);
         itemRepository.delete(item);
     }
 
-    public void changeItemAttachmentOrder(UUID userId, UUID itemId, ChangeItemAttachmentOrderDto data) throws TakeawayException {
+    public void changeItemPictureOrder(UUID userId, UUID itemId, ChangeItemPictureOrderDto data) throws TakeawayException {
         User user = validationLogic.validateGetUserById(userId);
         Item item = validationLogic.validateGetModifiableItemById(user.getId(), itemId);
         List<UUID> pictureIds = item.getPictures().stream()
@@ -150,17 +150,18 @@ public class UserItemLogic {
                 .collect(Collectors.toList());
 
         // containing the same elements with any order
-        if (!new HashSet<>(pictureIds).equals(new HashSet<>(data.getAttachmentIdsInOrder()))) {
+        if (!new HashSet<>(pictureIds).equals(new HashSet<>(data.getPictureIdsInOrder()))) {
             throw new TakeawayException(ExceptionTypes.INVALID_IDS_TO_REORDER);
         }
 
         for (Attachment picture : item.getPictures()) {
-            picture.setOrderIndex(data.getAttachmentIdsInOrder().indexOf(picture.getId()));
+            picture.setOrderIndex(data.getPictureIdsInOrder().indexOf(picture.getId()));
         }
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.ITEM_CHANGE_PICTURE_ORDER);
         attachmentRepository.saveAll(item.getPictures());
     }
 
-    public void addAttachmentToItem(UUID userId, UUID itemId, CreateAttachmentDto attachmentDto) throws TakeawayException {
+    public void addPictureToItem(UUID userId, UUID itemId, CreateAttachmentDto attachmentDto) throws TakeawayException {
         User user = validationLogic.validateGetUserById(userId);
         Item item = validationLogic.validateGetModifiableItemById(user.getId(), itemId);
         CreateAttachmentDto preparedImage = CreateAttachmentDto.builder()
@@ -174,10 +175,11 @@ public class UserItemLogic {
         Attachment attachment = attachmentLogic.createAttachment(preparedImage, AttachmentTypes.IMAGE);
         attachment.setOrderIndex(maxOrder + 1);
         item.getPictures().add(attachment);
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.ITEM_ADD_PICTURE);
         itemRepository.save(item);
     }
 
-    public void deleteAttachmentFromItem(UUID userId, UUID itemId, UUID attachmentId) throws TakeawayException {
+    public void deletePictureFromItem(UUID userId, UUID itemId, UUID attachmentId) throws TakeawayException {
         User user = validationLogic.validateGetUserById(userId);
         Item item = validationLogic.validateGetModifiableItemById(user.getId(), itemId);
         Optional<Attachment> foundPicture = item.getPictures().stream()
@@ -190,6 +192,7 @@ public class UserItemLogic {
                     attachmentId.toString()
             );
         }
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.ITEM_DELETE_PICTURE);
         attachmentRepository.delete(foundPicture.get());
     }
 
@@ -212,6 +215,7 @@ public class UserItemLogic {
         itemReport.setCategory(reportItemDto.getCategory());
         itemReport.setDescription(reportItemDto.getDescription());
         item.getItemReports().add(itemReport);
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.ITEM_REPORT);
         itemRepository.save(item);
     }
 }

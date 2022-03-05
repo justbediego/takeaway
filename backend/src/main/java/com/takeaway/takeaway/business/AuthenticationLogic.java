@@ -5,6 +5,7 @@ import com.takeaway.takeaway.business.dto.ChangePasswordDto;
 import com.takeaway.takeaway.business.exception.ExceptionTypes;
 import com.takeaway.takeaway.business.exception.TakeawayException;
 import com.takeaway.takeaway.dataaccess.model.User;
+import com.takeaway.takeaway.dataaccess.model.enums.ActionTypes;
 import com.takeaway.takeaway.dataaccess.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -26,10 +27,12 @@ public class AuthenticationLogic {
 
     private final ValidationLogic validationLogic;
     private final UserRepository userRepository;
+    private final ActionHistoryLogic actionHistoryLogic;
 
-    public AuthenticationLogic(ValidationLogic validationLogic, UserRepository userRepository) {
+    public AuthenticationLogic(ValidationLogic validationLogic, UserRepository userRepository, ActionHistoryLogic actionHistoryLogic) {
         this.validationLogic = validationLogic;
         this.userRepository = userRepository;
+        this.actionHistoryLogic = actionHistoryLogic;
     }
 
     private String getHashedPassword(String password) {
@@ -52,7 +55,7 @@ public class AuthenticationLogic {
 
         // business
         user.setHashedPassword(getHashedPassword(changePasswordDto.getNewPassword()));
-        user.updateDateModified();
+        actionHistoryLogic.AddHistoryRecord(ActionTypes.AUTH_CHANGE_PASSWORD);
         userRepository.save(user);
     }
 

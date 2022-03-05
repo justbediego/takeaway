@@ -6,6 +6,7 @@ import com.takeaway.takeaway.business.AuthenticationLogic;
 import com.takeaway.takeaway.business.UserItemLogic;
 import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.business.exception.TakeawayException;
+import com.takeaway.takeaway.dataaccess.model.enums.ItemPublishStates;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,12 +37,22 @@ public class UserItemController extends BaseController {
 
     @DeleteMapping(path = "/unPublishItem/{itemId}")
     public void unPublishItem(@PathVariable UUID itemId) throws TakeawayException {
-        userItemLogic.unPublishItem(getUserId(), itemId);
+        userItemLogic.setItemPublishState(getUserId(), itemId, ItemPublishStates.INACTIVE);
     }
 
-    @PostMapping(path = "/rePublishItem/{itemId}")
+    @PatchMapping(path = "/rePublishItem/{itemId}")
     public void rePublishItem(@PathVariable UUID itemId) throws TakeawayException {
-        userItemLogic.rePublishItem(getUserId(), itemId);
+        userItemLogic.setItemPublishState(getUserId(), itemId, ItemPublishStates.ACTIVE);
+    }
+
+    @PatchMapping(path = "/setItemAsReserved/{itemId}")
+    public void setItemAsReserved(@PathVariable UUID itemId) throws TakeawayException {
+        userItemLogic.setItemPublishState(getUserId(), itemId, ItemPublishStates.RESERVED);
+    }
+
+    @PatchMapping(path = "/setItemAsSold/{itemId}")
+    public void setItemAsSold(@PathVariable UUID itemId) throws TakeawayException {
+        userItemLogic.setItemPublishState(getUserId(), itemId, ItemPublishStates.SOLD);
     }
 
     @DeleteMapping(path = "/deleteItem/{itemId}")
@@ -49,19 +60,19 @@ public class UserItemController extends BaseController {
         userItemLogic.deleteItem(getUserId(), itemId);
     }
 
-    @PatchMapping(path = "/changeItemAttachmentOrder/{itemId}")
-    public void changeItemAttachmentOrder(@PathVariable UUID itemId, @RequestBody ChangeItemAttachmentOrderDto data) throws TakeawayException {
-        userItemLogic.changeItemAttachmentOrder(getUserId(), itemId, ChangeItemAttachmentOrderDto.fromOutside(data));
+    @PatchMapping(path = "/changeItemPictureOrder/{itemId}")
+    public void changeItemPictureOrder(@PathVariable UUID itemId, @RequestBody ChangeItemPictureOrderDto data) throws TakeawayException {
+        userItemLogic.changeItemPictureOrder(getUserId(), itemId, ChangeItemPictureOrderDto.fromOutside(data));
     }
 
-    @PostMapping(path = "/addAttachmentToItem/{itemId}")
-    public void addAttachmentToItem(@PathVariable UUID itemId, @RequestPart MultipartFile file) throws TakeawayException {
-        userItemLogic.addAttachmentToItem(getUserId(), itemId, CreateAttachmentDto.fromFile(file));
+    @PostMapping(path = "/addPictureToItem/{itemId}")
+    public void addPictureToItem(@PathVariable UUID itemId, @RequestPart MultipartFile file) throws TakeawayException {
+        userItemLogic.addPictureToItem(getUserId(), itemId, CreateAttachmentDto.fromFile(file));
     }
 
-    @DeleteMapping(path = "/deleteAttachmentFromItem/{itemId}/{attachmentId}")
-    public void deleteAttachmentFromItem(@PathVariable UUID itemId, @PathVariable UUID attachmentId) throws TakeawayException {
-        userItemLogic.deleteAttachmentFromItem(getUserId(), itemId, attachmentId);
+    @DeleteMapping(path = "/deletePictureFromItem/{itemId}/{attachmentId}")
+    public void deletePictureFromItem(@PathVariable UUID itemId, @PathVariable UUID attachmentId) throws TakeawayException {
+        userItemLogic.deletePictureFromItem(getUserId(), itemId, attachmentId);
     }
 
     @PostMapping(path = "/reportItem/{itemId}")

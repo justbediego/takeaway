@@ -16,15 +16,7 @@ public abstract class BaseEntity {
     @Column(nullable = false)
     private Date dateCreated;
 
-    @Column(nullable = false)
-    private Date dateModified;
-
     protected BaseEntity() {
         this.dateCreated = new Date();
-        this.dateModified = new Date();
-    }
-
-    public void updateDateModified() {
-        this.dateModified = new Date();
     }
 }
