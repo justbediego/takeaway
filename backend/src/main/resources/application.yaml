@@ -20,7 +20,6 @@ spring:
     properties:
       hibernate:
         show_sql: true
-        dialect: com.takeaway.takeaway.configuration.PostgreSQLDialect
         enable_lazy_load_no_trans: true
   application:
     name: takeaway

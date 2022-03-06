@@ -1,5 +1,6 @@
 package com.takeaway.takeaway.business;
 
+import com.google.gson.Gson;
 import com.takeaway.takeaway.business.dto.*;
 import com.takeaway.takeaway.business.exception.ExceptionEntities;
 import com.takeaway.takeaway.business.exception.ExceptionTypes;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -64,12 +66,12 @@ public class GuestLogic {
                 .build();
     }
 
-    public GetItemsDto getItems(GetItemsFiltersDto filtersDto, UserLanguages language) {
+    public GetItemsDto getItems(GetItemsFiltersDto filtersDto, UserLanguages language) throws TakeawayException {
         return null;
     }
 
-    public GetSingleItemDto getItem(UUID itemId, UserLanguages language) throws TakeawayException {
-        Optional<GetSingleItemDto> publicItem = itemRepository.getPublicItem(itemId, language);
+    public GetItemDto getItem(UUID itemId, UserLanguages language) throws TakeawayException {
+        Optional<ItemRepository.GetPublicItemResponse> publicItem = itemRepository.getPublicItem(itemId, language.ordinal());
         if (publicItem.isEmpty()) {
             throw new TakeawayException(
                     ExceptionTypes.ENTITY_NOT_FOUND,
@@ -77,7 +79,32 @@ public class GuestLogic {
                     itemId.toString()
             );
         }
-        return publicItem.get();
+        ItemRepository.GetPublicItemResponse dbItem = publicItem.get();
+        List<String> pictureUrls = null;
+        if (dbItem.getImage_Urls_Json() != null) {
+            Gson gson = new Gson();
+            pictureUrls = gson.fromJson(dbItem.getImage_Urls_Json(), List.class);
+        } else {
+            pictureUrls = null;
+        }
+        return GetItemDto.builder()
+                .id(itemId)
+                .title(dbItem.getTitle())
+                .description(dbItem.getDescription())
+                .publishStart(dbItem.getPublish_start())
+                .firstName(dbItem.getFirst_name())
+                .lastName(dbItem.getLast_name())
+                .publicEmail(dbItem.getPublic_email())
+                .publicPhoneNumber(dbItem.getPublic_phone_number())
+                .itemCategoryId(UUID.fromString(dbItem.getItem_category_id()))
+                .countryId(UUID.fromString(dbItem.getCountry_id()))
+                .countryName(dbItem.getCountry_name())
+                .stateId(UUID.fromString(dbItem.getState_id()))
+                .stateName(dbItem.getState_name())
+                .cityId(UUID.fromString(dbItem.getCity_id()))
+                .cityName(dbItem.getCity_name())
+                .pictureUrls(pictureUrls)
+                .build();
     }
 
 }

@@ -7,6 +7,5 @@ import lombok.*;
 @NoArgsConstructor
 //@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class GetItemsDto extends BaseDto {
-
+public class GetItemsSingleDto extends BaseDto {
 }

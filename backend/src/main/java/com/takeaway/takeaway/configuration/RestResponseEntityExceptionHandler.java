@@ -27,10 +27,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<ExceptionResponse> handleConflict(TakeawayException ex, WebRequest request) {
         ex.printStackTrace();
         ExceptionResponse responseBody = ExceptionResponse.builder()
-                .type(ex.getExceptionType().toString())
+                .type(ex.getExceptionType().name())
                 .message(ex.getMessage())
                 .details(ex.getDetails())
-                .entity(ex.getEntity() == null ? null : ex.getEntity().toString())
+                .entity(ex.getEntity() == null ? null : ex.getEntity().name())
                 .build();
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
@@ -41,7 +41,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<ExceptionResponse> handleConflict(Exception ex, WebRequest request) {
         ex.printStackTrace();
         ExceptionResponse responseBody = ExceptionResponse.builder()
-                .type(ExceptionTypes.UNRECOGNIZED.toString())
+                .type(ExceptionTypes.UNRECOGNIZED.name())
                 .message(ex.getMessage())
                 .details("uncaught")
                 .build();

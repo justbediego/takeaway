@@ -46,12 +46,12 @@ public class GuestController extends BaseController {
     }
 
     @GetMapping(path = "/getItems")
-    public GetItemsDto getItems(@RequestParam GetItemsFiltersDto filtersDto, UserLanguages language) throws TakeawayException {
+    public GetItemsDto getItems(@RequestParam GetItemsFiltersDto filtersDto, @RequestParam UserLanguages language) throws TakeawayException {
         return guestLogic.getItems(GetItemsFiltersDto.fromOutside(filtersDto), language);
     }
 
     @GetMapping(path = "/getItem/{itemId}")
-    public GetSingleItemDto getItem(@PathVariable UUID itemId, UserLanguages language) throws TakeawayException {
+    public GetItemDto getItem(@PathVariable UUID itemId, @RequestParam UserLanguages language) throws TakeawayException {
         return guestLogic.getItem(itemId, language);
     }
 
