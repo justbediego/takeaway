@@ -67,6 +67,17 @@ public class GuestLogic {
     }
 
     public GetItemsDto getItems(GetItemsFiltersDto filtersDto, UserLanguages language) throws TakeawayException {
+        List<ItemRepository.GetPublicItemsResponse> publicItems = itemRepository.getPublicItems(
+                filtersDto.getKeyword(),
+                filtersDto.getItemCategoryId(),
+                filtersDto.getCountryId(),
+                filtersDto.getStateId(),
+                filtersDto.getCityId(),
+                filtersDto.getRadiusKm(),
+                filtersDto.getPageIndex(),
+                filtersDto.getPageSize(),
+                language.ordinal()
+        );
         return null;
     }
 
@@ -84,11 +95,9 @@ public class GuestLogic {
         if (dbItem.getImage_Urls_Json() != null) {
             Gson gson = new Gson();
             pictureUrls = gson.fromJson(dbItem.getImage_Urls_Json(), List.class);
-        } else {
-            pictureUrls = null;
         }
         return GetItemDto.builder()
-                .id(itemId)
+                .id(UUID.fromString(dbItem.getItem_id()))
                 .title(dbItem.getTitle())
                 .description(dbItem.getDescription())
                 .publishStart(dbItem.getPublish_start())

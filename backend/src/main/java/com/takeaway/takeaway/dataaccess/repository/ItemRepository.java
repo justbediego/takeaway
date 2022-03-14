@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
     Optional<GetPublicItemResponse> getPublicItem(UUID item, Integer languageOrdinal);
 
     interface GetPublicItemResponse {
+        String getItem_id();
         Date getPublish_start();
         String getTitle();
         String getDescription();
@@ -37,7 +39,34 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
         String getImage_Urls_Json();
     }
 
-//    List<GetItemsDto> getPublicItems(UserLanguages language);
+    @Query(value = "SELECT * FROM get_public_items(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)", nativeQuery = true)
+    List<GetPublicItemsResponse> getPublicItems(
+            String keyword,
+            UUID itemCategoryId,
+            UUID countryId,
+            UUID stateId,
+            UUID cityId,
+            Integer radiusKm,
+            Integer pageIndex,
+            Integer pageSize,
+            Integer languageOrdinal
+    );
+
+    interface GetPublicItemsResponse {
+        String getItem_id();
+        Date getPublish_start();
+        String getTitle();
+        String getFirst_name();
+        String getLast_name();
+        String getItem_category_id();
+        String getCountry_id();
+        String getCountry_name();
+        String getState_id();
+        String getState_name();
+        String getCity_id();
+        String getCity_name();
+        String getThumbnail_Url();
+    }
 }
 
 

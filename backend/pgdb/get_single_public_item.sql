@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION public.get_single_public_item(
 	item_id uuid,
 	language_id integer)
-    RETURNS TABLE(title character varying, description character varying, first_name character varying, last_name character varying, public_phone_number character varying, public_email character varying, publish_start timestamp without time zone, item_category_id character varying, country_id character varying, country_name character varying, state_id character varying, state_name character varying, city_id character varying, city_name character varying, image_urls_json character varying)
+    RETURNS TABLE(item_id character varying, title character varying, description character varying, first_name character varying, last_name character varying, public_phone_number character varying, public_email character varying, publish_start timestamp without time zone, item_category_id character varying, country_id character varying, country_name character varying, state_id character varying, state_name character varying, city_id character varying, city_name character varying, image_urls_json character varying)
     LANGUAGE 'sql'
     COST 100
     VOLATILE PARALLEL UNSAFE
@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION public.get_single_public_item(
 
 AS $BODY$
 SELECT
+    CAST(i.id AS varchar),
     i.title,
     i.description,
     u.first_name,
